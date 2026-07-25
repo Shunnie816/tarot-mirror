@@ -1,0 +1,37 @@
+name: カードデータの追加
+description: デッキのカード定義（keywords / themes / axes / reflectionSeeds）を書く
+title: "feat(decks): "
+labels: ["type:feat", "area:decks", "core-principle"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        実装より工数を食う作業です。焦らず、スート単位など反証しやすい塊で切ってください。
+        `pnpm validate:decks` がスキーマと網羅性を検査します。
+
+  - type: input
+    id: scope
+    attributes:
+      label: 対象
+      placeholder: 小アルカナ Cups 1–10
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ### 著作権について
+        既存書籍のキーワード文面を書き写すと著作権侵害になります。
+        一般に流通する象徴解釈をもとに**自分の言葉で記述**してください。
+
+  - type: checkboxes
+    id: gates
+    attributes:
+      label: 完了条件
+      options:
+        - label: "正位置・逆位置の keywords が両方揃っている"
+        - label: "**正位置と逆位置で同じ keyword を共有していない**（共有すると逆位置が無意味になる。悪魔のカードで踏んだ罠）"
+        - label: "`axes` に「良い/悪い」の判断を持ち込んでいない（`friction` は抵抗であって不幸ではない）"
+        - label: "新規 keyword は `packages/content/src/ja/keywords.json` に追加済み"
+        - label: "`pnpm validate:decks` が通る"
+        - label: "`pnpm demo:reading` で実際に引いて、読んで不自然でない"

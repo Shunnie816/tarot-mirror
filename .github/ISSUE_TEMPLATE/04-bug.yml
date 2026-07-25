@@ -1,0 +1,29 @@
+name: バグ報告
+description: 想定と違う挙動
+title: "fix: "
+labels: ["type:fix"]
+body:
+  - type: input
+    id: seed
+    attributes:
+      label: seed
+      description: |
+        リーディングの問題なら seed を書いてください。**同じ seed なら必ず同じ結果が再現します。**
+        `pnpm demo:reading <seed>` で手元で再現できます。
+      placeholder: seed-demo-01
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待した挙動
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の挙動
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順

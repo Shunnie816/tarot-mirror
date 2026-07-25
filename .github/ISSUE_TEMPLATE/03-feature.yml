@@ -1,0 +1,51 @@
+name: 機能追加・変更
+description: UI・永続化・LLM 整形など一般的な作業
+title: "feat: "
+labels: ["type:feat"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: 何をするか
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: なぜ必要か
+      description: コンセプト（占いではなく自己対話）とどう繋がるか。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 対象
+      options:
+        - apps/web（UI）
+        - packages/engine
+        - packages/content（文言・トーン）
+        - packages/decks
+        - functions（LLM 整形）
+        - インフラ / CI
+    validations:
+      required: true
+
+  - type: textarea
+    id: done
+    attributes:
+      label: 完了条件
+      description: 何が確認できたら閉じてよいか。テストで担保できるものはテスト名で書く。
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: 設計原則との突き合わせ
+      description: 該当する場合のみチェック。1つでも該当したら PR のレビュー観点に含めます。
+      options:
+        - label: "利用者に見える文言が増える → `packages/content` にのみ置き、断定表現を使わない"
+        - label: "LLM を使う → LLM が落ちても機能が成立する経路がある"
+        - label: "Rule Engine を触る → 日本語の文章を返していない（ID のみ）"

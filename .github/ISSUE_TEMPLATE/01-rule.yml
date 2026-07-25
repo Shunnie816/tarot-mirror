@@ -1,0 +1,67 @@
+name: L2 クロスカードルールの追加・変更
+description: 複数枚の関係から意味を組み立てるルール（1ルール = 1ファイル + 1テスト）
+title: "feat(engine): "
+labels: ["type:feat", "area:engine", "layer:L2-rules"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Rule Engine が「本当に意味を組み立てている」と言えるのはこのレイヤーです。
+        **ルールは日本語の文章を返しません。`InsightId` と `strength` を返します。**
+        文言は `packages/content/src/ja/insights.json` 側に書きます。
+
+  - type: input
+    id: insight-id
+    attributes:
+      label: Insight ID
+      description: 出力する ID。命名は既存の `insight.<rule>.<variant>` に合わせる。
+      placeholder: insight.tensionPair.agency
+    validations:
+      required: true
+
+  - type: textarea
+    id: condition
+    attributes:
+      label: 発火条件
+      description: どういう引きのときに発火するか。数値の閾値まで書く。
+      placeholder: |
+        隣接する position 間で agency の符号が反転し、かつ差が 2 以上のとき
+    validations:
+      required: true
+
+  - type: textarea
+    id: meaning
+    attributes:
+      label: これは利用者に何を伝えるか
+      description: |
+        カードの意味の羅列ではなく「1枚ずつ見ていては出てこない観察」であること。
+        ここが書けないルールは、たいてい作る価値がない。
+      placeholder: |
+        自分の中で「動かしたい」と「委ねたい」が同時に働いている地点を指す。
+        どちらが正しいという話にはしない。
+    validations:
+      required: true
+
+  - type: textarea
+    id: degenerate
+    attributes:
+      label: 退化しないか
+      description: |
+        **必ず埋めてください。** 特定のデッキ・スプレッドで「常に真」になるルールは、
+        観察に見せかけたノイズです（`majorRatio` が大アルカナのみのデッキで踏んだ罠）。
+        反証されうる条件になっているかを書く。
+      placeholder: |
+        1枚引きでは隣接ペアが存在しないので発火しない。
+        3枚・8枚では軸が揃った引きで発火しないことを確認済み。
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: gates
+    attributes:
+      label: 完了条件
+      options:
+        - label: "`packages/engine/src/rules/` に実装（1ルール1ファイル）"
+        - label: "発火する引き・発火しない引きの両方をテスト"
+        - label: "`insights.json` に label と body を追加（断定表現なし）"
+        - label: "`pnpm test` と `pnpm typecheck` が通る"

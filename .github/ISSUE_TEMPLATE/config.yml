@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 設計方針を読む
+    url: https://github.com/Shunnie816/tarot-mirror/blob/main/README.md
+    about: Rule Engine と LLM の責務分離、パッケージの役割はここに書いてあります。
+  - name: プロダクトのコンセプト
+    url: https://github.com/Shunnie816/tarot-mirror/blob/main/PROJECT_OVERVIEW.md
+    about: 「占いではなく自己対話」という前提。仕様判断で迷ったらここに戻ります。
