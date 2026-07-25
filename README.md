@@ -70,7 +70,14 @@ pnpm demo:reading -- <seed>    # 同じ seed で再現
 - **カードデータは Firestore に置かない。** 不変で全ユーザー共通なので、
   読み取り課金もオフライン非対応も受け入れる理由がない。
 
+## 開発の進め方
+
+Issue 駆動。ブランチの切り方・commit 粒度・レビュー観点は [`CONTRIBUTING.md`](./CONTRIBUTING.md) を参照。
+
+CI は毎 PR で typecheck / test に加えて `demo:reading` を走らせる。
+LLM なしで読み物が完成することが壊れていないかを、テストとは別に一目でわかる位置に置いている。
+
 ## 現状
 
 Phase 1–6 完了（132 tests / typecheck clean）。次は Phase 7（`claude design` によるデザインシステムと Next.js UI）。
-実装計画は `~/.claude/plans/project-overview-md-ai-llm-tarot-mirror-tidy-parnas.md`。
+残作業は GitHub Issue に起票済み。実装計画は `~/.claude/plans/project-overview-md-ai-llm-tarot-mirror-tidy-parnas.md`。
