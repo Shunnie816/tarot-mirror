@@ -43,6 +43,16 @@
   "ui.drawStatusPlacedUnnamed": "置きました。",
   "ui.drawStatusDone": "すべて置きました。裏返しはありません。ここから読みはじめられます。",
   "ui.drawStart": "読みはじめる",
+  "ui.accountAnonymous": "いまは名前のない状態で使っています。書いたものは、この端末から開けます。",
+  "ui.accountLink": "アカウントをつなぐ",
+  "ui.accountLinking": "つないでいます",
+  "ui.accountLinked": "アカウントをつないであります。ほかの端末からも同じものを開けます。",
+  "ui.accountLinkCancelled": "つなぐのはやめました。このまま続けられます。",
+  "ui.accountLinkInUse": "そのアカウントはすでに使われています。いまの記録は、この端末に残したままです。",
+  "ui.accountLinkFailed": "うまくつながりませんでした。あとでもう一度試せます。",
+  "ui.accountUnavailable": "いまは保存されない状態で動いています。読むことは、そのまま続けられます。",
+  "ui.accountRetry": "もう一度つなぐ",
+
   "ui.keywordSeparator": "、",
   "ui.noInsights": "今回は、カードどうしの目立った重なりは見当たりませんでした。一枚ずつの意味に、ゆっくり目を通してみてください。",
   "ui.closingNote": "ここに書かれていることは、決まった答えではありません。いまのあなたが受け取れるものだけ、持ち帰ってみてください。"
