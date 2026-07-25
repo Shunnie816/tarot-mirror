@@ -32,13 +32,14 @@ jobs:
 
       # セキュリティルールは実際に動かさないと確かめられない。
       # 「他人の uid では読めない」が壊れていないことを毎回踏む。
-      # Firestore エミュレータは JDK を要求する（ubuntu ランナーには入っている）。
+      # Firestore エミュレータは JDK を要求する。ランナー既定の Java に
+      # 依存すると、その入れ替えで静かに壊れるので版を固定する。
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "21"
 
-      - name: Firestore rules and storage
+      - name: Firestore rules and saving
         run: npx --yes firebase-tools@15 emulators:exec --only firestore "npx vitest run --workspace vitest.firestore.workspace.ts"
 
       # このプロジェクトの中心的な不変条件。
