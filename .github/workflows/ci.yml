@@ -30,6 +30,17 @@ jobs:
       - name: Test
         run: pnpm test
 
+      # セキュリティルールは実際に動かさないと確かめられない。
+      # 「他人の uid では読めない」が壊れていないことを毎回踏む。
+      # Firestore エミュレータは JDK を要求する（ubuntu ランナーには入っている）。
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Firestore rules and storage
+        run: npx --yes firebase-tools@15 emulators:exec --only firestore "npx vitest run --workspace vitest.firestore.workspace.ts"
+
       # このプロジェクトの中心的な不変条件。
       # ネットワークも API キーもない CI 環境で読み物が完成することを毎回確かめる。
       # ここが落ちたらコスト戦略が壊れているので、テストとは別に可視化しておく。
