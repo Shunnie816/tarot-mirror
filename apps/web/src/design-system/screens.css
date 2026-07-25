@@ -316,3 +316,100 @@
   color: var(--color-text-secondary);
   transition: color var(--motion-duration-ui) var(--motion-ease-out);
 }
+
+.screen-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+}
+
+/* ---------- 書きとめる ---------- */
+
+/* 読み物と地続きにする。囲って「フォーム」にすると、書くことが手続きになる。 */
+.journal-block {
+  max-width: var(--measure-reading);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-top: var(--space-lg);
+}
+
+.journal-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.journal-heading {
+  margin: 0;
+  font-family: var(--font-reading);
+  font-weight: 400;
+  font-size: var(--text-card);
+  letter-spacing: var(--tracking-card);
+}
+
+.journal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-md);
+}
+
+.journal-entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.journal-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md) 0;
+  border-top: var(--control-border-width) solid var(--color-border-subtle);
+}
+
+.journal-entry-date {
+  font-size: var(--text-label-small);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-text-quiet);
+}
+
+/* 書いたものは読み物として置く。入力欄の名残を見せない。 */
+.journal-entry-body {
+  margin: 0;
+  font-family: var(--font-reading);
+  font-size: var(--text-body);
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+.journal-entry-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-md);
+  font-size: var(--text-label-small);
+}
+
+/* ボタンだが、押させたい意図を出さない見た目にする。 */
+.link-button {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-ui);
+  font-size: inherit;
+  letter-spacing: var(--tracking-label);
+  color: var(--color-accent-depth);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+
+.link-button:focus-visible {
+  outline: 2px solid var(--color-accent-depth);
+  outline-offset: 3px;
+}
