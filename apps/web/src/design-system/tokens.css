@@ -1,0 +1,104 @@
+/* Tarot Mirror — design tokens
+ *
+ * claude design (Reading View) の出力をそのまま持ち込んだもの。値を変えるときは
+ * design-system/DECISIONS.md の判断も併せて更新すること。
+ *
+ * 命名は「意味」ベース。--color-cream ではなく --color-surface-base にしてあるので、
+ * 後からダークモードを :root[data-theme="dark"] で差し替えられる。
+ */
+
+:root {
+  /* ---------- color: surface ---------- */
+  --color-surface-base: oklch(0.962 0.009 84); /* 紙・生成りの地 */
+  --color-surface-raised: oklch(0.984 0.006 84); /* ホバー等のわずかな持ち上げ */
+  --color-surface-sunken: oklch(0.936 0.011 82);
+
+  /* ---------- color: text ---------- */
+  --color-text-primary: oklch(0.3 0.014 62); /* 解釈本文 */
+  --color-text-secondary: oklch(0.47 0.013 62); /* 利用者の問い、正逆表示 */
+  --color-text-quiet: oklch(0.6 0.011 62); /* 締めの一文、補助ラベル */
+
+  /* ---------- color: accent ---------- */
+  --color-accent-depth: oklch(0.4 0.052 253); /* 深い藍＝奥行き。構造ラベル */
+  --color-accent-depth-quiet: oklch(0.63 0.028 253); /* 記号・境界線 */
+  --color-accent-warm: oklch(0.56 0.072 46); /* テラコッタ＝暖。振り返りの見出し */
+
+  /* ---------- color: line ---------- */
+  --color-border-subtle: oklch(0.88 0.01 82);
+  --color-border-strong: oklch(0.78 0.013 82);
+  --color-border-accent: oklch(0.82 0.02 253);
+
+  /* ---------- typography ---------- */
+  /* 読み物＝明朝 / ラベル＝ゴシック。この使い分け自体が体験設計。
+     Noto が落ちても Hiragino / Yu で明朝・ゴシックの別は保たれる。 */
+  --font-reading: var(--font-noto-serif-jp), "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-ui: var(--font-noto-sans-jp), "Hiragino Sans", "Yu Gothic", sans-serif;
+
+  --text-title: clamp(1.5rem, 1.1rem + 1.4vw, 2.125rem);
+  --text-card: clamp(1.375rem, 1.05rem + 1.1vw, 1.875rem);
+  --text-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --text-quote: clamp(1.0625rem, 1rem + 0.25vw, 1.125rem);
+  --text-label: 0.8125rem;
+  --text-label-small: 0.75rem;
+
+  --leading-reading: 2;
+  --leading-tight: 1.5;
+  --tracking-label: 0.14em;
+  --tracking-card: 0.06em;
+
+  /* ---------- measure ---------- */
+  /* 本文の行長。上限 38em ≒ 全角38字。ウィンドウ幅ではなく行長で本文幅を決める。
+     ※ em は使用箇所の font-size 基準なので、max-width をあてる要素に
+        font-size: var(--text-body) を必ず併記する（本文サイズで em を解決させる）。
+        16px 基準で解決すると約32字になり短すぎる。 */
+  --measure-reading: clamp(18rem, 92vw, 38em);
+
+  /* ---------- space ---------- */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 14px;
+  --space-md: 24px; /* 段落・カード名・本文の間 */
+  --space-lg: 40px;
+  --space-xl: 64px; /* ポジション間 */
+  --space-2xl: 96px; /* セクション間 */
+  --space-3xl: 144px; /* 画面上下の余白 */
+
+  /* ---------- motion ---------- */
+  --motion-duration-reveal: 520ms;
+  --motion-duration-ui: 220ms;
+  --motion-ease-out: cubic-bezier(0.16, 0.7, 0.3, 1);
+
+  /* ---------- control ---------- */
+  --control-min-height: 56px; /* 44px 以上を確保 */
+  --control-border-width: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-reveal: 1ms;
+    --motion-duration-ui: 1ms;
+  }
+}
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* 動きを消してもフェードだけは残す。要素が突然現れるより、出たことが分かる。 */
+  @keyframes reveal-rise {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
