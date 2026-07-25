@@ -1,0 +1,270 @@
+{
+  "id": "rw",
+  "kind": "tarot",
+  "cards": [
+    {
+      "id": "rw.major.00",
+      "arcana": "major",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.beginning", "kw.leap", "kw.innocence"],
+        "reversed": ["kw.hesitation", "kw.unpreparedness", "kw.recklessness"]
+      },
+      "themes": ["theme.threshold", "theme.movement"],
+      "reflectionSeeds": ["q.whatWouldYouDoIfReady", "q.whatSmallStepIsAvailable"],
+      "axes": { "agency": 1, "tempo": 2, "friction": 0, "focus": -1 }
+    },
+    {
+      "id": "rw.major.01",
+      "arcana": "major",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.initiative", "kw.resource", "kw.focus"],
+        "reversed": ["kw.scattered", "kw.unusedPotential", "kw.selfDoubt"]
+      },
+      "themes": ["theme.movement", "theme.authority"],
+      "reflectionSeeds": ["q.whatIsAlreadyEnough", "q.whatSmallStepIsAvailable"],
+      "axes": { "agency": 2, "tempo": 1, "friction": 1, "focus": 0 }
+    },
+    {
+      "id": "rw.major.02",
+      "arcana": "major",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.intuition", "kw.stillness", "kw.innerKnowing"],
+        "reversed": ["kw.ignoredIntuition", "kw.concealment", "kw.disconnection"]
+      },
+      "themes": ["theme.inward", "theme.uncertainty"],
+      "reflectionSeeds": ["q.whatAreYouNotSaying", "q.whatAreYouAvoidingLookingAt"],
+      "axes": { "agency": -1, "tempo": -2, "friction": 1, "focus": 2 }
+    },
+    {
+      "id": "rw.major.03",
+      "arcana": "major",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.nurture", "kw.abundance", "kw.receptivity"],
+        "reversed": ["kw.overgiving", "kw.selfNeglect", "kw.imbalance"]
+      },
+      "themes": ["theme.nurture", "theme.connection"],
+      "reflectionSeeds": ["q.whatIsAlreadyEnough", "q.whatDoYouNeedFromOthers"],
+      "axes": { "agency": 1, "tempo": 0, "friction": 0, "focus": -1 }
+    },
+    {
+      "id": "rw.major.04",
+      "arcana": "major",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.structure", "kw.boundary", "kw.authority"],
+        "reversed": ["kw.rigidity", "kw.controlLoss", "kw.resistanceToChange"]
+      },
+      "themes": ["theme.structure", "theme.authority"],
+      "reflectionSeeds": ["q.whatBoundaryIsMissing", "q.whoDecides"],
+      "axes": { "agency": 2, "tempo": 0, "friction": 1, "focus": -1 }
+    },
+    {
+      "id": "rw.major.05",
+      "arcana": "major",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.tradition", "kw.guidance", "kw.learning"],
+        "reversed": ["kw.questioningNorms", "kw.ownPath", "kw.rigidity"]
+      },
+      "themes": ["theme.structure", "theme.connection"],
+      "reflectionSeeds": ["q.whoseVoiceIsThis", "q.whatDoYouNeedFromOthers"],
+      "axes": { "agency": 0, "tempo": -1, "friction": 1, "focus": 0 }
+    },
+    {
+      "id": "rw.major.06",
+      "arcana": "major",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.choice", "kw.connection", "kw.alignment"],
+        "reversed": ["kw.indecision", "kw.misalignment", "kw.divided"]
+      },
+      "themes": ["theme.choice", "theme.connection"],
+      "reflectionSeeds": ["q.whichSideAreYouLeaning", "q.whereDoYouFeelMostYourself"],
+      "axes": { "agency": 1, "tempo": 0, "friction": 2, "focus": -1 }
+    },
+    {
+      "id": "rw.major.07",
+      "arcana": "major",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.drive", "kw.direction", "kw.willpower"],
+        "reversed": ["kw.stalledMomentum", "kw.conflictingAims", "kw.forcing"]
+      },
+      "themes": ["theme.movement", "theme.authority"],
+      "reflectionSeeds": ["q.whoDecides", "q.whereIsTheResistance"],
+      "axes": { "agency": 2, "tempo": 2, "friction": 2, "focus": -1 }
+    },
+    {
+      "id": "rw.major.08",
+      "arcana": "major",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.gentleStrength", "kw.patience", "kw.selfMastery"],
+        "reversed": ["kw.selfDoubt", "kw.suppressedFeeling", "kw.impatience"]
+      },
+      "themes": ["theme.inward", "theme.resistance"],
+      "reflectionSeeds": ["q.whatWouldYouTellAFriend", "q.whatAreYouNotSaying"],
+      "axes": { "agency": 1, "tempo": -1, "friction": 2, "focus": 1 }
+    },
+    {
+      "id": "rw.major.09",
+      "arcana": "major",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.solitude", "kw.introspection", "kw.search"],
+        "reversed": ["kw.isolation", "kw.avoidance", "kw.refusalOfHelp"]
+      },
+      "themes": ["theme.inward"],
+      "reflectionSeeds": ["q.whatDoYouNeedFromOthers", "q.whereDoYouFeelMostYourself"],
+      "axes": { "agency": 0, "tempo": -2, "friction": 1, "focus": 2 }
+    },
+    {
+      "id": "rw.major.10",
+      "arcana": "major",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.turningPoint", "kw.cycle", "kw.timing"],
+        "reversed": ["kw.resistanceToChange", "kw.repetition", "kw.waiting"]
+      },
+      "themes": ["theme.cycle", "theme.movement"],
+      "reflectionSeeds": ["q.whatChangedRecently", "q.whatAreYouWaitingFor"],
+      "axes": { "agency": -2, "tempo": 2, "friction": 1, "focus": -1 }
+    },
+    {
+      "id": "rw.major.11",
+      "arcana": "major",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.balance", "kw.accountability", "kw.clarity"],
+        "reversed": ["kw.imbalance", "kw.avoidedTruth", "kw.hesitation"]
+      },
+      "themes": ["theme.clarity", "theme.structure"],
+      "reflectionSeeds": ["q.whatAreYouAvoidingLookingAt", "q.whoDecides"],
+      "axes": { "agency": 1, "tempo": -1, "friction": 2, "focus": 0 }
+    },
+    {
+      "id": "rw.major.12",
+      "arcana": "major",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.pause", "kw.newPerspective", "kw.surrender"],
+        "reversed": ["kw.stuckness", "kw.pointlessSacrifice", "kw.delay"]
+      },
+      "themes": ["theme.inward", "theme.resistance"],
+      "reflectionSeeds": ["q.whatWouldSlowingDownLookLike", "q.whatAreYouWaitingFor"],
+      "axes": { "agency": -2, "tempo": -2, "friction": 3, "focus": 2 }
+    },
+    {
+      "id": "rw.major.13",
+      "arcana": "major",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.ending", "kw.transformation", "kw.release"],
+        "reversed": ["kw.clingingOn", "kw.fearOfEnding", "kw.delay"]
+      },
+      "themes": ["theme.release", "theme.threshold"],
+      "reflectionSeeds": ["q.whatAreYouHolding", "q.whatFeelsUnfinished"],
+      "axes": { "agency": -1, "tempo": 1, "friction": 3, "focus": 0 }
+    },
+    {
+      "id": "rw.major.14",
+      "arcana": "major",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.blending", "kw.moderation", "kw.integration"],
+        "reversed": ["kw.excess", "kw.imbalance", "kw.impatience"]
+      },
+      "themes": ["theme.clarity", "theme.inward"],
+      "reflectionSeeds": ["q.whatWouldEnoughLookLike", "q.whatIsWorkingAlready"],
+      "axes": { "agency": 1, "tempo": -1, "friction": 0, "focus": 1 }
+    },
+    {
+      "id": "rw.major.15",
+      "arcana": "major",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.attachment", "kw.pattern", "kw.shadow"],
+        "reversed": ["kw.recognizingBinding", "kw.loosening", "kw.confrontingShadow"]
+      },
+      "themes": ["theme.shadow", "theme.resistance"],
+      "reflectionSeeds": ["q.whatAreYouHolding", "q.whatAreYouAvoidingLookingAt"],
+      "axes": { "agency": -2, "tempo": -1, "friction": 4, "focus": 1 }
+    },
+    {
+      "id": "rw.major.16",
+      "arcana": "major",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.suddenChange", "kw.collapse", "kw.revelation"],
+        "reversed": ["kw.slowUnraveling", "kw.fearOfCollapse", "kw.resistanceToChange"]
+      },
+      "themes": ["theme.threshold", "theme.release"],
+      "reflectionSeeds": ["q.whatChangedRecently", "q.whatIsWorkingAlready"],
+      "axes": { "agency": -2, "tempo": 2, "friction": 4, "focus": -1 }
+    },
+    {
+      "id": "rw.major.17",
+      "arcana": "major",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.hope", "kw.renewal", "kw.quietFaith"],
+        "reversed": ["kw.discouragement", "kw.dimmedHope", "kw.selfDoubt"]
+      },
+      "themes": ["theme.faith", "theme.inward"],
+      "reflectionSeeds": ["q.whatIsWorkingAlready", "q.whereDoYouFeelMostYourself"],
+      "axes": { "agency": 0, "tempo": -1, "friction": 0, "focus": 1 }
+    },
+    {
+      "id": "rw.major.18",
+      "arcana": "major",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.uncertainty", "kw.imagination", "kw.unclear"],
+        "reversed": ["kw.emergingClarity", "kw.releasedFear", "kw.clarity"]
+      },
+      "themes": ["theme.uncertainty", "theme.shadow"],
+      "reflectionSeeds": ["q.whatAreYouAvoidingLookingAt", "q.whatAreYouNotSaying"],
+      "axes": { "agency": -1, "tempo": -1, "friction": 3, "focus": 2 }
+    },
+    {
+      "id": "rw.major.19",
+      "arcana": "major",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.clarity", "kw.vitality", "kw.openness"],
+        "reversed": ["kw.dimmedJoy", "kw.delayedClarity", "kw.selfDoubt"]
+      },
+      "themes": ["theme.clarity", "theme.connection"],
+      "reflectionSeeds": ["q.whereDoYouFeelMostYourself", "q.whatIsWorkingAlready"],
+      "axes": { "agency": 1, "tempo": 1, "friction": 0, "focus": -1 }
+    },
+    {
+      "id": "rw.major.20",
+      "arcana": "major",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.awakening", "kw.reckoning", "kw.call"],
+        "reversed": ["kw.ignoredCall", "kw.selfCriticism", "kw.hesitation"]
+      },
+      "themes": ["theme.threshold", "theme.clarity"],
+      "reflectionSeeds": ["q.whatFeelsUnfinished", "q.whatWouldYouTellAFriend"],
+      "axes": { "agency": 0, "tempo": 1, "friction": 2, "focus": 1 }
+    },
+    {
+      "id": "rw.major.21",
+      "arcana": "major",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.completion", "kw.wholeness", "kw.integration"],
+        "reversed": ["kw.nearCompletion", "kw.unfinished", "kw.delay"]
+      },
+      "themes": ["theme.completion", "theme.cycle"],
+      "reflectionSeeds": ["q.whatFeelsUnfinished", "q.whatWouldEnoughLookLike"],
+      "axes": { "agency": 1, "tempo": 0, "friction": 0, "focus": 0 }
+    }
+  ]
+}
