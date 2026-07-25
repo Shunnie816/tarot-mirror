@@ -18,6 +18,8 @@ ui-debug.log
 
 # agent tooling（ローカル権限設定。共有しない）
 .claude/settings.local.json
+.serena/
+.playwright-mcp/
 
 # editor / OS
 .DS_Store
