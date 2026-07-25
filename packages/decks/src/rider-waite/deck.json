@@ -547,6 +547,147 @@
       "themes": ["theme.completion", "theme.connection"],
       "reflectionSeeds": ["q.whatDoYouNeedFromOthers", "q.whatAreYouNotSaying"],
       "axes": { "agency": 0, "tempo": 0, "friction": 1, "focus": -2 }
+    },
+
+    {
+      "id": "rw.swords.01",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 1,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.clearSight", "kw.naming", "kw.cuttingThrough"],
+        "reversed": ["kw.foggyThinking", "kw.wrongWords", "kw.withheldTruth"]
+      },
+      "themes": ["theme.clarity", "theme.threshold"],
+      "reflectionSeeds": ["q.whatAreYouNotSaying", "q.whatSmallStepIsAvailable"],
+      "axes": { "agency": 2, "tempo": 1, "friction": 1, "focus": 0 }
+    },
+    {
+      "id": "rw.swords.02",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 2,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.heldBalance", "kw.notLookingYet", "kw.deferredDecision"],
+        "reversed": ["kw.openingEyes", "kw.forcedChoice", "kw.tiredStalemate"]
+      },
+      "themes": ["theme.choice", "theme.uncertainty"],
+      "reflectionSeeds": ["q.whichSideAreYouLeaning", "q.whatAreYouAvoidingLookingAt"],
+      "axes": { "agency": -1, "tempo": -2, "friction": 2, "focus": 1 }
+    },
+    {
+      "id": "rw.swords.03",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 3,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.painfulClarity", "kw.saidOutLoud", "kw.acheThatMakesSense"],
+        "reversed": ["kw.slowHealing", "kw.rehearsedHurt", "kw.softeningEdge"]
+      },
+      "themes": ["theme.clarity", "theme.inward"],
+      "reflectionSeeds": ["q.whatWouldYouTellAFriend", "q.whatAreYouHolding"],
+      "axes": { "agency": -1, "tempo": 0, "friction": 4, "focus": 2 }
+    },
+    {
+      "id": "rw.swords.04",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 4,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.restingMind", "kw.stepAway", "kw.recovery"],
+        "reversed": ["kw.reluctantRest", "kw.restlessMind", "kw.readyToReturn"]
+      },
+      "themes": ["theme.inward", "theme.release"],
+      "reflectionSeeds": ["q.whatWouldSlowingDownLookLike", "q.whatAreYouWaitingFor"],
+      "axes": { "agency": -2, "tempo": -2, "friction": 1, "focus": 2 }
+    },
+    {
+      "id": "rw.swords.05",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 5,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.winningAtCost", "kw.sharpWords", "kw.unevenGround"],
+        "reversed": ["kw.countingCost", "kw.steppingBack", "kw.repairAttempt"]
+      },
+      "themes": ["theme.resistance", "theme.connection"],
+      "reflectionSeeds": ["q.whatWouldYouTellAFriend", "q.whereIsTheResistance"],
+      "axes": { "agency": 2, "tempo": 1, "friction": 4, "focus": 0 }
+    },
+    {
+      "id": "rw.swords.06",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 6,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.movingOn", "kw.calmerWater", "kw.carriedForward"],
+        "reversed": ["kw.unfinishedCrossing", "kw.baggage", "kw.reluctantMove"]
+      },
+      "themes": ["theme.movement", "theme.release"],
+      "reflectionSeeds": ["q.whatAreYouHolding", "q.whatChangedRecently"],
+      "axes": { "agency": 0, "tempo": 1, "friction": 1, "focus": 0 }
+    },
+    {
+      "id": "rw.swords.07",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 7,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.actingAlone", "kw.partialTelling", "kw.strategy"],
+        "reversed": ["kw.comingClean", "kw.caughtOut", "kw.reconsideredTactic"]
+      },
+      "themes": ["theme.shadow", "theme.choice"],
+      "reflectionSeeds": ["q.whatAreYouNotSaying", "q.whoDecides"],
+      "axes": { "agency": 2, "tempo": 1, "friction": 2, "focus": 1 }
+    },
+    {
+      "id": "rw.swords.08",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 8,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.feltStuckness", "kw.selfImposedLimit", "kw.unseenExit"],
+        "reversed": ["kw.loosening", "kw.testingTheLimit", "kw.firstStepOut"]
+      },
+      "themes": ["theme.resistance", "theme.inward"],
+      "reflectionSeeds": ["q.whereIsTheResistance", "q.whatSmallStepIsAvailable"],
+      "axes": { "agency": -2, "tempo": -1, "friction": 4, "focus": 2 }
+    },
+    {
+      "id": "rw.swords.09",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 9,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.nightWorry", "kw.replayingThoughts", "kw.disproportion"],
+        "reversed": ["kw.namingTheFear", "kw.morningLight", "kw.sharedBurden"]
+      },
+      "themes": ["theme.inward", "theme.shadow"],
+      "reflectionSeeds": ["q.whatWouldYouTellAFriend", "q.whatDoYouNeedFromOthers"],
+      "axes": { "agency": -2, "tempo": -1, "friction": 4, "focus": 2 }
+    },
+    {
+      "id": "rw.swords.10",
+      "arcana": "minor",
+      "suit": "swords",
+      "rank": 10,
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.bottomedOut", "kw.nothingLeftToLose", "kw.endOfACycle"],
+        "reversed": ["kw.firstLight", "kw.slowRecovery", "kw.reluctantEnding"]
+      },
+      "themes": ["theme.completion", "theme.release"],
+      "reflectionSeeds": ["q.whatFeelsUnfinished", "q.whatChangedRecently"],
+      "axes": { "agency": -2, "tempo": -1, "friction": 4, "focus": 1 }
     }
   ]
 }
