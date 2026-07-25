@@ -1,6 +1,6 @@
 import type { Locale, PositionId } from "@tarot-mirror/content";
 
-import type { ReadingJSON } from "../types.js";
+import type { PositionGroup, ReadingJSON } from "../types.js";
 
 /** How the prose was produced. Surfaced so the UI can label an LLM-assisted reading. */
 export type RenderMode = "template" | "llm";
@@ -8,8 +8,19 @@ export type RenderMode = "template" | "llm";
 export interface RenderedPosition {
   readonly positionId: PositionId;
   readonly positionLabel: string;
+  /**
+   * The slot named for the board, where a group heading already carries the
+   * side: 「あなた・これまで」 becomes 「これまで」 once it sits under 「あなた」.
+   */
+  readonly shortLabel: string;
   readonly cardName: string;
   readonly orientationLabel: string;
+  /**
+   * Which side of the spread this slot belongs to. Carried through from the
+   * spread because the synthesis refers to it — 「あなたと相手のカードは…」 is
+   * meaningless if the surface cannot show which cards those are.
+   */
+  readonly group?: PositionGroup;
   /** The interpretation itself. */
   readonly text: string;
 }
