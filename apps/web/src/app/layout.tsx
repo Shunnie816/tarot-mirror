@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 
+import { SessionProvider } from "@/lib/session/provider";
+
 import "../design-system/tokens.css";
 import "../design-system/tokens.board.css";
 import "../design-system/board.css";
@@ -45,7 +47,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja" className={`${serif.variable} ${sans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   );
 }

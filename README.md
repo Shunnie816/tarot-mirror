@@ -43,7 +43,7 @@ Spread   ─┤
 | `packages/content` | i18n 辞書とトークン。**文言はすべてここにしかない**。`tone.ts` の禁止表現リストは UI コピー・Template・LLM 検証の3箇所が共有する |
 | `packages/decks` | カードデータ（静的JSON）と zod スキーマ。クライアントバンドルに載るため zod は実行時に走らせず、検証はテストで行う |
 | `packages/engine` | Rule Engine 本体。DOM 非依存・外部依存なしの純TS |
-| `apps/web` | Next.js（未着手 / Phase 7） |
+| `apps/web` | Next.js (App Router)。デザインシステムと画面。Firebase に触れるのはセッションと保存だけ |
 | `functions` | Cloud Functions v2、LLM 整形のみ（未着手 / Phase 9） |
 
 ## コマンド
@@ -55,7 +55,28 @@ pnpm validate:decks            # デッキデータの整合性のみ
 pnpm typecheck
 pnpm demo:reading              # LLM なしでリーディングを1件生成して表示
 pnpm demo:reading -- <seed>    # 同じ seed で再現
+
+cp apps/web/.env.example apps/web/.env.local   # 初回のみ
+pnpm emulators                 # Auth / Firestore エミュレータ（JDK が要る）
+pnpm dev
 ```
+
+## Firebase
+
+| 項目 | 値 |
+|---|---|
+| プロジェクト | `tarot-mirror-a74b6` |
+| Firestore リージョン | **`asia-northeast1`（確定・変更不可）** |
+
+Firestore のロケーションは後から変更できないので、Cloud Functions のリージョンも
+これに揃える。`(default)` データベースを Native モードで作成済み。
+
+`.env.local` の設定値は秘密情報ではない。クライアントバンドルに載る公開識別子で、
+データを守っているのは `firestore.rules` のほう。`NEXT_PUBLIC_FIREBASE_EMULATORS=1`
+にするとエミュレータに繋がる。
+
+**設定値が無くてもアプリは動く。** カードを引いて読むところまでは Firebase に
+一切触れないため、その場合は保存だけが利用できない状態になる。
 
 ## 設計上の判断メモ
 
@@ -69,6 +90,12 @@ pnpm demo:reading -- <seed>    # 同じ seed で再現
   （Design Philosophy「slow down and think」）。
 - **カードデータは Firestore に置かない。** 不変で全ユーザー共通なので、
   読み取り課金もオフライン非対応も受け入れる理由がない。
+- **サインアップを求めない。** 匿名で黙って始め、あとから Google に繋げる。
+  認証が失敗したときの行き先も「エラー画面」ではなく「保存のない状態」。
+  読むことだけは最後まで続けられる、という不変条件はここでも同じ。
+- **Firebase SDK を初期バンドルに載せない。** 動的 import 越しにのみ読み込む。
+  静的に import すると `/` の First Load JS が 139kB → 292kB になり、
+  保存を使わない人にも読み込みの重さだけを負わせることになる。
 
 ## 開発の進め方
 
@@ -79,5 +106,5 @@ LLM なしで読み物が完成することが壊れていないかを、テス�
 
 ## 現状
 
-Phase 1–6 完了（132 tests / typecheck clean）。次は Phase 7（`claude design` によるデザインシステムと Next.js UI）。
+Phase 1–7 完了（148 tests / typecheck clean）。Phase 8（永続化）に着手中で、匿名 Auth まで完了。
 残作業は GitHub Issue に起票済み。実装計画は `~/.claude/plans/project-overview-md-ai-llm-tarot-mirror-tidy-parnas.md`。
