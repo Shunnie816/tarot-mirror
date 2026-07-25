@@ -5,27 +5,58 @@
  * 値はすべて tokens.css の変数を経由する（ここに生の色やサイズを置かない）。
  */
 
-.reading-page {
-  min-height: 100vh;
-  background: var(--color-surface-base);
-  color: var(--color-text-primary);
-  font-family: var(--font-ui);
-  display: flex;
-  flex-direction: column;
+/* 盤面を持つので外枠は --measure-board まで広がるが、
+   読み物ブロック（.screen-reading-block）だけが --measure-reading に従う。
+   ※ .screen-reading-block の font-size 併記は必須。--measure-reading の上限が
+      em なので、本文サイズを与えないと 16px 基準で解決され全角32字相当まで縮む。 */
+.reading-layout {
   align-items: center;
-  padding: var(--space-2xl) var(--space-md) var(--space-3xl);
+  gap: var(--space-2xl);
 }
 
-/* 読み物カラム。
-   font-size の併記は必須。--measure-reading の上限が em なので、ここで本文サイズを
-   与えないと 16px 基準で解決され、行長が全角32字相当まで縮む。 */
-.reading-column {
-  width: 100%;
-  font-size: var(--text-body);
-  max-width: var(--measure-reading);
+.reading-body {
+  gap: var(--space-xl);
+}
+
+/* ---------- 群 ---------- */
+
+.reading-group,
+.reading-group-open {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xl);
+  gap: var(--space-xl);
+}
+
+.reading-group-open:focus-visible {
+  outline: 2px solid var(--color-accent-depth);
+  outline-offset: 6px;
+}
+
+/* 群の切れ目は上に実線。ポジション名の細い罫線より強くして、
+   「あなた」と「相手」の境目が読み流しでも分かるようにする。 */
+.group-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-top: var(--space-md);
+  border-top: var(--control-border-width) solid var(--color-border-strong);
+}
+
+.group-name {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  color: var(--color-accent-depth);
+}
+
+.group-note {
+  font-family: var(--font-reading);
+  font-weight: 300;
+  font-size: var(--text-quote);
+  line-height: 1.9;
+  color: var(--color-text-quiet);
 }
 
 /* ---------- header ---------- */
@@ -84,13 +115,8 @@
 
 /* ---------- ポジション ---------- */
 
-.reading-positions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
-}
-
 .position {
+  scroll-margin-top: var(--space-xl);
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
@@ -155,39 +181,6 @@
   line-height: var(--leading-reading);
   color: var(--color-text-primary);
   text-wrap: pretty;
-}
-
-/* ---------- 開くボタン ---------- */
-
-/* 幅いっぱい・枠線のみ。スロット的な連打を誘発する見た目にしない。
-   ホバーは背景がわずかに持ち上がるだけで、ホバー限定の情報は持たせない。 */
-.reveal-button {
-  appearance: none;
-  width: 100%;
-  min-height: var(--control-min-height);
-  background: transparent;
-  border: var(--control-border-width) solid var(--color-border-accent);
-  border-radius: 3px;
-  color: var(--color-accent-depth);
-  font-family: var(--font-ui);
-  font-size: var(--text-label);
-  font-weight: 500;
-  letter-spacing: var(--tracking-label);
-  cursor: pointer;
-  padding: var(--space-sm) var(--space-md);
-  transition:
-    background var(--motion-duration-ui) var(--motion-ease-out),
-    border-color var(--motion-duration-ui) var(--motion-ease-out);
-}
-
-.reveal-button:hover {
-  background: var(--color-surface-raised);
-  border-color: var(--color-accent-depth-quiet);
-}
-
-.reveal-button:focus-visible {
-  outline: 2px solid var(--color-accent-depth);
-  outline-offset: 3px;
 }
 
 /* ---------- 開示アニメーション ---------- */
