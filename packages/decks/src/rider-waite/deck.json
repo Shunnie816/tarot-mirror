@@ -406,6 +406,147 @@
       "themes": ["theme.completion", "theme.release"],
       "reflectionSeeds": ["q.whatAreYouHolding", "q.whatDoYouNeedFromOthers"],
       "axes": { "agency": 1, "tempo": 0, "friction": 4, "focus": 1 }
+    },
+
+    {
+      "id": "rw.cups.01",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 1,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.feelingStirs", "kw.tenderness", "kw.openHeart"],
+        "reversed": ["kw.heldFeeling", "kw.numbness", "kw.guardedHeart"]
+      },
+      "themes": ["theme.threshold", "theme.connection"],
+      "reflectionSeeds": ["q.whatAreYouNotSaying", "q.whatChangedRecently"],
+      "axes": { "agency": 0, "tempo": 1, "friction": 0, "focus": 1 }
+    },
+    {
+      "id": "rw.cups.02",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 2,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.mutualRegard", "kw.meeting", "kw.exchange"],
+        "reversed": ["kw.unevenExchange", "kw.missedMeeting", "kw.withheldWarmth"]
+      },
+      "themes": ["theme.connection", "theme.choice"],
+      "reflectionSeeds": ["q.whatDoYouNeedFromOthers", "q.whatAreYouNotSaying"],
+      "axes": { "agency": 0, "tempo": 0, "friction": 1, "focus": -1 }
+    },
+    {
+      "id": "rw.cups.03",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 3,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.sharedJoy", "kw.celebration", "kw.belonging"],
+        "reversed": ["kw.crowdedness", "kw.surfaceCheer", "kw.leftOut"]
+      },
+      "themes": ["theme.connection", "theme.nurture"],
+      "reflectionSeeds": ["q.whereDoYouFeelMostYourself", "q.whatIsWorkingAlready"],
+      "axes": { "agency": 0, "tempo": 1, "friction": 0, "focus": -2 }
+    },
+    {
+      "id": "rw.cups.04",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 4,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.discontent", "kw.turningInward", "kw.overlookedOffer"],
+        "reversed": ["kw.renewedInterest", "kw.noticing", "kw.unsettled"]
+      },
+      "themes": ["theme.inward", "theme.resistance"],
+      "reflectionSeeds": ["q.whatIsAlreadyEnough", "q.whatAreYouAvoidingLookingAt"],
+      "axes": { "agency": -1, "tempo": -1, "friction": 2, "focus": 2 }
+    },
+    {
+      "id": "rw.cups.05",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 5,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.grief", "kw.lookingBack", "kw.whatRemains"],
+        "reversed": ["kw.turningToWhatRemains", "kw.lingeringRegret", "kw.beginningToMove"]
+      },
+      "themes": ["theme.release", "theme.inward"],
+      "reflectionSeeds": ["q.whatIsWorkingAlready", "q.whatWouldYouTellAFriend"],
+      "axes": { "agency": -1, "tempo": -1, "friction": 3, "focus": 2 }
+    },
+    {
+      "id": "rw.cups.06",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 6,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.memory", "kw.simpleKindness", "kw.familiarity"],
+        "reversed": ["kw.stuckInMemory", "kw.idealizedPast", "kw.outgrown"]
+      },
+      "themes": ["theme.cycle", "theme.connection"],
+      "reflectionSeeds": ["q.whatChangedRecently", "q.whatAreYouHolding"],
+      "axes": { "agency": 0, "tempo": -1, "friction": 1, "focus": 1 }
+    },
+    {
+      "id": "rw.cups.07",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 7,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.manyOptions", "kw.imagination", "kw.unchosen"],
+        "reversed": ["kw.narrowingDown", "kw.disillusion", "kw.groundedChoice"]
+      },
+      "themes": ["theme.choice", "theme.uncertainty"],
+      "reflectionSeeds": ["q.whichSideAreYouLeaning", "q.whatSmallStepIsAvailable"],
+      "axes": { "agency": -1, "tempo": 0, "friction": 2, "focus": 2 }
+    },
+    {
+      "id": "rw.cups.08",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 8,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.walkingAway", "kw.seekingMore", "kw.quietDeparture"],
+        "reversed": ["kw.hesitantDeparture", "kw.returning", "kw.unfinishedLeaving"]
+      },
+      "themes": ["theme.release", "theme.threshold"],
+      "reflectionSeeds": ["q.whatFeelsUnfinished", "q.whatWouldYouDoIfReady"],
+      "axes": { "agency": 1, "tempo": 1, "friction": 2, "focus": 1 }
+    },
+    {
+      "id": "rw.cups.09",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 9,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.contentment", "kw.wishFulfilled", "kw.selfSatisfaction"],
+        "reversed": ["kw.hollowSatisfaction", "kw.wantingMore", "kw.unnamedWish"]
+      },
+      "themes": ["theme.completion", "theme.nurture"],
+      "reflectionSeeds": ["q.whatWouldEnoughLookLike", "q.whatIsAlreadyEnough"],
+      "axes": { "agency": 0, "tempo": 0, "friction": 0, "focus": 1 }
+    },
+    {
+      "id": "rw.cups.10",
+      "arcana": "minor",
+      "suit": "cups",
+      "rank": 10,
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.sharedWholeness", "kw.harmony", "kw.lastingBond"],
+        "reversed": ["kw.strainedHarmony", "kw.unspokenGap", "kw.idealVsReal"]
+      },
+      "themes": ["theme.completion", "theme.connection"],
+      "reflectionSeeds": ["q.whatDoYouNeedFromOthers", "q.whatAreYouNotSaying"],
+      "axes": { "agency": 0, "tempo": 0, "friction": 1, "focus": -2 }
     }
   ]
 }

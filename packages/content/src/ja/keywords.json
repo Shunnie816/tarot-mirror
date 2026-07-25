@@ -204,5 +204,72 @@
   "kw.nearingEnd": "終わりが見えていること",
   "kw.puttingDown": "下ろすこと",
   "kw.delegating": "渡すこと",
-  "kw.reluctantRelease": "手放しきれない重さ"
+  "kw.reluctantRelease": "手放しきれない重さ",
+
+  "kw.feelingStirs": "心が動き始めること",
+  "kw.tenderness": "やわらかさ",
+  "kw.openHeart": "開いている心",
+  "kw.heldFeeling": "言えないままの気持ち",
+  "kw.numbness": "感じにくさ",
+  "kw.guardedHeart": "閉じている心",
+
+  "kw.mutualRegard": "お互いを見ていること",
+  "kw.meeting": "向き合うこと",
+  "kw.exchange": "やりとり",
+  "kw.unevenExchange": "かたよったやりとり",
+  "kw.missedMeeting": "すれ違い",
+  "kw.withheldWarmth": "渡しそびれた温かさ",
+
+  "kw.celebration": "祝うこと",
+  "kw.belonging": "居場所があること",
+  "kw.crowdedness": "人といて疲れること",
+  "kw.surfaceCheer": "うわべの明るさ",
+  "kw.leftOut": "輪の外にいる感じ",
+
+  "kw.discontent": "満たされなさ",
+  "kw.turningInward": "内へこもること",
+  "kw.overlookedOffer": "見落としている差し出しもの",
+  "kw.renewedInterest": "戻ってきた関心",
+  "kw.noticing": "気づき始めること",
+
+  "kw.grief": "惜しむ気持ち",
+  "kw.lookingBack": "振り返っていること",
+  "kw.whatRemains": "まだ残っているもの",
+  "kw.turningToWhatRemains": "残っているほうを見ること",
+  "kw.lingeringRegret": "長引く心残り",
+  "kw.beginningToMove": "動き出しかけていること",
+
+  "kw.memory": "覚えていること",
+  "kw.simpleKindness": "素朴なやさしさ",
+  "kw.familiarity": "なじみ",
+  "kw.stuckInMemory": "過去にとどまること",
+  "kw.idealizedPast": "美化された過去",
+  "kw.outgrown": "合わなくなったもの",
+
+  "kw.manyOptions": "たくさんの選択肢",
+  "kw.unchosen": "まだ選んでいないこと",
+  "kw.narrowingDown": "絞り込むこと",
+  "kw.disillusion": "思い描きすぎたと気づくこと",
+  "kw.groundedChoice": "地に足のついた選択",
+
+  "kw.walkingAway": "離れていくこと",
+  "kw.seekingMore": "これではないと感じること",
+  "kw.quietDeparture": "静かな離脱",
+  "kw.hesitantDeparture": "離れきれないこと",
+  "kw.returning": "戻ること",
+  "kw.unfinishedLeaving": "中途半端な別れ",
+
+  "kw.contentment": "満ち足り",
+  "kw.wishFulfilled": "望みが形になること",
+  "kw.selfSatisfaction": "自分で満たせている感じ",
+  "kw.hollowSatisfaction": "満たされきらない充足",
+  "kw.wantingMore": "もっと欲しい気持ち",
+  "kw.unnamedWish": "名前のついていない望み",
+
+  "kw.sharedWholeness": "分かち合えているまとまり",
+  "kw.harmony": "調和",
+  "kw.lastingBond": "続いていくつながり",
+  "kw.strainedHarmony": "無理をした調和",
+  "kw.unspokenGap": "口にしない隔たり",
+  "kw.idealVsReal": "理想と実際の差"
 }
