@@ -829,6 +829,234 @@
       "themes": ["theme.completion", "theme.structure"],
       "reflectionSeeds": ["q.whoseVoiceIsThis", "q.whereDoYouFeelMostYourself"],
       "axes": { "agency": 0, "tempo": -1, "friction": 1, "focus": -2 }
+    },
+
+    {
+      "id": "rw.wands.page",
+      "arcana": "minor",
+      "suit": "wands",
+      "court": "page",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.learnerStance", "kw.urge", "kw.curiosity"],
+        "reversed": ["kw.notYetSkilled", "kw.scatteredHaste", "kw.unclearAim"]
+      },
+      "themes": ["theme.threshold", "theme.movement"],
+      "reflectionSeeds": ["q.whatAreYouLearning", "q.whatRoleAreYouTaking"],
+      "axes": { "agency": 1, "tempo": 1, "friction": 1, "focus": -1 }
+    },
+    {
+      "id": "rw.wands.knight",
+      "arcana": "minor",
+      "suit": "wands",
+      "court": "knight",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.moverStance", "kw.boldness", "kw.singleDirection"],
+        "reversed": ["kw.rushedMove", "kw.losingInterest", "kw.unsteadyCourse"]
+      },
+      "themes": ["theme.movement", "theme.resistance"],
+      "reflectionSeeds": ["q.whatPaceSuitsYou", "q.whatRoleAreYouTaking"],
+      "axes": { "agency": 2, "tempo": 2, "friction": 2, "focus": -1 }
+    },
+    {
+      "id": "rw.wands.queen",
+      "arcana": "minor",
+      "suit": "wands",
+      "court": "queen",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.holderStance", "kw.warmPresence", "kw.selfAssurance"],
+        "reversed": ["kw.performedWarmth", "kw.guardedPresence", "kw.dependentOnGaze"]
+      },
+      "themes": ["theme.authority", "theme.connection"],
+      "reflectionSeeds": ["q.whoAreYouBeingFor", "q.whereDoYouFeelMostYourself"],
+      "axes": { "agency": 1, "tempo": 0, "friction": 1, "focus": 1 }
+    },
+    {
+      "id": "rw.wands.king",
+      "arcana": "minor",
+      "suit": "wands",
+      "court": "king",
+      "element": "fire",
+      "keywords": {
+        "upright": ["kw.directorStance", "kw.settingDirection", "kw.takingResponsibility"],
+        "reversed": ["kw.overridingOthers", "kw.impatientLead", "kw.unsharedVision"]
+      },
+      "themes": ["theme.authority", "theme.movement"],
+      "reflectionSeeds": ["q.whoDecides", "q.whatRoleAreYouTaking"],
+      "axes": { "agency": 2, "tempo": 1, "friction": 2, "focus": 0 }
+    },
+
+    {
+      "id": "rw.cups.page",
+      "arcana": "minor",
+      "suit": "cups",
+      "court": "page",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.learnerStance", "kw.openHeart", "kw.unexpectedFeeling"],
+        "reversed": ["kw.notYetSkilled", "kw.overwhelmedFeeling", "kw.guardedHeart"]
+      },
+      "themes": ["theme.threshold", "theme.connection"],
+      "reflectionSeeds": ["q.whatAreYouLearning", "q.whatChangedRecently"],
+      "axes": { "agency": 0, "tempo": 1, "friction": 1, "focus": 1 }
+    },
+    {
+      "id": "rw.cups.knight",
+      "arcana": "minor",
+      "suit": "cups",
+      "court": "knight",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.moverStance", "kw.followingFeeling", "kw.offering"],
+        "reversed": ["kw.driftingFeeling", "kw.idealizedOffer", "kw.unlandedGesture"]
+      },
+      "themes": ["theme.movement", "theme.connection"],
+      "reflectionSeeds": ["q.whoAreYouBeingFor", "q.whatDoYouNeedFromOthers"],
+      "axes": { "agency": 1, "tempo": 1, "friction": 1, "focus": 1 }
+    },
+    {
+      "id": "rw.cups.queen",
+      "arcana": "minor",
+      "suit": "cups",
+      "court": "queen",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.holderStance", "kw.deepFeeling", "kw.holdingSpace"],
+        "reversed": ["kw.absorbedFeeling", "kw.blurredBoundary", "kw.selfNeglect"]
+      },
+      "themes": ["theme.nurture", "theme.inward"],
+      "reflectionSeeds": ["q.whatBoundaryIsMissing", "q.whereAreYouHoldingBack"],
+      "axes": { "agency": 0, "tempo": -1, "friction": 1, "focus": 2 }
+    },
+    {
+      "id": "rw.cups.king",
+      "arcana": "minor",
+      "suit": "cups",
+      "court": "king",
+      "element": "water",
+      "keywords": {
+        "upright": ["kw.directorStance", "kw.steadyFeeling", "kw.takingResponsibility"],
+        "reversed": ["kw.dammedFeeling", "kw.calmOnTheSurface", "kw.distantCare"]
+      },
+      "themes": ["theme.authority", "theme.nurture"],
+      "reflectionSeeds": ["q.whatAreYouNotSaying", "q.whatRoleAreYouTaking"],
+      "axes": { "agency": 1, "tempo": -1, "friction": 2, "focus": 0 }
+    },
+
+    {
+      "id": "rw.swords.page",
+      "arcana": "minor",
+      "suit": "swords",
+      "court": "page",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.learnerStance", "kw.curiosity", "kw.watchfulness"],
+        "reversed": ["kw.notYetSkilled", "kw.hastyConclusion", "kw.wordsAhead"]
+      },
+      "themes": ["theme.clarity", "theme.threshold"],
+      "reflectionSeeds": ["q.whatAreYouLearning", "q.whatAreYouNotSaying"],
+      "axes": { "agency": 1, "tempo": 1, "friction": 2, "focus": 0 }
+    },
+    {
+      "id": "rw.swords.knight",
+      "arcana": "minor",
+      "suit": "swords",
+      "court": "knight",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.moverStance", "kw.directSpeech", "kw.singleDirection"],
+        "reversed": ["kw.bluntness", "kw.rushedJudgment", "kw.exhaustingPace"]
+      },
+      "themes": ["theme.movement", "theme.resistance"],
+      "reflectionSeeds": ["q.whatPaceSuitsYou", "q.whatWouldYouDoDifferently"],
+      "axes": { "agency": 2, "tempo": 2, "friction": 3, "focus": 0 }
+    },
+    {
+      "id": "rw.swords.queen",
+      "arcana": "minor",
+      "suit": "swords",
+      "court": "queen",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.holderStance", "kw.clearBoundary", "kw.honestSight"],
+        "reversed": ["kw.coldTone", "kw.overGuarded", "kw.lonelyClarity"]
+      },
+      "themes": ["theme.clarity", "theme.authority"],
+      "reflectionSeeds": ["q.whatBoundaryIsMissing", "q.whatDoYouNeedFromOthers"],
+      "axes": { "agency": 1, "tempo": 0, "friction": 2, "focus": 1 }
+    },
+    {
+      "id": "rw.swords.king",
+      "arcana": "minor",
+      "suit": "swords",
+      "court": "king",
+      "element": "air",
+      "keywords": {
+        "upright": ["kw.directorStance", "kw.principle", "kw.takingResponsibility"],
+        "reversed": ["kw.rigidPrinciple", "kw.judgingOthers", "kw.detachedRule"]
+      },
+      "themes": ["theme.authority", "theme.clarity"],
+      "reflectionSeeds": ["q.whoseVoiceIsThis", "q.whatWouldYouTellAFriend"],
+      "axes": { "agency": 2, "tempo": 0, "friction": 2, "focus": 0 }
+    },
+
+    {
+      "id": "rw.pentacles.page",
+      "arcana": "minor",
+      "suit": "pentacles",
+      "court": "page",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.learnerStance", "kw.steadyStudy", "kw.practicalCuriosity"],
+        "reversed": ["kw.notYetSkilled", "kw.stalledStart", "kw.distractedFocus"]
+      },
+      "themes": ["theme.threshold", "theme.structure"],
+      "reflectionSeeds": ["q.whatAreYouLearning", "q.whatSmallStepIsAvailable"],
+      "axes": { "agency": 1, "tempo": 0, "friction": 1, "focus": 0 }
+    },
+    {
+      "id": "rw.pentacles.knight",
+      "arcana": "minor",
+      "suit": "pentacles",
+      "court": "knight",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.moverStance", "kw.steadyPace", "kw.reliability"],
+        "reversed": ["kw.stalledPace", "kw.dullRoutine", "kw.resistanceToChange"]
+      },
+      "themes": ["theme.structure", "theme.cycle"],
+      "reflectionSeeds": ["q.whatPaceSuitsYou", "q.whatIsWorkingAlready"],
+      "axes": { "agency": 1, "tempo": -1, "friction": 1, "focus": 0 }
+    },
+    {
+      "id": "rw.pentacles.queen",
+      "arcana": "minor",
+      "suit": "pentacles",
+      "court": "queen",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.holderStance", "kw.practicalCare", "kw.groundedness"],
+        "reversed": ["kw.overExtendedCare", "kw.selfNeglect", "kw.tiredProvider"]
+      },
+      "themes": ["theme.nurture", "theme.structure"],
+      "reflectionSeeds": ["q.whereAreYouHoldingBack", "q.whatIsAlreadyEnough"],
+      "axes": { "agency": 1, "tempo": -1, "friction": 1, "focus": 1 }
+    },
+    {
+      "id": "rw.pentacles.king",
+      "arcana": "minor",
+      "suit": "pentacles",
+      "court": "king",
+      "element": "earth",
+      "keywords": {
+        "upright": ["kw.directorStance", "kw.stewardship", "kw.takingResponsibility"],
+        "reversed": ["kw.holdingTooTight", "kw.riskAversion", "kw.measuringWorth"]
+      },
+      "themes": ["theme.authority", "theme.structure"],
+      "reflectionSeeds": ["q.whoDecides", "q.whatRoleAreYouTaking"],
+      "axes": { "agency": 2, "tempo": -1, "friction": 1, "focus": 0 }
     }
   ]
 }
