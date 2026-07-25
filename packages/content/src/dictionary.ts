@@ -1,6 +1,7 @@
 import type {
   CardId,
   FramingId,
+  GroupId,
   InsightId,
   KeywordId,
   Locale,
@@ -19,6 +20,14 @@ export interface InsightCopy {
   readonly body: string;
 }
 
+/** Copy for a side of a spread that is laid out and read as a unit. */
+export interface GroupCopy {
+  /** Names the side, e.g. 「あなた」. */
+  readonly label: string;
+  /** One line explaining where the side sits on the board and why. */
+  readonly note: string;
+}
+
 /**
  * One locale's full text surface. Every ID the engine can emit must resolve
  * here — `dictionary.test.ts` fails the build if any is missing.
@@ -33,7 +42,15 @@ export interface Dictionary {
   readonly framings: Readonly<Record<FramingId, string>>;
   readonly insights: Readonly<Record<InsightId, InsightCopy>>;
   readonly positions: Readonly<Record<PositionId, string>>;
+  /**
+   * The same slot named for the board, where the group heading already carries
+   * the side: 「あなた・これまで」 becomes 「これまで」 once it sits under 「あなた」.
+   */
+  readonly positionsShort: Readonly<Record<PositionId, string>>;
   readonly spreads: Readonly<Record<SpreadLabelId, string>>;
+  /** What choosing this spread means — shown when picking, not while reading. */
+  readonly spreadNotes: Readonly<Record<SpreadLabelId, string>>;
+  readonly groups: Readonly<Record<GroupId, GroupCopy>>;
   readonly ui: Readonly<Record<UiId, string>>;
 }
 
@@ -67,7 +84,10 @@ export interface CopyResolver {
   framing(id: FramingId, vars: Readonly<Record<string, string>>): string;
   insight(id: InsightId): InsightCopy;
   position(id: PositionId): string;
+  positionShort(id: PositionId): string;
   spread(id: SpreadLabelId): string;
+  spreadNote(id: SpreadLabelId): string;
+  group(id: GroupId): GroupCopy;
   ui(id: UiId): string;
   /** Non-throwing probe, for completeness tests and tooling. */
   has(kind: keyof Omit<Dictionary, "locale">, id: string): boolean;
@@ -94,7 +114,10 @@ export function createResolver(dictionary: Dictionary): CopyResolver {
       interpolate(lookup(dictionary.framings, "framing", id), vars),
     insight: (id) => lookup(dictionary.insights, "insight", id),
     position: (id) => lookup(dictionary.positions, "position", id),
+    positionShort: (id) => lookup(dictionary.positionsShort, "positionShort", id),
     spread: (id) => lookup(dictionary.spreads, "spread", id),
+    spreadNote: (id) => lookup(dictionary.spreadNotes, "spreadNote", id),
+    group: (id) => lookup(dictionary.groups, "group", id),
     ui: (id) => lookup(dictionary.ui, "ui", id),
     has: (kind, id) => Object.hasOwn(dictionary[kind], id),
   };

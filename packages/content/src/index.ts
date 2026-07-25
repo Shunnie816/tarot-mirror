@@ -1,9 +1,12 @@
 import cards from "./ja/cards.json" with { type: "json" };
 import framings from "./ja/framings.json" with { type: "json" };
+import groups from "./ja/groups.json" with { type: "json" };
 import insights from "./ja/insights.json" with { type: "json" };
 import keywords from "./ja/keywords.json" with { type: "json" };
+import positionsShort from "./ja/positions-short.json" with { type: "json" };
 import positions from "./ja/positions.json" with { type: "json" };
 import questions from "./ja/questions.json" with { type: "json" };
+import spreadNotes from "./ja/spread-notes.json" with { type: "json" };
 import spreads from "./ja/spreads.json" with { type: "json" };
 import themes from "./ja/themes.json" with { type: "json" };
 import ui from "./ja/ui.json" with { type: "json" };
@@ -25,7 +28,10 @@ export const ja: Dictionary = {
   framings,
   insights,
   positions,
+  positionsShort,
   spreads,
+  spreadNotes,
+  groups,
   ui,
 };
 

@@ -12,15 +12,37 @@ import { findToneViolations } from "./tone.js";
  * than shipping a fortune-telling app.
  */
 describe("tone rules", () => {
+  /**
+   * Every table, not just the ones a reading is assembled from. Screen copy is
+   * read by the same person in the same sitting, so a prediction smuggled into
+   * a button label counts exactly as much as one in an interpretation.
+   */
   const everyCopyString = (): Array<[string, string]> => {
     const entries: Array<[string, string]> = [];
-    for (const [id, text] of Object.entries(ja.keywords)) entries.push([id, text]);
-    for (const [id, text] of Object.entries(ja.themes)) entries.push([id, text]);
-    for (const [id, text] of Object.entries(ja.questions)) entries.push([id, text]);
-    for (const [id, text] of Object.entries(ja.framings)) entries.push([id, text]);
+    const flat = {
+      cards: ja.cards,
+      keywords: ja.keywords,
+      themes: ja.themes,
+      questions: ja.questions,
+      framings: ja.framings,
+      positions: ja.positions,
+      positionsShort: ja.positionsShort,
+      spreads: ja.spreads,
+      spreadNotes: ja.spreadNotes,
+      ui: ja.ui,
+    };
+    for (const [table, record] of Object.entries(flat)) {
+      for (const [id, text] of Object.entries(record)) {
+        entries.push([`${table}/${id}`, text]);
+      }
+    }
     for (const [id, copy] of Object.entries(ja.insights)) {
-      entries.push([`${id}.label`, copy.label]);
-      entries.push([`${id}.body`, copy.body]);
+      entries.push([`insights/${id}.label`, copy.label]);
+      entries.push([`insights/${id}.body`, copy.body]);
+    }
+    for (const [id, copy] of Object.entries(ja.groups)) {
+      entries.push([`groups/${id}.label`, copy.label]);
+      entries.push([`groups/${id}.note`, copy.note]);
     }
     return entries;
   };
