@@ -1,0 +1,37 @@
+/* Tarot Mirror — 第2ラウンドで追加したトークン
+ *
+ * tokens.css の後に読み込む。既存トークンは変更していない。
+ * 判断は design-system/DECISIONS-round2.md を参照。
+ */
+
+:root {
+  /* ---------- 盤面（board） ---------- */
+  /* 盤面は読み物ではないので --measure-reading に従わない。
+     カードが横に並ぶぶんの幅が要るため、独立した上限を持つ。 */
+  --measure-board: clamp(18rem, 94vw, 58rem);
+  --tile-min-height: 88px; /* タップ領域 44px の2倍。文字だけのカード1枚分 */
+  --text-card-tile: clamp(1rem, 0.9rem + 0.5vw, 1.25rem); /* 盤面上のカード名 */
+  --space-tile-gap: 10px; /* カード間。3枚が 320px 幅でも並ぶ値 */
+  --radius-tile: 3px;
+  --motion-duration-place: 560ms; /* カードが置かれる */
+  --motion-stagger: 150ms; /* 群のなかの1枚ずつのずれ */
+
+  /* ---------- 入力部品（field / action） ---------- */
+  --color-field-surface: oklch(0.988 0.005 84);
+  --color-field-border: oklch(0.84 0.011 82);
+  --color-field-border-focus: oklch(0.63 0.028 253);
+  --color-field-placeholder: oklch(0.68 0.01 62);
+  --color-action-solid-surface: oklch(0.4 0.052 253); /* = accent-depth。前進のみに使う */
+  --color-action-solid-text: oklch(0.975 0.006 84);
+  --text-field: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem); /* = text-body。入力も読み物 */
+  --leading-field: 1.9;
+  --field-min-height: 9rem;
+  --tap-min: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-place: 1ms;
+    --motion-stagger: 0ms;
+  }
+}

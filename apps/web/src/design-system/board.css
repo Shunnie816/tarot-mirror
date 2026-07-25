@@ -1,0 +1,187 @@
+/* 盤面
+ *
+ * 物理的にカードを並べたときの配置を写したもの。8枚なら上段が「あなた」、
+ * 下段が「相手」で上下が鏡、右脇に「二人のあいだ」の2枚。
+ * この配置はエンジンの group と一致していて、本文の横断的な観察
+ * （「あなたと相手のカードは…」）が指している対象そのもの。
+ *
+ * メディアクエリを使っていない。2階層の flex-wrap だけで組んであるので、
+ * 幅がいくら狭くなっても行のなかの3枚は3枚のまま並ぶ。
+ */
+
+.board {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: stretch;
+}
+
+.board-main {
+  flex: 1 1 20rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* 脇（二人のあいだ）。PC では右に並び、狭い画面では下へ回り込む。
+   上下の鏡は幅に関係なく保たれる。 */
+.board-side {
+  flex: 1 1 13rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+.board-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.board-group-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.board-group-name {
+  font-family: var(--font-ui);
+  font-size: var(--text-label-small);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  color: var(--color-accent-depth);
+}
+
+/* 脇の群だけテラコッタ。どちらの側にも属さないことを色で示す。 */
+.board-group-name--side {
+  color: var(--color-accent-warm);
+}
+
+.board-group-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border-subtle);
+}
+
+.board-row {
+  display: flex;
+  gap: var(--space-tile-gap);
+  align-items: stretch;
+}
+
+.board-row--side {
+  flex-wrap: wrap;
+}
+
+/* 上下の鏡であることを明示する。8枚スプレッドの意味はこの対比にある。 */
+.board-mirror {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xs) 0;
+}
+
+.board-mirror-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border-accent);
+}
+
+.board-mirror-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-label-small);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-accent-depth-quiet);
+}
+
+/* ---------- カード ---------- */
+
+/* flex:1 1 0 の等分。狭いと縮むだけで、必ず横並びのまま。
+   カード名は文字だけなので画像枠のような最小幅がなく、320px でも3枚並ぶ。
+   画像を使えない制約の副産物。 */
+.tile {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2xs);
+  text-align: left;
+  min-height: var(--tile-min-height);
+  padding: var(--space-sm) var(--space-sm) var(--space-xs);
+  background: var(--color-surface-raised);
+  border: var(--control-border-width) solid var(--color-border-subtle);
+  border-radius: var(--radius-tile);
+  font-family: var(--font-ui);
+  cursor: pointer;
+  animation: reveal-rise var(--motion-duration-place) var(--motion-ease-out) both;
+  transition:
+    border-color var(--motion-duration-ui) var(--motion-ease-out),
+    background var(--motion-duration-ui) var(--motion-ease-out);
+}
+
+.tile--side {
+  flex: 1 1 9rem;
+}
+
+.tile:hover:not(:disabled) {
+  border-color: var(--color-accent-depth-quiet);
+  background: var(--color-surface-base);
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--color-accent-depth);
+  outline-offset: 3px;
+}
+
+.tile:disabled {
+  cursor: default;
+}
+
+.tile-position {
+  font-size: var(--text-label-small);
+  letter-spacing: 0.08em;
+  color: var(--color-text-quiet);
+  line-height: 1.5;
+}
+
+/* 盤面のカード名は明朝。盤面は UI 部品ではなく、象徴が置かれた場だから。 */
+.tile-name {
+  font-family: var(--font-reading);
+  font-size: var(--text-card-tile);
+  letter-spacing: var(--tracking-card);
+  line-height: 1.35;
+  color: var(--color-text-primary);
+}
+
+.tile-name--empty {
+  color: var(--color-border-strong);
+}
+
+.tile-orientation {
+  font-size: var(--text-label-small);
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* 向きを罫線の位置で示す。正位置は下辺、逆位置は上辺。
+   物理カードの上下が入れ替わることの写しで、盤面を引きで見ると
+   逆位置の分布が見える。カード名を180°回すと読めなくなるので採らない。 */
+.tile-edge {
+  height: 1px;
+  width: 100%;
+}
+
+.tile-edge--top {
+  background: var(--color-accent-warm);
+}
+
+.tile-edge--bottom {
+  margin-top: auto;
+  background: var(--color-border-strong);
+}

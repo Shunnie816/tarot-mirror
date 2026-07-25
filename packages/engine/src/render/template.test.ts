@@ -1,8 +1,8 @@
-import { findToneViolations } from "@tarot-mirror/content";
+import { findToneViolations, getResolver } from "@tarot-mirror/content";
 import { riderWaite } from "@tarot-mirror/decks";
 import { describe, expect, it } from "vitest";
 
-import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "../spreads.js";
+import { ALL_SPREADS, ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "../spreads.js";
 import { createReading } from "../synthesize.js";
 import { renderTemplate, toPlainText } from "./template.js";
 
@@ -48,6 +48,62 @@ describe("renderTemplate", () => {
 
   it("should mark itself as template-rendered", () => {
     expect(renderTemplate(reading("s")).mode).toBe("template");
+  });
+});
+
+/**
+ * The synthesis says things like 「あなたと相手のカードは…」. A surface can only
+ * show which cards those are if the rendering carries the side through, so the
+ * grouping is part of the contract rather than something the UI re-derives.
+ */
+describe("rendered positions and the side they belong to", () => {
+  it("should carry the group through for a spread that has sides", () => {
+    const rendered = renderTemplate(reading("s", RELATIONSHIP_8));
+
+    const groups = rendered.positions.map((p) => p.group);
+
+    expect(groups).toEqual([
+      "self",
+      "self",
+      "self",
+      "partner",
+      "partner",
+      "partner",
+      "relationship",
+      "relationship",
+    ]);
+  });
+
+  it("should leave the group unset for a spread that has no sides", () => {
+    const rendered = renderTemplate(reading("s", THREE_CARDS));
+
+    for (const position of rendered.positions) {
+      expect(position.group).toBeUndefined();
+    }
+  });
+
+  it("should have copy for every group any spread uses", () => {
+    const resolver = getResolver("ja");
+
+    const used = new Set(
+      ALL_SPREADS.flatMap((spread) =>
+        spread.positions.flatMap((p) => (p.group !== undefined ? [p.group] : [])),
+      ),
+    );
+
+    const missing = [...used].filter(
+      (group) => !resolver.has("groups", `group.${group}`),
+    );
+
+    expect(missing).toEqual([]);
+  });
+
+  it("should shorten the position label when a group heading already names the side", () => {
+    const rendered = renderTemplate(reading("s", RELATIONSHIP_8));
+    const first = rendered.positions[0]!;
+
+    expect(first.positionLabel).toBe("あなた・これまで");
+    expect(first.shortLabel).toBe("これまで");
   });
 });
 

@@ -1,0 +1,234 @@
+/* 質問入力・スプレッド選択・ドローの3画面。
+ * リーディング表示は reading.css。
+ */
+
+/* 盤面を含む画面は読み物より広い。読み物ブロックだけが --measure-reading を
+   持ち、盤面は --measure-board で広がる。中央軸は共有する。 */
+.screen {
+  min-height: 100vh;
+  background: var(--color-surface-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-ui);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-2xl) var(--space-md) var(--space-3xl);
+}
+
+.screen-narrow {
+  width: 100%;
+  max-width: var(--measure-reading);
+  font-size: var(--text-body);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.screen-wide {
+  width: 100%;
+  max-width: var(--measure-board);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* 広い画面のなかに置く読み物ブロック。行長は読み物の規則に従う。 */
+.screen-reading-block {
+  width: 100%;
+  max-width: var(--measure-reading);
+  font-size: var(--text-body);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.screen-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.screen-eyebrow {
+  font-size: var(--text-label-small);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-text-quiet);
+}
+
+.screen-title {
+  margin: 0;
+  font-family: var(--font-reading);
+  font-weight: 400;
+  font-size: var(--text-title);
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+
+.screen-lead,
+.screen-status {
+  margin: 0;
+  font-family: var(--font-reading);
+  font-weight: 300;
+  font-size: var(--text-quote);
+  line-height: 1.95;
+  color: var(--color-text-secondary);
+  text-wrap: pretty;
+}
+
+.screen-note {
+  font-size: var(--text-label-small);
+  letter-spacing: 0.04em;
+  color: var(--color-text-quiet);
+  line-height: 1.7;
+}
+
+/* ---------- 入力 ---------- */
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.field-label {
+  font-size: var(--text-label-small);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-text-quiet);
+}
+
+/* 入力文字は明朝。利用者の言葉は読み物の側に属する。
+   文字数カウンタは置かない（書く量を評価しているように見える）。 */
+.field {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--field-min-height);
+  resize: vertical;
+  padding: var(--space-md);
+  background: var(--color-field-surface);
+  border: var(--control-border-width) solid var(--color-field-border);
+  border-radius: var(--radius-tile);
+  font-family: var(--font-reading);
+  font-size: var(--text-field);
+  line-height: var(--leading-field);
+  color: var(--color-text-primary);
+  outline: none;
+  transition: border-color var(--motion-duration-ui) var(--motion-ease-out);
+}
+
+.field:focus {
+  border-color: var(--color-field-border-focus);
+}
+
+.field::placeholder {
+  color: var(--color-field-placeholder);
+}
+
+/* ---------- 操作 ---------- */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.button {
+  appearance: none;
+  min-height: var(--control-min-height);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-tile);
+  font-family: var(--font-ui);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  cursor: pointer;
+}
+
+/* 塗りは「前へ進む」だけに使う。装飾として使うと押させたい意図が出る。 */
+.button--solid {
+  background: var(--color-action-solid-surface);
+  color: var(--color-action-solid-text);
+  border: var(--control-border-width) solid var(--color-action-solid-surface);
+  transition: opacity var(--motion-duration-ui) var(--motion-ease-out);
+}
+
+.button--solid:hover {
+  opacity: 0.88;
+}
+
+.button--outline {
+  background: transparent;
+  color: var(--color-accent-depth);
+  border: var(--control-border-width) solid var(--color-border-accent);
+  transition: background var(--motion-duration-ui) var(--motion-ease-out);
+}
+
+.button--outline:hover {
+  background: var(--color-surface-raised);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-accent-depth);
+  outline-offset: 3px;
+}
+
+.button--block {
+  width: 100%;
+}
+
+/* 「問いを書かずに進む」を同じ大きさで横並びに置く。
+   スキップリンクにすると「書かないのは手抜き」という含みが出る。 */
+.button--half {
+  flex: 1 1 14rem;
+}
+
+.button--inline {
+  align-self: flex-start;
+  padding: var(--space-sm) var(--space-lg);
+}
+
+/* ---------- スプレッド選択 ---------- */
+
+.spread-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.spread-option {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: var(--control-border-width) solid var(--color-border-subtle);
+}
+
+.spread-option-name {
+  margin: 0;
+  font-family: var(--font-reading);
+  font-weight: 400;
+  font-size: var(--text-card);
+  letter-spacing: var(--tracking-card);
+}
+
+/* ---------- ドロー ---------- */
+
+.draw-controls {
+  max-width: var(--measure-reading);
+  font-size: var(--text-body);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.board-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.board-block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-sm) var(--space-md);
+}

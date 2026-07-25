@@ -31,6 +31,9 @@ export type PositionId = `pos.${string}`;
 /** A spread's display name, e.g. `spread.threeCards`. */
 export type SpreadLabelId = `spread.${string}`;
 
+/** A side of a spread that is read as a unit, e.g. `group.self`. */
+export type GroupId = `group.${string}`;
+
 /** Chrome and connective copy used by renderers, e.g. `ui.upright`. */
 export type UiId = `ui.${string}`;
 

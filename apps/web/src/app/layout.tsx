@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 
 import "../design-system/tokens.css";
+import "../design-system/tokens.board.css";
+import "../design-system/board.css";
+import "../design-system/screens.css";
 import "../design-system/reading.css";
 import "./globals.css";
 

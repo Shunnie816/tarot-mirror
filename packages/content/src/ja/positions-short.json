@@ -1,0 +1,19 @@
+{
+  "pos.single": "いま",
+
+  "pos.past": "これまで",
+  "pos.present": "いま",
+  "pos.future": "この先",
+
+  "pos.self.past": "これまで",
+  "pos.self.present": "いま",
+  "pos.self.future": "この先",
+  "pos.partner.past": "これまで",
+  "pos.partner.present": "いま",
+  "pos.partner.future": "この先",
+  "pos.relationship.catalyst": "動きを生むもの",
+  "pos.relationship.outcome": "向かう先",
+
+  "pos.oracle.theme": "テーマ",
+  "pos.oracle.advice": "そえる言葉"
+}

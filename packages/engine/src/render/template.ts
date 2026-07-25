@@ -36,8 +36,10 @@ export function renderPosition(
   return {
     positionId: position.positionId,
     positionLabel: resolver.position(position.positionId),
+    shortLabel: resolver.positionShort(position.positionId),
     cardName: resolver.card(position.cardId),
     orientationLabel: resolver.ui(`ui.${position.orientation}`),
+    ...(position.group !== undefined ? { group: position.group } : {}),
     text: resolver.framing(position.framing, {
       keywords: renderKeywords(position.keywords, resolver),
     }),
