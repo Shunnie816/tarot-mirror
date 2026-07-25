@@ -31,6 +31,21 @@ const MIXED_DECK = testDeck([
   testCard({ id: "test.major.cc", arcana: "major", element: "air" }),
 ]);
 
+/**
+ * Built here rather than borrowed from a real deck. The condition under test is
+ * "this deck contains only major arcana" — a test that leans on whichever deck
+ * happens to satisfy that today breaks the moment the deck data grows, which is
+ * exactly what happened when the minor arcana landed.
+ */
+const MAJORS_ONLY_DECK = testDeck(
+  [
+    testCard({ id: "test.major.aa", arcana: "major", element: "fire" }),
+    testCard({ id: "test.major.bb", arcana: "major", element: "water" }),
+    testCard({ id: "test.major.cc", arcana: "major", element: "air" }),
+  ],
+  "majorsOnly",
+);
+
 describe("suitDominance", () => {
   it("should emit an insight when at least half the suited cards share a suit", () => {
     const ctx = contextFor(THREE_CARDS, MIXED_DECK, [
@@ -63,12 +78,12 @@ describe("suitDominance", () => {
 
 describe("majorRatio", () => {
   it("should stay silent on a majors-only deck, where the ratio proves nothing", () => {
-    // Every possible draw from the MVP deck is 100% major arcana. Reporting
+    // Every possible draw from such a deck is 100% major arcana. Reporting
     // that as a pattern would be noise dressed up as insight.
-    const ctx = contextFor(THREE_CARDS, riderWaite, [
-      ["rw.major.00"],
-      ["rw.major.01"],
-      ["rw.major.02"],
+    const ctx = contextFor(THREE_CARDS, MAJORS_ONLY_DECK, [
+      ["test.major.aa"],
+      ["test.major.bb"],
+      ["test.major.cc"],
     ]);
 
     expect(majorRatio.evaluate(ctx)).toEqual([]);
