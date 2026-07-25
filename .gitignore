@@ -1,0 +1,30 @@
+node_modules/
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+*.local
+
+# env
+.env
+.env.local
+.env*.local
+
+# agent tooling（ローカル権限設定。共有しない）
+.claude/settings.local.json
+
+# editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# test output
+coverage/
