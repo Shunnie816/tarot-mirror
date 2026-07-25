@@ -64,5 +64,25 @@
   "rw.pentacles.07": "金貨の7",
   "rw.pentacles.08": "金貨の8",
   "rw.pentacles.09": "金貨の9",
-  "rw.pentacles.10": "金貨の10"
+  "rw.pentacles.10": "金貨の10",
+
+  "rw.wands.page": "杖の従者",
+  "rw.wands.knight": "杖の騎士",
+  "rw.wands.queen": "杖の女王",
+  "rw.wands.king": "杖の王",
+
+  "rw.cups.page": "聖杯の従者",
+  "rw.cups.knight": "聖杯の騎士",
+  "rw.cups.queen": "聖杯の女王",
+  "rw.cups.king": "聖杯の王",
+
+  "rw.swords.page": "剣の従者",
+  "rw.swords.knight": "剣の騎士",
+  "rw.swords.queen": "剣の女王",
+  "rw.swords.king": "剣の王",
+
+  "rw.pentacles.page": "金貨の従者",
+  "rw.pentacles.knight": "金貨の騎士",
+  "rw.pentacles.queen": "金貨の女王",
+  "rw.pentacles.king": "金貨の王"
 }
