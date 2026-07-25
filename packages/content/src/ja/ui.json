@@ -1,0 +1,10 @@
+{
+  "ui.upright": "正位置",
+  "ui.reversed": "逆位置",
+  "ui.synthesisHeading": "全体をとおして",
+  "ui.reflectionHeading": "考えてみるための問い",
+  "ui.questionHeading": "あなたの問い",
+  "ui.keywordSeparator": "、",
+  "ui.noInsights": "今回は、カードどうしの目立った重なりは見当たりませんでした。一枚ずつの意味に、ゆっくり目を通してみてください。",
+  "ui.closingNote": "ここに書かれていることは、決まった答えではありません。いまのあなたが受け取れるものだけ、持ち帰ってみてください。"
+}

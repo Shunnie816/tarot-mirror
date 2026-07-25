@@ -1,0 +1,19 @@
+{
+  "framing.origin.upright": "ここに至るまでの流れには、{keywords}が関わっていたのかもしれません。",
+  "framing.origin.reversed": "ここに至る過程では、{keywords}が十分に形にならないまま残されてきた、という読み方もできます。",
+
+  "framing.currentState.upright": "いまの状況には、{keywords}が表れているようです。",
+  "framing.currentState.reversed": "いまは{keywords}が、外に出る手前で内側にとどまっている時期なのかもしれません。",
+
+  "framing.trajectory.upright": "このまま進んだとき、{keywords}に近づいていく可能性があります。",
+  "framing.trajectory.reversed": "この先しばらくは、{keywords}を内側で整える時間になるのかもしれません。",
+
+  "framing.advice.upright": "試してみられることがあるとすれば、{keywords}に意識を向けることかもしれません。",
+  "framing.advice.reversed": "{keywords}を急いで進めるより、いったん立ち止まってみることもできます。",
+
+  "framing.catalyst.upright": "動きを生むきっかけとして、{keywords}が挙げられそうです。",
+  "framing.catalyst.reversed": "{keywords}が滞っていることが、動きにくさにつながっているのかもしれません。",
+
+  "framing.theme.upright": "全体を貫いているのは、{keywords}という色合いです。",
+  "framing.theme.reversed": "全体には、{keywords}が静かに伏在しているように見えます。"
+}
