@@ -16,7 +16,17 @@ import { anchorIdFor, countLabel, groupPositions } from "@/lib/groups";
  * 盤面と読み物は同じ画面に積むが、幅の制約は共有しない。盤面は横に広がり、
  * 読み物は1カラムのまま。盤面のカードを押すとその本文へ移動する。
  */
-export function ReadingView({ reading }: { readonly reading: RenderedReading }) {
+export function ReadingView({
+  reading,
+  footer,
+}: {
+  readonly reading: RenderedReading;
+  /**
+   * 画面のいちばん下に置かれるもの。読み物の一部ではないので段階開示の外に出す。
+   * ここに入れたものは、どこまで開いたかに関係なく最初から載っている。
+   */
+  readonly footer?: React.ReactNode;
+}) {
   const resolver = getResolver(reading.locale);
   const groups = useMemo(
     () => groupPositions(reading, resolver),
@@ -202,6 +212,8 @@ export function ReadingView({ reading }: { readonly reading: RenderedReading }) 
             </section>
           )}
         </div>
+
+        {footer}
       </div>
     </div>
   );
