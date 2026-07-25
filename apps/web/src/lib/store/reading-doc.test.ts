@@ -2,7 +2,12 @@ import { riderWaite } from "@tarot-mirror/decks";
 import { createReading, getSpread } from "@tarot-mirror/engine";
 import { describe, expect, it } from "vitest";
 
-import { fromReadingDoc, readingDocId, toReadingDoc } from "./reading-doc";
+import {
+  fromReadingDoc,
+  parseReadingDocId,
+  readingDocId,
+  toReadingDoc,
+} from "./reading-doc";
 
 /**
  * テスト観点
@@ -78,6 +83,27 @@ describe("readingDocId", () => {
     const id = readingDocId({ spreadId: "oneCard", seed: "a/../b" });
 
     expect(id).not.toContain("/");
+  });
+});
+
+describe("parseReadingDocId", () => {
+  it("should name the reading its id was built from", () => {
+    expect(parseReadingDocId(readingDocId(threeCards))).toEqual({
+      spreadId: "threeCards",
+      seed: "doc-test",
+    });
+  });
+
+  it("should recover a seed that contained characters needing escaping", () => {
+    const id = readingDocId({ spreadId: "oneCard", seed: "a/b c" });
+
+    expect(parseReadingDocId(id)?.seed).toBe("a/b c");
+  });
+
+  it("should refuse an id that names no reading", () => {
+    expect(parseReadingDocId("threeCards")).toBeNull();
+    expect(parseReadingDocId("threeCards-")).toBeNull();
+    expect(parseReadingDocId("-seed")).toBeNull();
   });
 });
 
