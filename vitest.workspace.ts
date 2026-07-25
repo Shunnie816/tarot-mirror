@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+
 import { defineWorkspace } from "vitest/config";
 
 export default defineWorkspace([
@@ -25,6 +27,21 @@ export default defineWorkspace([
       root: "./packages/content",
       environment: "node",
       include: ["src/**/*.test.ts"],
+    },
+  },
+  {
+    // 画面まわりで検証するのは、hooks に切り出したロジックだけ。
+    // カードの見た目や DOM の構造はテストしない。
+    test: {
+      name: "web",
+      root: "./apps/web",
+      environment: "jsdom",
+      include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    },
+    resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("./apps/web/src", import.meta.url)),
+      },
     },
   },
 ]);

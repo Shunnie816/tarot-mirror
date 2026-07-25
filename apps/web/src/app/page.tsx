@@ -1,5 +1,6 @@
 import { DEFAULT_LOCALE, getResolver } from "@tarot-mirror/content";
 
+import { AccountNotice } from "@/components/account-notice";
 import { QuestionForm } from "@/components/question-form";
 import { readQuestion, type RawParams } from "@/lib/flow";
 
@@ -28,6 +29,8 @@ export default async function Page({
           locale={DEFAULT_LOCALE}
           {...(question !== undefined ? { initialQuestion: question } : {})}
         />
+
+        <AccountNotice locale={DEFAULT_LOCALE} />
       </main>
     </div>
   );
