@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// Firestore セキュリティルール。
+//
+// ルールは加算的で、既定は拒否。ここに書かれていないパスは誰も読み書きできない。
+// カードデータは Firestore に存在しない（不変で全ユーザー共通なのでバンドル同梱）ため、
+// ここで守るのは利用者が自分で書いたものだけになる。
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 自分の領域だけ。Journal は定義上プライベートで、共有機能は MVP に入れない。
+    // 匿名ログインも request.auth を持つので、この一行で匿名利用者も守られる。
+    match /users/{uid}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
