@@ -2,6 +2,7 @@
 
 import { getResolver, type Locale } from "@tarot-mirror/content";
 import type { ReadingJSON } from "@tarot-mirror/engine";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useSession } from "@/lib/session/provider";
@@ -55,9 +56,13 @@ export function SaveReading({
 
   if (!kept) return null;
 
+  const resolver = getResolver(locale);
   return (
     <p className="screen-note reading-kept">
-      {getResolver(locale).ui("ui.readingKept")}
+      {resolver.ui("ui.readingKept")}{" "}
+      <Link href="/history" className="quiet-link">
+        {resolver.ui("ui.historyLink")}
+      </Link>
     </p>
   );
 }
