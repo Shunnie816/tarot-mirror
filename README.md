@@ -170,6 +170,41 @@ CI が `npm install --omit=dev` を毎回踏んでいる。
 ビルドが走らないまま古い成果物がデプロイされる。`node functions/build.mjs` は
 自分の位置からパスを解決するので、どこから呼ばれても動く。
 
+### 配信（App Hosting）
+
+画面は Firebase App Hosting に載せている。Next.js の SSR がそのまま動き、
+Auth / Firestore / Functions と同じプロジェクトに同居する。
+
+```bash
+firebase deploy --only apphosting        # ルールも Function も一緒なら firebase deploy
+```
+
+| 項目 | 値 |
+|---|---|
+| バックエンド | `web`（`firebase.json` の `apphosting`） |
+| ルートディレクトリ | `apps/web` |
+| 設定 | [`apps/web/apphosting.yaml`](./apps/web/apphosting.yaml) |
+| リージョン | `asia-east1` — **App Hosting に `asia-northeast1` は無い** |
+
+Firestore と Function は `asia-northeast1` のまま。画面の配信リージョンだけが
+違っていても困らない。整形の callable を叩くのはブラウザで、宛先のリージョンは
+`lib/firebase/client.ts` が持っているからで、SSR サーバーは経由しない。
+
+**`apphosting.yaml` はアプリのルートに置く。** リポジトリのルートではなく
+`rootDir` が指す先（`apps/web`）。置き場所を間違えても deploy は成功し、
+環境変数だけが黙って落ちる。
+
+**モノレポでも `rootDir` の外は捨てられない。** App Hosting は `firebase.json` の
+ある階層をまるごと固めて上げるので、`packages/*` は上がる。`.gitignore` に
+書いてあるものは自動で外れるため、`ignore` に足すのはそれ以外だけでいい。
+
+**`pnpm install` はどこで走ってもワークスペース全体を見る。** `apps/web` の中から
+呼んでも `pnpm-workspace.yaml` まで遡るので、`workspace:*` は解決される。
+`functions/` で踏んだ npm の罠（`EUNSUPPORTEDPROTOCOL`）はここでは起きない。
+
+**画面の本番ビルドは CI で毎回踏む。** dev サーバーでは通るのに `next build` で
+落ちるものがあり、それを知るのがロールアウトの瞬間になるのは遅すぎる。
+
 ## カードの絵
 
 1909年初版（ウェイト＝スミス版）のパブリックドメイン図版を、Wikimedia Commons の
@@ -243,6 +278,6 @@ LLM なしで読み物が完成することが壊れていないかを、テス�
 
 ## 現状
 
-Phase 1–9 完了 + Issue #14/#21/#34/#36（268 tests + エミュレータ 37 tests / typecheck clean）。
-本番への Cloud Function デプロイはまだ（Blaze プランと API キーが要る）。
+Phase 1–9 完了 + Issue #14/#21/#34/#36/#38/#40（274 tests + エミュレータ 37 tests / typecheck clean）。
+`formatReading` は本番稼働中（`asia-northeast1` / `claude-haiku-4-5`、実測は3枚 $0.004〜0.006 / 8枚 $0.006〜0.016）。
 残作業は GitHub Issue に起票済み。実装計画は `~/.claude/plans/project-overview-md-ai-llm-tarot-mirror-tidy-parnas.md`。
