@@ -74,6 +74,40 @@ describe("drawCards", () => {
     expect(ratio).toBeLessThan(0.4);
   });
 
+  /**
+   * オラクルデッキには「逆位置の意味」が無い。呼び出し側が毎回それを
+   * 覚えている前提にせず、デッキ自身に言わせる。
+   */
+  it("should honour a rate the deck declares for itself", () => {
+    const uprightOnly = { ...riderWaite, reversalRate: 0 };
+
+    for (let i = 0; i < 50; i++) {
+      const drawn = drawCards({
+        spread: RELATIONSHIP_8,
+        deck: uprightOnly,
+        seed: `deck-rate-${i}`,
+      });
+
+      expect(drawn.every((d) => d.orientation === "upright")).toBe(true);
+    }
+  });
+
+  /** 読む人が最後に決める。デッキは似合う読み方を言えるが、押しつけられない。 */
+  it("should let the reader's rate override the deck's", () => {
+    const neverReversed = { ...riderWaite, reversalRate: 0 };
+
+    const drawn = Array.from({ length: 200 }, (_, i) =>
+      drawCards({
+        spread: ONE_CARD,
+        deck: neverReversed,
+        seed: `override-${i}`,
+        reversalRate: 1,
+      }),
+    ).flat();
+
+    expect(drawn.every((d) => d.orientation === "reversed")).toBe(true);
+  });
+
   it("should throw when the deck has fewer cards than the spread needs", () => {
     const tinyDeck = { ...riderWaite, cards: riderWaite.cards.slice(0, 2) };
 

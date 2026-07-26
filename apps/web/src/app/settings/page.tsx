@@ -1,19 +1,21 @@
 import { DEFAULT_LOCALE, getResolver } from "@tarot-mirror/content";
 import { cookies } from "next/headers";
 
-import { LlmToggle } from "@/components/llm-toggle";
+import { SettingToggle } from "@/components/setting-toggle";
 import { LLM_COOKIE, parseLlmPref } from "@/lib/prefs/llm";
+import { REVERSALS_COOKIE, parseReversalsPref } from "@/lib/prefs/reversals";
 
 /**
  * 読み方の設定。
  *
  * Cookie をサーバーで読んでから描く。クライアントで読むと、サーバーが描いた
  * 画面と一度食い違い、設定が勝手に切り替わったように見える。
+ *
+ * 「おすすめ」を付けない。どちらの読み方も等しく正しい。
  */
 export default async function Page() {
   const resolver = getResolver(DEFAULT_LOCALE);
   const store = await cookies();
-  const enabled = parseLlmPref(store.get(LLM_COOKIE)?.value);
 
   return (
     <div className="screen">
@@ -26,7 +28,23 @@ export default async function Page() {
           <p className="screen-lead">{resolver.ui("ui.settingsLead")}</p>
         </header>
 
-        <LlmToggle locale={DEFAULT_LOCALE} initialEnabled={enabled} />
+        <SettingToggle
+          locale={DEFAULT_LOCALE}
+          id="reversals"
+          cookie={REVERSALS_COOKIE}
+          initialEnabled={parseReversalsPref(store.get(REVERSALS_COOKIE)?.value)}
+          label={resolver.ui("ui.settingsReversalsLabel")}
+          note={resolver.ui("ui.settingsReversalsNote")}
+        />
+
+        <SettingToggle
+          locale={DEFAULT_LOCALE}
+          id="llm"
+          cookie={LLM_COOKIE}
+          initialEnabled={parseLlmPref(store.get(LLM_COOKIE)?.value)}
+          label={resolver.ui("ui.settingsLlmLabel")}
+          note={resolver.ui("ui.settingsLlmNote")}
+        />
       </main>
     </div>
   );

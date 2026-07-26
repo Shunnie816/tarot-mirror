@@ -6,7 +6,6 @@ import {
   getSpread,
   renderTemplate,
 } from "@tarot-mirror/engine";
-import { cookies } from "next/headers";
 
 import { JournalEditor } from "@/components/journal-editor";
 import { ReadingSurface } from "@/components/reading-surface";
@@ -17,7 +16,7 @@ import {
   readSpread,
   type RawParams,
 } from "@/lib/flow";
-import { LLM_COOKIE, parseLlmPref } from "@/lib/prefs/llm";
+import { readReadingPrefs } from "@/lib/prefs/server";
 import { readingDocId } from "@/lib/store/reading-doc";
 
 /**
@@ -34,15 +33,16 @@ export default async function Page({
   const params = await searchParams;
   const question = readQuestion(params);
 
-  // 整形するかどうかは最初の描画そのものを変えるので、サーバーで知っておく。
+  // 読み方の設定は最初の描画そのものを変えるので、サーバーで知っておく。
   // クライアントで読むと、既定の無料経路にまで「待っている」画面が挟まるか、
   // 整える経路で本文が一瞬出てから消えるかのどちらかになる。
-  const llmEnabled = parseLlmPref((await cookies()).get(LLM_COOKIE)?.value);
+  const prefs = await readReadingPrefs();
 
   const reading = createReading({
     spread: getSpread(readSpread(params)),
     deck: riderWaite,
     seed: readSeed(params) ?? generateSeed(),
+    allowReversals: prefs.allowReversals,
     ...(question !== undefined ? { question } : {}),
   });
 
@@ -60,7 +60,7 @@ export default async function Page({
     <ReadingSurface
       source={reading}
       template={renderTemplate(reading)}
-      llmEnabled={llmEnabled}
+      llmEnabled={prefs.llmEnabled}
       footer={
         <>
           <JournalEditor
