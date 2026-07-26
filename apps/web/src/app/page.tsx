@@ -40,6 +40,9 @@ export default async function Page({
           <Link href="/journal" className="quiet-link">
             {resolver.ui("ui.journalLink")}
           </Link>
+          <Link href="/settings" className="quiet-link">
+            {resolver.ui("ui.settingsLink")}
+          </Link>
         </p>
 
         <AccountNotice locale={DEFAULT_LOCALE} />
