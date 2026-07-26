@@ -15,6 +15,7 @@
     "fetch:images": "tsx scripts/fetch-card-images.ts",
     "dev": "pnpm --filter @tarot-mirror/web dev",
     "build": "pnpm --filter @tarot-mirror/web build",
+    "build:apphosting": "turbo run build --filter=@tarot-mirror/web --env-mode=loose",
     "emulators": "pnpm --filter @tarot-mirror/functions build && firebase emulators:start",
     "build:functions": "pnpm --filter @tarot-mirror/functions build",
     "demo:reading": "tsx scripts/demo-reading.ts"
@@ -27,6 +28,7 @@
     "firebase": "^12.16.0",
     "sharp": "^0.35.3",
     "tsx": "^4.23.1",
+    "turbo": "^2.10.7",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }

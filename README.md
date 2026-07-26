@@ -181,7 +181,8 @@ firebase deploy --only apphosting        # ルールも Function も一緒なら
 
 | 項目 | 値 |
 |---|---|
-| バックエンド | `web`（`firebase.json` の `apphosting`） |
+| バックエンド | `tarot-mirror`（GitHub 連携。main への push でロールアウト） |
+| URL | https://tarot-mirror--tarot-mirror-a74b6.asia-east1.hosted.app |
 | ルートディレクトリ | `apps/web` |
 | 設定 | [`apps/web/apphosting.yaml`](./apps/web/apphosting.yaml) |
 | リージョン | `asia-east1` — **App Hosting に `asia-northeast1` は無い** |
@@ -194,9 +195,16 @@ Firestore と Function は `asia-northeast1` のまま。画面の配信リー�
 `rootDir` が指す先（`apps/web`）。置き場所を間違えても deploy は成功し、
 環境変数だけが黙って落ちる。
 
-**モノレポでも `rootDir` の外は捨てられない。** App Hosting は `firebase.json` の
-ある階層をまるごと固めて上げるので、`packages/*` は上がる。`.gitignore` に
-書いてあるものは自動で外れるため、`ignore` に足すのはそれ以外だけでいい。
+**`turbo.json` を消さないこと。** App Hosting が「モノレポ」と認識するのは
+**`nx.json` か `turbo.json` がリポジトリのルートにある場合だけ**で、pnpm workspace は
+それだけでは認識されない。無いと `apps/web` 自体がアプリのルートとして扱われ、
+ルートにある `pnpm-lock.yaml` が一度も見られないまま `fah/missing-lock-file` で
+落ちる（パッケージマネージャの判定も npm に落ちる）。ローカルの開発は今までどおり
+`pnpm --filter` で回してよく、turbo を通るのは App Hosting のビルドだけ。
+
+**`rootDir` の外も一緒に上がる。** App Hosting は `firebase.json` のある階層を
+まるごと固めて上げるので `packages/*` は届く。`.gitignore` に書いてあるものは
+自動で外れるため、`ignore` に足すのはそれ以外だけでいい。
 
 **`pnpm install` はどこで走ってもワークスペース全体を見る。** `apps/web` の中から
 呼んでも `pnpm-workspace.yaml` まで遡るので、`workspace:*` は解決される。
