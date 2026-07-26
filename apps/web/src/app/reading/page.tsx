@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE } from "@tarot-mirror/content";
 import { riderWaite } from "@tarot-mirror/decks";
 import {
   createReading,
@@ -7,6 +8,7 @@ import {
 } from "@tarot-mirror/engine";
 
 import { ReadingView } from "@/components/reading-view";
+import { SaveReading } from "@/components/save-reading";
 import {
   readQuestion,
   readSeed,
@@ -35,5 +37,13 @@ export default async function Page({
     ...(question !== undefined ? { question } : {}),
   });
 
-  return <ReadingView reading={renderTemplate(reading)} />;
+  // ReadingJSON をそのままクライアントへ渡す。seed から引き直すこともできるが、
+  // それにはエンジンとデッキをクライアントバンドルに載せることになり、
+  // 「読むだけの人に重さを負わせない」方針と衝突する。
+  return (
+    <ReadingView
+      reading={renderTemplate(reading)}
+      footer={<SaveReading reading={reading} locale={DEFAULT_LOCALE} />}
+    />
+  );
 }

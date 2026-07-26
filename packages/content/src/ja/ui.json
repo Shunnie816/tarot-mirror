@@ -43,6 +43,8 @@
   "ui.drawStatusPlacedUnnamed": "置きました。",
   "ui.drawStatusDone": "すべて置きました。裏返しはありません。ここから読みはじめられます。",
   "ui.drawStart": "読みはじめる",
+  "ui.readingKept": "この読みは残してあります。あとから読み返せます。",
+
   "ui.accountAnonymous": "いまは名前のない状態で使っています。書いたものは、この端末から開けます。",
   "ui.accountLink": "アカウントをつなぐ",
   "ui.accountLinking": "つないでいます",

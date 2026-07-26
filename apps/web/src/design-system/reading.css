@@ -258,3 +258,10 @@
   color: var(--color-text-quiet);
   text-wrap: pretty;
 }
+
+/* 残したことの控えめな報告。読み物ではなく画面の状態なので、
+   本文の幅に揃えたうえで、いちばん下に一段下がった声で置く。 */
+.reading-kept {
+  max-width: var(--measure-reading);
+  margin: 0 auto;
+}

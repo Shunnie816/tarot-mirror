@@ -59,7 +59,11 @@ pnpm demo:reading -- <seed>    # 同じ seed で再現
 cp apps/web/.env.example apps/web/.env.local   # 初回のみ
 pnpm emulators                 # Auth / Firestore エミュレータ（JDK が要る）
 pnpm dev
+pnpm test:firestore            # セキュリティルールと保存（エミュレータを自前で起動する）
 ```
+
+`pnpm test` はエミュレータも Java も要らない。実際に動かさないと確かめられないもの
+（ルール・undefined の拒否・サーバー時刻）だけを `test:firestore` に分けてある。
 
 ## Firebase
 
@@ -78,6 +82,21 @@ Firestore のロケーションは後から変更できないので、Cloud Func
 **設定値が無くてもアプリは動く。** カードを引いて読むところまでは Firebase に
 一切触れないため、その場合は保存だけが利用できない状態になる。
 
+### 保存されるもの
+
+```
+users/{uid}/readings/{spreadId}-{seed}   ReadingJSON をそのまま + createdAt
+users/{uid}/journal/{entryId}            未実装 / Phase 8 の #10
+```
+
+ドキュメント ID をリーディングそのものから決めているので、同じ URL を開き直しても
+履歴は増えない。**決定性がそのまま冪等性になっている。**
+
+`drawn[]` や `deckIds` を別立てで持たない。どちらも `positions` と `meta` から導ける。
+テンプレートの本文も保存しない。readingJson と辞書があれば必ず同じ文章が再生成できる
+（0円・オフライン可）ので、保存する価値があるのは再生成できないもの、つまり
+Phase 9 の LLM 出力だけになる。カードデータを Firestore に置かないのと同じ判断。
+
 ## 設計上の判断メモ
 
 - **`axes` に「良い/悪い」軸を作らない。** `friction` は「抵抗の大きさ」であって不幸ではない。
@@ -90,6 +109,9 @@ Firestore のロケーションは後から変更できないので、Cloud Func
   （Design Philosophy「slow down and think」）。
 - **カードデータは Firestore に置かない。** 不変で全ユーザー共通なので、
   読み取り課金もオフライン非対応も受け入れる理由がない。
+- **リーディングに保存ボタンを置かない。** 「気に入った引きだけ残す」形にすると
+  履歴が選ばれたものに偏り、「同じカードが繰り返し出ている」ことに自分で気づけなくなる。
+  気づきの材料にするには、偏りなく揃っている必要がある。
 - **サインアップを求めない。** 匿名で黙って始め、あとから Google に繋げる。
   認証が失敗したときの行き先も「エラー画面」ではなく「保存のない状態」。
   読むことだけは最後まで続けられる、という不変条件はここでも同じ。
