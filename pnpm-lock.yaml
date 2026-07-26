@@ -85,15 +85,6 @@ importers:
         specifier: ^7.3.0
         version: 7.3.0(firebase-admin@14.2.0)
     devDependencies:
-      '@tarot-mirror/content':
-        specifier: workspace:*
-        version: link:../packages/content
-      '@tarot-mirror/decks':
-        specifier: workspace:*
-        version: link:../packages/decks
-      '@tarot-mirror/engine':
-        specifier: workspace:*
-        version: link:../packages/engine
       '@types/node':
         specifier: ^22.10.2
         version: 22.20.1

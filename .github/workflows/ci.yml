@@ -36,6 +36,18 @@ jobs:
       - name: The function must still bundle
         run: pnpm build:functions
 
+      # デプロイ先は npm で入れる。ワークスペースの記法（workspace:*）が
+      # functions/package.json に紛れ込むと、npm がマニフェストを読んだ時点で
+      # 落ちる。pnpm で開発しているとローカルでは一度も踏まないので、
+      # 気づく場所をここに作っておく（Issue #36）。
+      - name: The function's manifest must install with npm
+        run: |
+          rm -rf /tmp/deploy-manifest
+          mkdir -p /tmp/deploy-manifest
+          cp functions/package.json /tmp/deploy-manifest/
+          cd /tmp/deploy-manifest
+          npm install --omit=dev --no-audit --no-fund
+
       # セキュリティルールは実際に動かさないと確かめられない。
       # 「他人の uid では読めない」が壊れていないことを毎回踏む。
       # Firestore エミュレータは JDK を要求する。ランナー既定の Java に

@@ -1,10 +1,20 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "./lib",
+    // rootDir も outDir も置かない。tsc は型を見るだけで、成果物を作るのは
+    // esbuild のほう。rootDir があると、束ねる対象のワークスペースのソースが
+    // 「rootDir の外にある」と言われて型検査が通らなくなる。
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
+    // ワークスペースのパッケージは package.json に書けない（npm が workspace:* を
+    // 解釈できずデプロイが落ちる）。型解決はここで補う。実体を束ねるのは
+    // build.mjs 側の別名で、この2つは同じ場所を指していなければならない。
+    "paths": {
+      "@tarot-mirror/content": ["../packages/content/src/index.ts"],
+      "@tarot-mirror/content/prompt": ["../packages/content/src/prompt.ts"],
+      "@tarot-mirror/decks": ["../packages/decks/src/index.ts"],
+      "@tarot-mirror/engine": ["../packages/engine/src/index.ts"]
+    }
   },
   "include": ["src/**/*.ts", "build.mjs"]
 }

@@ -38,6 +38,25 @@ export default defineWorkspace([
       environment: "node",
       include: ["src/**/*.test.ts"],
     },
+    // ワークスペースのパッケージは functions/package.json に書けない
+    // （npm が workspace:* を解釈できずデプロイが落ちる）ので、node_modules に
+    // リンクが張られない。build.mjs / tsconfig.json と同じ場所をここでも指す。
+    resolve: {
+      alias: {
+        "@tarot-mirror/content/prompt": fileURLToPath(
+          new URL("./packages/content/src/prompt.ts", import.meta.url),
+        ),
+        "@tarot-mirror/content": fileURLToPath(
+          new URL("./packages/content/src/index.ts", import.meta.url),
+        ),
+        "@tarot-mirror/decks": fileURLToPath(
+          new URL("./packages/decks/src/index.ts", import.meta.url),
+        ),
+        "@tarot-mirror/engine": fileURLToPath(
+          new URL("./packages/engine/src/index.ts", import.meta.url),
+        ),
+      },
+    },
   },
   {
     // 画面まわりで検証するのは、hooks に切り出したロジックだけ。

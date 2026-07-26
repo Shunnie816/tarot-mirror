@@ -150,6 +150,13 @@ firebase deploy --only functions        # Blaze プランが要る
 ANTHROPIC_API_KEY=sk-ant-... pnpm emulators
 ```
 
+**`functions/package.json` にワークスペースのパッケージを書かないこと。** npm は
+`workspace:*` を解釈できず、devDependencies に書いてあってもマニフェストを読んだ
+時点で落ちる（Cloud Functions のビルドは npm で走る）。エンジンと辞書は esbuild が
+束ねるので書く必要もない。解決は `build.mjs` / `functions/tsconfig.json` /
+`vitest.workspace.ts` の3か所の別名で行っていて、書き忘れるとビルドが落ちる。
+CI が `npm install --omit=dev` を毎回踏んでいる。
+
 ## 設計上の判断メモ
 
 - **`axes` に「良い/悪い」軸を作らない。** `friction` は「抵抗の大きさ」であって不幸ではない。
