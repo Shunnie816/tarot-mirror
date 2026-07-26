@@ -202,6 +202,11 @@ Firestore と Function は `asia-northeast1` のまま。画面の配信リー�
 落ちる（パッケージマネージャの判定も npm に落ちる）。ローカルの開発は今までどおり
 `pnpm --filter` で回してよく、turbo を通るのは App Hosting のビルドだけ。
 
+**`turbo.json` にコメントを書かないこと。** このファイルは2つの実装に読まれる。
+turbo（Rust）は JSONC を受け付けるので `turbo run build` はローカルで通るが、
+ビルドパック（Go）は `encoding/json` で読むので落ちる。CI が厳しいほうの
+パーサを毎回踏んでいる。
+
 **`rootDir` の外も一緒に上がる。** App Hosting は `firebase.json` のある階層を
 まるごと固めて上げるので `packages/*` は届く。`.gitignore` に書いてあるものは
 自動で外れるため、`ignore` に足すのはそれ以外だけでいい。
