@@ -1,0 +1,57 @@
+# Firebase App Hosting の設定。
+#
+# 置き場所は**アプリのルート**であって、リポジトリのルートではない。
+# `firebase.json` の `rootDir` が指す先（`apps/web`）に居る必要がある。
+
+runConfig:
+  # 使わない日を 0 円のままにする。常時起動を1つ持てば最初の表示は速くなるが、
+  # 「毎日は開かない道具」に月額を発生させる理由がない。それに、この道具で
+  # 実際に待たされるのは SSR ではなく整形のほう（3枚で5〜7秒、8枚で18秒）で、
+  # そこはインスタンスを温めても1秒も速くならない。
+  minInstances: 0
+
+  # 既定は 100。個人の道具にその上限は要らないうえ、クローラや再試行で
+  # 跳ねたぶんはそのまま請求になる。2 × concurrency 80 で同時 160 まで捌ける。
+  # 足りなくなってから上げればいい類の数字。
+  maxInstances: 2
+
+# Firebase Web SDK の設定値。
+#
+# **秘密ではない。** クライアントバンドルに載る公開識別子で、データを守っているのは
+# `firestore.rules` のほう。`apps/web/.env.example` に入っているものと同じ値で、
+# だからこのファイルはそのままリポジトリに置ける。
+#
+# `ANTHROPIC_API_KEY` はここには来ない。鍵を持てるのは Cloud Function だけで、
+# ブラウザから届くのは callable 越しの「整形して」だけ（README「LLM 整形」参照）。
+#
+# `NEXT_PUBLIC_` は `next build` の時点で本文に焼き込まれるので、効いているのは
+# BUILD のほう。RUNTIME にも出しておくと、動いているコンテナの中でも同じ値を
+# 確かめられる。
+env:
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyDx8t2d69hgXqjvy4gTeB_zAQSgN83qw0Q
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: tarot-mirror-a74b6.firebaseapp.com
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: tarot-mirror-a74b6
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: "1:353031149616:web:19b1ef6c36361155ea75f5"
+    availability:
+      - BUILD
+      - RUNTIME
+
+# NEXT_PUBLIC_FIREBASE_EMULATORS は意図的に書かない。
+# 空のままなら本番の Firebase を向く。ここに 1 が紛れ込むと、公開されている
+# 画面が 127.0.0.1 のエミュレータを探しに行って、保存だけが静かに死ぬ。
