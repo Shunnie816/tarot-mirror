@@ -61,7 +61,7 @@ cp apps/web/.env.example apps/web/.env.local   # 初回のみ
 pnpm emulators                 # Auth / Firestore / Functions（JDK が要る）
 pnpm dev
 pnpm test:firestore            # セキュリティルールと保存（エミュレータを自前で起動する）
-pnpm build:functions           # Cloud Function を束ねる（デプロイ前に走る）
+pnpm build:functions           # Cloud Function を束ねる（deploy 時にも自動で走る）
 ```
 
 `pnpm test` はエミュレータも Java も要らない。実際に動かさないと確かめられないもの
@@ -157,6 +157,12 @@ ANTHROPIC_API_KEY=sk-ant-... pnpm emulators
 束ねるので書く必要もない。解決は `build.mjs` / `functions/tsconfig.json` /
 `vitest.workspace.ts` の3か所の別名で行っていて、書き忘れるとビルドが落ちる。
 CI が `npm install --omit=dev` を毎回踏んでいる。
+
+**predeploy に `pnpm --filter` を使わないこと。** firebase-tools は predeploy を
+シェル越しに渡すので引数に引用符が付き、`pnpm --filter "@tarot-mirror/functions"` は
+どのパッケージにも一致しない。しかも **pnpm は一致しなくても終了コード 0 を返す**ため、
+ビルドが走らないまま古い成果物がデプロイされる。`node functions/build.mjs` は
+自分の位置からパスを解決するので、どこから呼ばれても動く。
 
 ## カードの絵
 
