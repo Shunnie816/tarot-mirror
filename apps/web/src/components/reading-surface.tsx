@@ -28,19 +28,28 @@ const createPort: CreateFormatPort = async () => {
 export function ReadingSurface({
   source,
   template,
+  llmEnabled,
   footer,
 }: {
   readonly source: ReadingJSON;
   /** 辞書だけで組んだ読み物。差し替えの土台でもあり、行き先でもある。 */
   readonly template: RenderedReading;
+  /**
+   * 設定。サーバーが Cookie から読んだ値をそのまま受け取る。
+   * ここで読み直すとサーバーの描画と食い違い、本文が一瞬出てから消える。
+   */
+  readonly llmEnabled: boolean;
   readonly footer?: React.ReactNode;
 }) {
   const session = useSession();
 
-  // Function は uid を要求するので、サインインが済むまでは呼べない。
-  // 「まだ分からない」と「呼べない」を分けて渡す。前者だけが待つ理由になる。
-  const enabled =
-    session.status === "connecting" ? undefined : session.user !== null;
+  // 使わない設定なら、待つ理由がそもそも無い。使う設定のときだけ、
+  // サインインが済むまでを「まだ分からない」として待つ（Function は uid を要求する）。
+  const enabled = !llmEnabled
+    ? false
+    : session.status === "connecting"
+      ? undefined
+      : session.user !== null;
 
   const state = useRenderedReading(source, template, createPort, { enabled });
 

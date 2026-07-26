@@ -47,10 +47,22 @@ export function useRenderedReading(
   createPort: CreateFormatPort,
   options: RenderedReadingOptions = {},
 ): ProseState {
-  const [state, setState] = useState<ProseState>({
-    settling: true,
+  // `undefined` が「まだ分からない」という意味を持つので、分割代入の既定値
+  // （`enabled = true`）は使えない。渡されなかったことと、渡されたうえで
+  // まだ決まっていないことを、同じ値に潰してしまう。
+  const enabled = "enabled" in options ? options.enabled : true;
+
+  /**
+   * 呼ばないと分かっているなら、最初から待たない。
+   *
+   * ここを常に `true` から始めると、整形を使わない設定でもサーバーが描く
+   * HTML が本文を伏せた状態になる。既定の（無料で・速い）経路にだけ
+   * 待ち時間を足すことになり、順序があべこべ。
+   */
+  const [state, setState] = useState<ProseState>(() => ({
+    settling: enabled !== false,
     reading: template,
-  });
+  }));
 
   /**
    * やり直す理由は「引きが変わったこと」と「呼べるようになったこと」だけ。
@@ -62,11 +74,6 @@ export function useRenderedReading(
    */
   const key = `${source.spreadId}:${source.seed}`;
   const { timeoutMs = SETTLE_TIMEOUT_MS, onFallback } = options;
-
-  // `undefined` が「まだ分からない」という意味を持つので、分割代入の既定値
-  // （`enabled = true`）は使えない。渡されなかったことと、渡されたうえで
-  // まだ決まっていないことを、同じ値に潰してしまう。
-  const enabled = "enabled" in options ? options.enabled : true;
 
   const latest = useRef({ source, template, createPort, onFallback });
   latest.current = { source, template, createPort, onFallback };
@@ -100,6 +107,12 @@ export function useRenderedReading(
       setState({ settling: false, reading: next });
     };
 
+    // 呼ばないと決まっている。伏せる前に決着させる。
+    if (enabled === false) {
+      settle(base);
+      return;
+    }
+
     setState({ settling: true, reading: base });
 
     const remaining = Math.max(0, (deadline.current?.at ?? 0) - Date.now());
@@ -107,11 +120,6 @@ export function useRenderedReading(
 
     // まだ呼べるかどうか分からない。時計だけ回して次の合図を待つ。
     if (enabled === undefined) {
-      return () => clearTimeout(timer);
-    }
-
-    if (!enabled) {
-      settle(base);
       return () => clearTimeout(timer);
     }
 

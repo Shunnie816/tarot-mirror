@@ -413,3 +413,49 @@
   outline: 2px solid var(--color-accent-depth);
   outline-offset: 3px;
 }
+
+/* ---------- 設定 ---------- */
+
+/* 設定は読み物ではない。押しやすさより、いま何を選んでいるかが読めることを優先する。
+   トグルではなくチェックボックスを使うのは、状態を絵ではなく言葉で示すため。 */
+.setting {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.setting-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+
+.setting-check {
+  flex: none;
+  width: 1.05em;
+  height: 1.05em;
+  accent-color: var(--color-accent-depth);
+  cursor: pointer;
+}
+
+.setting-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-sm);
+  font-family: var(--font-ui);
+  color: var(--color-text-primary);
+}
+
+/* いまどちらなのかを言葉でも出す。チェックの有無だけだと、
+   「使わない」を選んでいるのか未設定なのかが読み取れない。 */
+.setting-state {
+  font-size: var(--text-label-small);
+  letter-spacing: var(--tracking-label);
+  color: var(--color-text-quiet);
+}
+
+.setting-note {
+  max-width: var(--measure-reading);
+}

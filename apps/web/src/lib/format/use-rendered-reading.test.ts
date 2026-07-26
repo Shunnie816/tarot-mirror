@@ -212,6 +212,40 @@ describe("useRenderedReading", () => {
     expect(result.current.reading.mode).toBe("llm");
   });
 
+  /**
+   * 整形を使わない設定のときは、待つ理由がそもそも無い。
+   * ここが `true` から始まると、サーバーが描く HTML が本文を伏せた状態になり、
+   * 既定の（無料で・速い）経路にだけ待ち時間が足される。
+   */
+  it("should not hide the prose for a single frame when it will not call", () => {
+    const create = portReturning(CLEAN);
+    const options = { enabled: false };
+
+    const { result } = renderHook(() =>
+      useRenderedReading(source, template, create, options),
+    );
+
+    expect(result.current.settling).toBe(false);
+    expect(result.current.reading).toEqual(template);
+  });
+
+  it("should never reach the port when it is switched off", async () => {
+    let calls = 0;
+    const create: CreateFormatPort = async () => {
+      calls += 1;
+      return { format: async () => CLEAN };
+    };
+    const options = { enabled: false };
+
+    const { result } = renderHook(() =>
+      useRenderedReading(source, template, create, options),
+    );
+
+    await waitFor(() => expect(result.current.settling).toBe(false));
+    expect(calls).toBe(0);
+    expect(result.current.reading.mode).toBe("template");
+  });
+
   it("should settle on the template as soon as it learns it cannot call", async () => {
     const create = portReturning(CLEAN);
     const { result, rerender } = renderHook(
