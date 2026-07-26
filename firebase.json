@@ -18,6 +18,18 @@
       "*.local"
     ]
   },
+  "apphosting": [
+    {
+      "backendId": "web",
+      "rootDir": "apps/web",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "*-debug.log",
+        "*.local"
+      ]
+    }
+  ],
   "emulators": {
     "auth": {
       "port": 9099

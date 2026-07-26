@@ -6,9 +6,11 @@ out/
 
 # Firebase
 .firebase/
+.apphosting/
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
+apphosting-debug.log
 *.local
 
 # env
