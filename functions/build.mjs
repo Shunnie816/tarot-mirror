@@ -1,3 +1,4 @@
+import { rmSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -20,14 +21,29 @@ import { build } from "esbuild";
  * The three runtime dependencies stay external. `firebase-functions` and
  * `firebase-admin` must be the copies the runtime provides, and bundling the
  * Anthropic SDK would buy nothing but a slower build.
+ *
+ * Every path here is resolved from this file, never from the working
+ * directory, so `node functions/build.mjs` works from anywhere. That matters
+ * because `firebase deploy` runs the predeploy hook through a shell: a
+ * `pnpm --filter` invocation comes back quoted, matches no workspace package,
+ * and *still exits 0* — the build silently does not happen and whatever is
+ * left in `lib/` gets deployed instead (Issue #38).
  */
-const packages = fileURLToPath(new URL("../packages/", import.meta.url));
+const here = fileURLToPath(new URL(".", import.meta.url));
+const packages = path.join(here, "..", "packages");
 const src = (name, file = "index.ts") =>
   path.join(packages, name, "src", file);
 
+const outDir = path.join(here, "lib");
+
+// 先に消す。ビルドが走らなかったときに古い成果物が残っていると気づけないが、
+// 消してあれば firebase-tools が main を見つけられずその場で落ちる。
+// 黙って古いものを出荷するより、うるさく落ちるほうがいい。
+rmSync(outDir, { recursive: true, force: true });
+
 await build({
-  entryPoints: ["src/index.ts"],
-  outfile: "lib/index.js",
+  entryPoints: [path.join(here, "src", "index.ts")],
+  outfile: path.join(outDir, "index.js"),
   bundle: true,
   platform: "node",
   target: "node22",

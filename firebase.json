@@ -6,7 +6,9 @@
   "functions": {
     "source": "functions",
     "codebase": "default",
-    "predeploy": ["pnpm --filter @tarot-mirror/functions build"],
+    "predeploy": [
+      "node functions/build.mjs"
+    ],
     "ignore": [
       "node_modules",
       ".git",
@@ -17,9 +19,18 @@
     ]
   },
   "emulators": {
-    "auth": { "port": 9099 },
-    "firestore": { "port": 8080 },
-    "functions": { "port": 5001 },
-    "ui": { "enabled": true, "port": 4000 }
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
   }
 }
