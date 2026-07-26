@@ -40,6 +40,25 @@ export function readingDocId(
   return `${reading.spreadId}-${seed}`;
 }
 
+/**
+ * ID から元のリーディングを言い当てる。`readingDocId` の逆。
+ *
+ * Journal の記入は読みの ID をそのまま持つので、これがあると「どの読みについて
+ * 書いたか」を、記入側に spreadId と seed を重複して持たせずに辿れる。
+ * spreadId に `-` は入らないので、最初の1つで切れば足りる。
+ */
+export function parseReadingDocId(
+  id: string,
+): { readonly spreadId: string; readonly seed: string } | null {
+  const separator = id.indexOf("-");
+  if (separator <= 0 || separator === id.length - 1) return null;
+
+  return {
+    spreadId: id.slice(0, separator),
+    seed: decodeURIComponent(id.slice(separator + 1)),
+  };
+}
+
 function storeAxes(axes: AxisVector): Storable {
   return {
     agency: axes.agency,

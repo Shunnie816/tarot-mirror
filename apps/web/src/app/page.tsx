@@ -33,9 +33,12 @@ export default async function Page({
         />
 
         {/* 引くことより前に出さない。ふりかえりは、引いたあとの行き先。 */}
-        <p className="screen-note">
+        <p className="screen-note screen-links">
           <Link href="/history" className="quiet-link">
             {resolver.ui("ui.historyLink")}
+          </Link>
+          <Link href="/journal" className="quiet-link">
+            {resolver.ui("ui.journalLink")}
           </Link>
         </p>
 

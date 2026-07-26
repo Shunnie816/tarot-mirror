@@ -86,7 +86,8 @@ Firestore のロケーションは後から変更できないので、Cloud Func
 
 ```
 users/{uid}/readings/{spreadId}-{seed}   ReadingJSON をそのまま + createdAt
-users/{uid}/journal/{entryId}            未実装 / Phase 8 の #10
+users/{uid}/journal/{readingId}          読みについて書いたもの（読み1つにつき1つ）
+users/{uid}/journal/{autoId}             読みに紐づかない記入
 ```
 
 ドキュメント ID をリーディングそのものから決めているので、同じ URL を開き直しても
@@ -115,6 +116,10 @@ Phase 9 の LLM 出力だけになる。カードデータを Firestore に置�
 - **履歴で集計しない。** よく出るカードも、傾向も出さない。数えた瞬間に
   「当たり外れ」の語彙が入り込む。並べておく場所であって、読み解く場所ではない。
   気づくのは利用者の仕事で、こちらから「あなたはこういう傾向です」と言わない。
+- **書くことを義務にしない。** 促さない、数えない、続けていることを褒めない。
+  褒めた瞬間に書くことは習慣の達成になり、書きたくない日に書かないことが失敗になる。
+  Journal の保存に失敗しても入力欄には手を触れない。通信の都合で消えてよい
+  言葉は1文字も無い。
 - **サインアップを求めない。** 匿名で黙って始め、あとから Google に繋げる。
   認証が失敗したときの行き先も「エラー画面」ではなく「保存のない状態」。
   読むことだけは最後まで続けられる、という不変条件はここでも同じ。
@@ -131,5 +136,5 @@ LLM なしで読み物が完成することが壊れていないかを、テス�
 
 ## 現状
 
-Phase 1–7 完了（148 tests / typecheck clean）。Phase 8（永続化）に着手中で、匿名 Auth まで完了。
+Phase 1–8 完了（186 tests + エミュレータ 35 tests / typecheck clean）。次は Phase 9（LLM 整形）。
 残作業は GitHub Issue に起票済み。実装計画は `~/.claude/plans/project-overview-md-ai-llm-tarot-mirror-tidy-parnas.md`。
