@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { ja } from "./index.js";
+import { promptTables } from "./prompt.js";
 import { BANNED_PHRASES, findToneViolations } from "./tone.js";
 
 /**
@@ -30,10 +31,11 @@ describe("tone rules", () => {
       spreads: ja.spreads,
       spreadNotes: ja.spreadNotes,
       ui: ja.ui,
-      // プロンプトも読み物と同じ規律で書く。禁止表現を「使うな」と示すための
-      // 例文は tone.ts 側（コード）に置いてあるので、辞書はここを通せる。
+      // プロンプトも読み物と同じ規律で書く。辞書の外（`content/prompt`）に
+      // 出してあるのはバンドルの都合だけで、トーンの扱いは同じ。
+      // 禁止表現の例文は tone.ts 側（コード）にあるので、辞書はここを通せる。
       // ここが落ちたら、例文を prompt.json に書こうとしている。
-      prompt: ja.prompt,
+      prompt: promptTables.ja,
     };
     for (const [table, record] of Object.entries(flat)) {
       for (const [id, text] of Object.entries(record)) {

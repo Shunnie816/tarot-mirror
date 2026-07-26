@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import { defineSecret, defineString } from "firebase-functions/params";
+import { defineSecret } from "firebase-functions/params";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v2";
 
@@ -22,7 +22,13 @@ import { createFirestoreQuota } from "./quota.js";
  */
 
 const ANTHROPIC_API_KEY = defineSecret("ANTHROPIC_API_KEY");
-const LLM_MODEL = defineString("LLM_MODEL", { default: DEFAULT_MODEL });
+
+/**
+ * モデルは差し替えられる。ただし `defineString` は使わない。
+ * 値の出どころが無いとエミュレータの起動時に対話プロンプトで止まってしまい、
+ * 「動かして確かめる」がひとり分の手間になる。秘密ではないので環境変数で足りる。
+ */
+const model = () => process.env["LLM_MODEL"] ?? DEFAULT_MODEL;
 
 initializeApp();
 
@@ -43,7 +49,7 @@ export const formatReading = onCall(
     }
 
     return runFormat(uid, request.data, {
-      model: createAnthropicClient(ANTHROPIC_API_KEY.value(), LLM_MODEL.value()),
+      model: createAnthropicClient(ANTHROPIC_API_KEY.value(), model()),
       quota: createFirestoreQuota(getFirestore()),
       // 実測単価は推測できない。1リーディングあたりの入出力トークンを毎回残す。
       log: (entry) => logger.info("formatReading", entry),

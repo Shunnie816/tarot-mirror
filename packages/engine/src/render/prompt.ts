@@ -7,6 +7,7 @@ import {
   type Locale,
   type ToneViolation,
 } from "@tarot-mirror/content";
+import { getPromptCopy } from "@tarot-mirror/content/prompt";
 
 import { getSpread } from "../spreads.js";
 import type { PositionReading, ReadingJSON } from "../types.js";
@@ -97,49 +98,44 @@ const ORIENTATIONS = ["upright", "reversed"] as const;
  * rules rot.
  */
 export function buildSystemPrompt(locale: Locale = DEFAULT_LOCALE): string {
-  const resolver = getResolver(locale);
+  const copy = getPromptCopy(locale);
 
   const banned = BANNED_PHRASES.map(
     (phrase) => `${phrase.examples.join(" / ")} — ${phrase.reason}`,
   );
 
   return [
-    resolver.prompt("prompt.role"),
+    copy("prompt.role"),
     "",
-    `## ${resolver.prompt("prompt.rulesHeading")}`,
+    `## ${copy("prompt.rulesHeading")}`,
     numbered([
-      resolver.prompt("prompt.rule.materialsOnly"),
-      `${resolver.prompt("prompt.rule.noAssertion")}\n${bulleted(SANCTIONED_HEDGES)}`,
-      `${resolver.prompt("prompt.rule.banned")}\n${bulleted(banned)}`,
-      resolver.prompt("prompt.rule.voice"),
-      resolver.prompt("prompt.rule.noVerdict"),
-      resolver.prompt("prompt.rule.noCardNames"),
-      resolver.prompt("prompt.rule.noAdviceVoice"),
+      copy("prompt.rule.materialsOnly"),
+      `${copy("prompt.rule.noAssertion")}\n${bulleted(SANCTIONED_HEDGES)}`,
+      `${copy("prompt.rule.banned")}\n${bulleted(banned)}`,
+      copy("prompt.rule.voice"),
+      copy("prompt.rule.noVerdict"),
+      copy("prompt.rule.noCardNames"),
+      copy("prompt.rule.noAdviceVoice"),
     ]),
     "",
-    `## ${resolver.prompt("prompt.lensHeading")}`,
+    `## ${copy("prompt.lensHeading")}`,
+    bulleted(LENSES.map((lens) => `${lens}: ${copy(`prompt.lens.${lens}`)}`)),
+    "",
+    `## ${copy("prompt.orientationHeading")}`,
     bulleted(
-      LENSES.map((lens) => `${lens}: ${resolver.prompt(`prompt.lens.${lens}`)}`),
+      ORIENTATIONS.map((o) => `${o}: ${copy(`prompt.orientation.${o}`)}`),
     ),
     "",
-    `## ${resolver.prompt("prompt.orientationHeading")}`,
-    bulleted(
-      ORIENTATIONS.map(
-        (o) => `${o}: ${resolver.prompt(`prompt.orientation.${o}`)}`,
-      ),
-    ),
-    "",
-    `## ${resolver.prompt("prompt.lengthHeading")}`,
-    resolver.prompt("prompt.length"),
+    `## ${copy("prompt.lengthHeading")}`,
+    copy("prompt.length"),
   ].join("\n");
 }
 
 function describePosition(
   position: PositionReading,
   resolver: CopyResolver,
+  label: (id: `prompt.${string}`) => string,
 ): string {
-  const label = (id: `prompt.${string}`) => resolver.prompt(id);
-
   const lines = [
     `- ${label("prompt.label.positionId")}: ${position.positionId}`,
     `  ${label("prompt.label.positionLabel")}: ${resolver.position(position.positionId)}`,
@@ -176,7 +172,7 @@ export function buildUserPrompt(
   locale: Locale = DEFAULT_LOCALE,
 ): string {
   const resolver = getResolver(locale);
-  const label = (id: `prompt.${string}`) => resolver.prompt(id);
+  const label = getPromptCopy(locale);
   const spread = getSpread(reading.spreadId);
 
   const sections: string[] = [
@@ -192,7 +188,9 @@ export function buildUserPrompt(
   sections.push(
     "",
     `## ${label("prompt.label.positions")}`,
-    reading.positions.map((p) => describePosition(p, resolver)).join("\n"),
+    reading.positions
+      .map((p) => describePosition(p, resolver, label))
+      .join("\n"),
   );
 
   sections.push("", `## ${label("prompt.label.insights")}`);
@@ -240,7 +238,7 @@ export function buildRetryPrompt(
   violations: readonly ToneViolation[],
   locale: Locale = DEFAULT_LOCALE,
 ): FormatPrompt {
-  const resolver = getResolver(locale);
+  const copy = getPromptCopy(locale);
   const notes = violations.map((v) => `「${v.match}」 — ${v.reason}`);
 
   return {
@@ -248,7 +246,7 @@ export function buildRetryPrompt(
     user: [
       prompt.user,
       "",
-      resolver.prompt("prompt.retry"),
+      copy("prompt.retry"),
       bulleted(notes),
     ].join("\n"),
   };

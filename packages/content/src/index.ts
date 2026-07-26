@@ -5,7 +5,6 @@ import insights from "./ja/insights.json" with { type: "json" };
 import keywords from "./ja/keywords.json" with { type: "json" };
 import positionsShort from "./ja/positions-short.json" with { type: "json" };
 import positions from "./ja/positions.json" with { type: "json" };
-import prompt from "./ja/prompt.json" with { type: "json" };
 import questions from "./ja/questions.json" with { type: "json" };
 import spreadNotes from "./ja/spread-notes.json" with { type: "json" };
 import spreads from "./ja/spreads.json" with { type: "json" };
@@ -34,7 +33,6 @@ export const ja: Dictionary = {
   spreadNotes,
   groups,
   ui,
-  prompt,
 };
 
 const DICTIONARIES: Readonly<Record<Locale, Dictionary>> = { ja };

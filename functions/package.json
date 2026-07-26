@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "main": "lib/index.js",
+  "_engines": "firebase-tools はランタイムの版をここから読む。範囲指定（>=22）は受け付けない。",
   "engines": {
-    "node": ">=22"
+    "node": "22"
   },
   "scripts": {
     "build": "node build.mjs",
