@@ -20,7 +20,7 @@
   },
   "apphosting": [
     {
-      "backendId": "web",
+      "backendId": "tarot-mirror",
       "rootDir": "apps/web",
       "ignore": [
         "node_modules",
