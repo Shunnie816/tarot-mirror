@@ -7,6 +7,7 @@ import {
 } from "@tarot-mirror/engine";
 import { describe, expect, it } from "vitest";
 
+import type { RenderingCache } from "./cache.js";
 import { formatReading, type FormatDeps, type FormatLog } from "./format.js";
 import type { ModelAnswer, ModelClient } from "./model.js";
 import type { QuotaStore } from "./quota.js";
@@ -20,6 +21,7 @@ import type { QuotaStore } from "./quota.js";
  * 3. トーンを外した答えは、どこが外れたかを伝えて1回だけ引き直す
  * 4. 通信の失敗は引き直さない（クライアントには完成した読み物がある）
  * 5. 入出力トークンを毎回残す
+ * 6. 一度整えたものに二度払わない
  */
 
 const UID = "tester";
@@ -73,16 +75,50 @@ function scriptedModel(
 }
 
 const allowingQuota = (): QuotaStore => ({ consume: async () => true });
+
+/** 数えた回数を見たいときに使う。 */
+function countingQuota(limit = 99): QuotaStore & { readonly used: () => number } {
+  let used = 0;
+  return {
+    used: () => used,
+    consume: async () => {
+      if (used >= limit) return false;
+      used += 1;
+      return true;
+    },
+  };
+}
+
 const exhaustedQuota = (): QuotaStore => ({ consume: async () => false });
+
+/** その場限りのキャッシュ。Firestore を持ち出さずに当たり外れだけを見る。 */
+function memoryCache(): RenderingCache & { readonly size: () => number } {
+  const store = new Map<string, LlmFormatOutput>();
+  return {
+    size: () => store.size,
+    get: async (uid, key) => store.get(`${uid}/${key}`) ?? null,
+    put: async (uid, key, output) => {
+      store.set(`${uid}/${key}`, output);
+    },
+  };
+}
+
+const noCache = (): RenderingCache => ({
+  get: async () => null,
+  put: async () => undefined,
+});
 
 function depsFor(
   model: ModelClient,
   quota: QuotaStore = allowingQuota(),
+  cache: RenderingCache = noCache(),
 ): FormatDeps & { readonly logs: FormatLog[] } {
   const logs: FormatLog[] = [];
   return {
     logs,
     model,
+    cache,
+    modelName: "claude-haiku-4-5",
     quota,
     log: (entry) => logs.push(entry),
     now: () => new Date("2026-07-26T09:00:00.000Z"),
@@ -209,5 +245,86 @@ describe("formatReading", () => {
     await formatReading(UID, request(), deps);
 
     expect(deps.logs[0]?.outcome).toBe("quotaExhausted");
+  });
+});
+
+/**
+ * Issue #12 — ReadingJSON は決定的なので、履歴から開き直せば必ず当たる。
+ */
+describe("formatReading (cache)", () => {
+  it("should call the model once for a reading opened twice", async () => {
+    // 2度呼ばれたら scriptedModel が投げるので、それ自体が検証になる。
+    const model = scriptedModel([CLEAN]);
+    const deps = depsFor(model, allowingQuota(), memoryCache());
+
+    const first = await formatReading(UID, request(), deps);
+    const second = await formatReading(UID, request(), deps);
+
+    expect(first).toEqual({ ok: true, output: CLEAN });
+    expect(second).toEqual({ ok: true, output: CLEAN });
+    expect(model.prompts).toHaveLength(1);
+  });
+
+  /**
+   * 二度目の表示で残り回数が減るなら、履歴を開くことが遠慮の対象になる。
+   * 払っていないものは数えない。
+   */
+  it("should not spend the daily allowance on a reading it already has", async () => {
+    const quota = countingQuota();
+    const deps = depsFor(scriptedModel([CLEAN]), quota, memoryCache());
+
+    await formatReading(UID, request(), deps);
+    await formatReading(UID, request(), deps);
+
+    expect(quota.used()).toBe(1);
+  });
+
+  it("should say in the log that nothing was paid for", async () => {
+    const deps = depsFor(scriptedModel([CLEAN]), allowingQuota(), memoryCache());
+
+    await formatReading(UID, request(), deps);
+    await formatReading(UID, request(), deps);
+
+    expect(deps.logs.map((entry) => entry.outcome)).toEqual(["ok", "cached"]);
+    expect(deps.logs[1]?.usage).toEqual({ inputTokens: 0, outputTokens: 0 });
+  });
+
+  it("should keep one person's rendering out of another's", async () => {
+    const model = scriptedModel([CLEAN, CLEAN]);
+    const deps = depsFor(model, allowingQuota(), memoryCache());
+
+    await formatReading("first", request(), deps);
+    await formatReading("second", request(), deps);
+
+    expect(model.prompts).toHaveLength(2);
+  });
+
+  it("should not keep an answer it refused to use", async () => {
+    const cache = memoryCache();
+    const deps = depsFor(
+      scriptedModel([answerWith("必ず前に進めます。"), answerWith("絶対に。")]),
+      allowingQuota(),
+      cache,
+    );
+
+    await formatReading(UID, request(), deps);
+
+    expect(cache.size()).toBe(0);
+  });
+
+  it("should still answer when the cache cannot be reached", async () => {
+    const broken: RenderingCache = {
+      get: async () => {
+        throw new Error("firestore down");
+      },
+      put: async () => {
+        throw new Error("firestore down");
+      },
+    };
+    const deps = depsFor(scriptedModel([CLEAN]), allowingQuota(), broken);
+
+    const result = await formatReading(UID, request(), deps);
+
+    expect(result).toEqual({ ok: true, output: CLEAN });
   });
 });

@@ -39,6 +39,7 @@ const PATHS = [
   ["プロフィール", `users/${OWNER}`],
   ["リーディング", `users/${OWNER}/readings/threeCards-seed`],
   ["Journal", `users/${OWNER}/journal/entry-1`],
+  ["整形された読み物", `users/${OWNER}/renderings/abc123`],
 ] as const;
 
 let testEnv: RulesTestEnvironment;
