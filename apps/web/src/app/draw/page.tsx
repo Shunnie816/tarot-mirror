@@ -10,6 +10,7 @@ import {
   readSpread,
   type RawParams,
 } from "@/lib/flow";
+import { readReadingPrefs } from "@/lib/prefs/server";
 
 /**
  * ドロー。カードを盤面に置いていく。
@@ -30,11 +31,16 @@ export default async function Page({
   const seed = readSeed(params) ?? "preview";
   const question = readQuestion(params);
 
+  // 盤面と読み物は同じ引きでなければならない。設定を片方だけが見ていると、
+  // ここに逆位置のカードが並んだあと、本文がすべて正位置になる。
+  const { allowReversals } = await readReadingPrefs();
+
   const reading = renderTemplate(
     createReading({
       spread: getSpread(spreadId),
       deck: riderWaite,
       seed,
+      allowReversals,
       ...(question !== undefined ? { question } : {}),
     }),
   );

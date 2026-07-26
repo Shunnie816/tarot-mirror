@@ -31,6 +31,14 @@ export function DrawView({
   const resolver = getResolver(locale);
   const [placedCount, setPlacedCount] = useState(0);
 
+  // 逆位置を使わない設定なら、印の説明は要らない。設定に関わらずこの引きに
+  // 1枚も無いときも同じで、出てこない印を先に説明されても引っかかるだけ。
+  const hasReversed = groups.some((group) =>
+    group.positions.some(
+      (position) => position.orientationLabel === resolver.ui("ui.reversed"),
+    ),
+  );
+
   const next = groups[placedCount];
   const justPlaced = placedCount > 0 ? groups[placedCount - 1] : undefined;
 
@@ -85,7 +93,9 @@ export function DrawView({
           </Link>
         )}
 
-        <span className="screen-note">{resolver.ui("ui.reversedHint")}</span>
+        {hasReversed && (
+          <span className="screen-note">{resolver.ui("ui.reversedHint")}</span>
+        )}
       </div>
     </>
   );

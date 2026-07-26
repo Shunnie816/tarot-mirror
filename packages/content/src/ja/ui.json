@@ -50,8 +50,10 @@
   "ui.settingsLink": "読み方の設定",
   "ui.settingsLlmLabel": "言葉を AI に整えてもらう",
   "ui.settingsLlmNote": "オフのままでも読み物は最後まで完成します。オンにすると、引いたカードの意味をもとに文章が書き起こされ、読みはじめるまでに数秒かかります。意味そのものを決めるのは引いた時点です。どちらを選んでも、読むのは同じカードの同じ意味です。",
-  "ui.settingsLlmOn": "使う",
-  "ui.settingsLlmOff": "使わない",
+  "ui.settingsOn": "使う",
+  "ui.settingsOff": "使わない",
+  "ui.settingsReversalsLabel": "逆位置を使う",
+  "ui.settingsReversalsNote": "逆位置は「意味が反対になる」ことではありません。同じ言葉が、外へ出ずに内側にとどまっている状態として読みます。外すとすべて正位置で読むことになりますが、引くカードそのものは変わりません。",
   "ui.settingsSaved": "この端末に覚えました。次に引くときから変わります。",
 
   "ui.readingSettling": "いま、言葉を整えています。少しだけお待ちください。",
