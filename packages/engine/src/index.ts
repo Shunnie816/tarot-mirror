@@ -7,3 +7,5 @@ export * from "./rules/index.js";
 export * from "./synthesize.js";
 export * from "./render/types.js";
 export * from "./render/template.js";
+export * from "./render/prompt.js";
+export * from "./render/llm.js";
