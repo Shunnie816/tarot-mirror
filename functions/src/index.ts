@@ -4,6 +4,7 @@ import { defineSecret } from "firebase-functions/params";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v2";
 
+import { createFirestoreCache } from "./cache.js";
 import { formatReading as runFormat } from "./format.js";
 import { createAnthropicClient, DEFAULT_MODEL } from "./model.js";
 import { createFirestoreQuota } from "./quota.js";
@@ -50,6 +51,8 @@ export const formatReading = onCall(
 
     return runFormat(uid, request.data, {
       model: createAnthropicClient(ANTHROPIC_API_KEY.value(), model()),
+      modelName: model(),
+      cache: createFirestoreCache(getFirestore()),
       quota: createFirestoreQuota(getFirestore()),
       // 実測単価は推測できない。1リーディングあたりの入出力トークンを毎回残す。
       log: (entry) => logger.info("formatReading", entry),

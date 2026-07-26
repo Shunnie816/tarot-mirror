@@ -6,6 +6,7 @@ import {
   type LlmFormatOutput,
 } from "@tarot-mirror/engine";
 
+import { renderingKey, type RenderingCache } from "./cache.js";
 import type { ModelAnswer, ModelClient, ModelUsage } from "./model.js";
 import { parseReadingRequest } from "./reading-input.js";
 import { dayKey, type QuotaStore } from "./quota.js";
@@ -34,12 +35,16 @@ export interface FormatLog {
   readonly promptVersion: number;
   readonly attempts: number;
   readonly usage: ModelUsage;
-  readonly outcome: "ok" | FailureReason;
+  /** `cached` は「払わずに返せた」の印。実測単価はこれを差し引いて見る。 */
+  readonly outcome: "ok" | "cached" | FailureReason;
 }
 
 export interface FormatDeps {
   readonly model: ModelClient;
+  readonly cache: RenderingCache;
   readonly quota: QuotaStore;
+  /** 鍵に含める。差し替えたら古い文章は出さない。 */
+  readonly modelName: string;
   /** Token counts and outcomes, so the real cost per reading is observable. */
   readonly log: (entry: FormatLog) => void;
   readonly now: () => Date;
@@ -95,6 +100,21 @@ export async function formatReading(
       outcome,
     });
 
+  // 上限より先に見る。二度目の表示で回数が減るなら、履歴を開くことが
+  // 遠慮の対象になってしまう。払っていないものは数えない。
+  const key = renderingKey({
+    reading,
+    locale,
+    promptVersion: PROMPT_VERSION,
+    model: deps.modelName,
+  });
+
+  const cached = await deps.cache.get(uid, key).catch(() => null);
+  if (cached !== null) {
+    record(0, NO_USAGE, "cached");
+    return { ok: true, output: cached };
+  }
+
   if (!(await deps.quota.consume(uid, dayKey(deps.now())))) {
     record(0, NO_USAGE, "quotaExhausted");
     return { ok: false, reason: "quotaExhausted" };
@@ -119,6 +139,8 @@ export async function formatReading(
 
     const violations = findOutputViolations(answer.output);
     if (violations.length === 0) {
+      // 残せなくても答えは返す。キャッシュは付随物で、読み物ではない。
+      await deps.cache.put(uid, key, answer.output).catch(() => undefined);
       record(attempt, usage, "ok");
       return { ok: true, output: answer.output };
     }
