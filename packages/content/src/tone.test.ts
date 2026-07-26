@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { ja } from "./index.js";
-import { findToneViolations } from "./tone.js";
+import { BANNED_PHRASES, findToneViolations } from "./tone.js";
 
 /**
  * Core Principle #1 — a reading is never a prediction.
@@ -30,6 +30,10 @@ describe("tone rules", () => {
       spreads: ja.spreads,
       spreadNotes: ja.spreadNotes,
       ui: ja.ui,
+      // プロンプトも読み物と同じ規律で書く。禁止表現を「使うな」と示すための
+      // 例文は tone.ts 側（コード）に置いてあるので、辞書はここを通せる。
+      // ここが落ちたら、例文を prompt.json に書こうとしている。
+      prompt: ja.prompt,
     };
     for (const [table, record] of Object.entries(flat)) {
       for (const [id, text] of Object.entries(record)) {
@@ -72,6 +76,24 @@ describe("tone rules", () => {
     const violations = findToneViolations("今週の運勢は大吉です。");
 
     expect(violations.map((v) => v.id)).toContain("fortune.luck");
+  });
+
+  /**
+   * The system prompt quotes `examples` instead of the regexes, so an example
+   * that no longer matches its rule would quietly teach the model to avoid
+   * something we do not actually check.
+   */
+  it("should flag every wording listed as an example of its own rule", () => {
+    const drifted = BANNED_PHRASES.flatMap((phrase) =>
+      phrase.examples
+        .filter(
+          (example) =>
+            !findToneViolations(example).some((v) => v.id === phrase.id),
+        )
+        .map((example) => `${phrase.id}: ${example}`),
+    );
+
+    expect(drifted).toEqual([]);
   });
 
   it("should accept a hedged interpretation", () => {

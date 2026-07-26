@@ -6,6 +6,7 @@ import type {
   KeywordId,
   Locale,
   PositionId,
+  PromptId,
   QuestionId,
   SpreadLabelId,
   ThemeId,
@@ -52,6 +53,14 @@ export interface Dictionary {
   readonly spreadNotes: Readonly<Record<SpreadLabelId, string>>;
   readonly groups: Readonly<Record<GroupId, GroupCopy>>;
   readonly ui: Readonly<Record<UiId, string>>;
+  /**
+   * The instructions handed to the LLM renderer.
+   *
+   * Prompt text is copy like any other, so it lives beside the copy it governs
+   * rather than inside the renderer. Keeping it here is also what lets a second
+   * locale change what the model is told without touching the engine.
+   */
+  readonly prompt: Readonly<Record<PromptId, string>>;
 }
 
 export class MissingCopyError extends Error {
@@ -89,6 +98,7 @@ export interface CopyResolver {
   spreadNote(id: SpreadLabelId): string;
   group(id: GroupId): GroupCopy;
   ui(id: UiId): string;
+  prompt(id: PromptId): string;
   /** Non-throwing probe, for completeness tests and tooling. */
   has(kind: keyof Omit<Dictionary, "locale">, id: string): boolean;
 }
@@ -119,6 +129,7 @@ export function createResolver(dictionary: Dictionary): CopyResolver {
     spreadNote: (id) => lookup(dictionary.spreadNotes, "spreadNote", id),
     group: (id) => lookup(dictionary.groups, "group", id),
     ui: (id) => lookup(dictionary.ui, "ui", id),
+    prompt: (id) => lookup(dictionary.prompt, "prompt", id),
     has: (kind, id) => Object.hasOwn(dictionary[kind], id),
   };
 }
