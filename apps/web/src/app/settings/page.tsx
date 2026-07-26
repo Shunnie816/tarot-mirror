@@ -45,6 +45,14 @@ export default async function Page() {
           label={resolver.ui("ui.settingsLlmLabel")}
           note={resolver.ui("ui.settingsLlmNote")}
         />
+
+        {/* 表示義務は無いが、描いた人の名前は出す。根拠は docs/CARD_IMAGES.md。 */}
+        <section className="credits">
+          <h2 className="credits-heading">
+            {resolver.ui("ui.creditsHeading")}
+          </h2>
+          <p className="screen-note">{resolver.ui("ui.creditsCards")}</p>
+        </section>
       </main>
     </div>
   );

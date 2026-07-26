@@ -101,8 +101,9 @@
 /* ---------- カード ---------- */
 
 /* flex:1 1 0 の等分。狭いと縮むだけで、必ず横並びのまま。
-   カード名は文字だけなので画像枠のような最小幅がなく、320px でも3枚並ぶ。
-   画像を使えない制約の副産物。 */
+   絵を入れても3枚並ぶ。タイルは flex: 1 1 0 で等分され、絵は幅に追従する
+   （固定の最小幅を持たせていない）。狭い画面では小さくなるが、並びが崩れて
+   スプレッドの形が読めなくなるより、そのほうがいい。 */
 .tile {
   flex: 1 1 0;
   min-width: 0;
@@ -140,6 +141,23 @@
 
 .tile:disabled {
   cursor: default;
+}
+
+/* カードの絵。比は原寸のまま。読み込み前から枠を取るので盤面が跳ねない。 */
+.tile-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 320 / 548;
+  object-fit: cover;
+  border-radius: 2px;
+  background: var(--color-surface-base);
+}
+
+/* 逆位置。物理カードを回したのと同じことを絵にもさせる。
+   文字は回さない（読めなくなる）。 */
+.tile-art--reversed {
+  transform: rotate(180deg);
 }
 
 .tile-position {

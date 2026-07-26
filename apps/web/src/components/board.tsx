@@ -15,6 +15,47 @@ import { anchorIdFor, type ReadingGroup } from "@/lib/groups";
  * 幅は --measure-board。読み物の行長（--measure-reading）には従わない。
  * カードごとに本文を横に並べる案は採っていない（全角38字 × 3 は読めない幅になる）。
  */
+/** 原寸そのままの比。枠だけ先に取っておかないと、読み込みのたびに盤面が跳ねる。 */
+const ART_WIDTH = 320;
+const ART_HEIGHT = 548;
+
+/**
+ * カードの絵。
+ *
+ * `alt` は空にする。カード名はすぐ下に文字で並んでいるので、絵に名前を
+ * 持たせると読み上げが二重になる。ボタンの読み上げ名は文字のほうが担っている。
+ *
+ * 逆位置は絵ごと180°回す。文字を回すと読めなくなるので採らなかった判断
+ * （DECISIONS-round2）は、回すものが絵になったことで前提が変わった。
+ * 罫線での表示は残す。読み込みの前や失敗したときに向きが分かる唯一の手がかりで、
+ * 盤面を引きで見たときに逆位置の分布が見えるのはこちらの効き目。
+ */
+function CardArt({
+  cardId,
+  reversed,
+}: {
+  /** 未指定なら伏せた状態。 */
+  readonly cardId?: string;
+  readonly reversed: boolean;
+}) {
+  return (
+    <img
+      className={reversed ? "tile-art tile-art--reversed" : "tile-art"}
+      src={`/cards/${cardId ?? "back"}.webp`}
+      alt=""
+      width={ART_WIDTH}
+      height={ART_HEIGHT}
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+      // 絵が来なくても読めることは変えない。出せないなら黙って引っ込める。
+      onError={(event) => {
+        event.currentTarget.hidden = true;
+      }}
+    />
+  );
+}
+
 export function Board({
   groups,
   locale,
@@ -63,6 +104,10 @@ export function Board({
       >
         {reversed && <span className="tile-edge tile-edge--top" />}
         <span className="tile-position">{position.shortLabel}</span>
+        <CardArt
+          {...(isPlaced ? { cardId: position.cardId } : {})}
+          reversed={reversed}
+        />
         {isPlaced ? (
           <>
             <span className="tile-name">{position.cardName}</span>
