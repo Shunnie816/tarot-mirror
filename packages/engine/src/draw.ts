@@ -12,7 +12,13 @@ export interface DrawOptions {
    * discouraging, which works against the app's purpose.
    */
   readonly allowReversals?: boolean;
-  /** Chance a drawn card lands reversed. Ignored when `allowReversals` is false. */
+  /**
+   * Chance a drawn card lands reversed. Ignored when `allowReversals` is false.
+   *
+   * Resolved as user preference, then the deck's own rate, then the default.
+   * The person reading gets the last word: a deck can say what suits it, but
+   * it cannot insist on a way of reading that someone has turned off.
+   */
   readonly reversalRate?: number;
 }
 
@@ -32,13 +38,9 @@ const DEFAULT_REVERSAL_RATE = 0.3;
  * card is ever dealt twice.
  */
 export function drawCards(options: DrawOptions): DrawnCard[] {
-  const {
-    spread,
-    deck,
-    seed,
-    allowReversals = true,
-    reversalRate = DEFAULT_REVERSAL_RATE,
-  } = options;
+  const { spread, deck, seed, allowReversals = true } = options;
+  const reversalRate =
+    options.reversalRate ?? deck.reversalRate ?? DEFAULT_REVERSAL_RATE;
 
   const needed = spread.positions.length;
   if (deck.cards.length < needed) {

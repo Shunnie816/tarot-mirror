@@ -90,6 +90,15 @@ export const DeckSchema = z
     /** Card back / cover art path, relative to the web app's public dir. */
     coverImage: z.string().optional(),
     kind: z.enum(["tarot", "oracle"]),
+    /**
+     * How often a card from this deck lands reversed, 0–1.
+     *
+     * A deck property because it is a property of the deck: an oracle deck
+     * has no reversed reading to give, so it sets 0 rather than relying on
+     * every caller to remember. Omitted means "use the engine's default";
+     * a user preference still overrides whatever is set here.
+     */
+    reversalRate: z.number().min(0).max(1).optional(),
     cards: z.array(CardSchema).min(1),
   })
   .superRefine((deck, ctx) => {
