@@ -52,6 +52,20 @@ jobs:
       - name: turbo.json must parse as strict JSON
         run: node -e "JSON.parse(require('fs').readFileSync('turbo.json','utf8'))"
 
+      # App Hosting はロックファイルから next の版を読めないとき package.json の
+      # 文字列にフォールバックし、それを semver.satisfies に渡す。satisfies は
+      # バージョンを要求するのでレンジは何であれ false になり、"Vulnerable Next
+      # version" としてデプロイが止まる。^ を戻した瞬間から、ローカルでは
+      # 何も起きないままロールアウトだけが落ちる（Issue #49）。
+      - name: next must be pinned to an exact version
+        run: |
+          node -e "
+            const v = require('./apps/web/package.json').dependencies.next;
+            if (!/^\d+\.\d+\.\d+$/.test(v)) {
+              throw new Error('next must be an exact version, got: ' + v);
+            }
+          "
+
       # デプロイ先は npm で入れる。ワークスペースの記法（workspace:*）が
       # functions/package.json に紛れ込むと、npm がマニフェストを読んだ時点で
       # 落ちる。pnpm で開発しているとローカルでは一度も踏まないので、

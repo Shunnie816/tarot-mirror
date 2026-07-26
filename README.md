@@ -207,6 +207,12 @@ turbo（Rust）は JSONC を受け付けるので `turbo run build` はローカ
 ビルドパック（Go）は `encoding/json` で読むので落ちる。CI が厳しいほうの
 パーサを毎回踏んでいる。
 
+**`next` はレンジではなく正確な版で書くこと。** ビルドパックは pnpm のロックファイルから
+版を読めないと `package.json` の文字列にフォールバックし、それを `semver.satisfies` に
+渡す。`satisfies` はバージョンを要求するので、レンジは中身が何であれ false になり、
+「脆弱な Next」としてデプロイが止まる。**`^` を付けた時点で、値を上げても通らない。**
+更新するときは `next` の実際の版を書き、CI がレンジでないことを踏む。
+
 **`rootDir` の外も一緒に上がる。** App Hosting は `firebase.json` のある階層を
 まるごと固めて上げるので `packages/*` は届く。`.gitignore` に書いてあるものは
 自動で外れるため、`ignore` に足すのはそれ以外だけでいい。
