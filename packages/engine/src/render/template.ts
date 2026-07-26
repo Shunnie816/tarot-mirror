@@ -35,6 +35,7 @@ export function renderPosition(
 ): RenderedPosition {
   return {
     positionId: position.positionId,
+    cardId: position.cardId,
     positionLabel: resolver.position(position.positionId),
     shortLabel: resolver.positionShort(position.positionId),
     cardName: resolver.card(position.cardId),

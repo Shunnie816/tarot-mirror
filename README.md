@@ -55,6 +55,7 @@ pnpm validate:decks            # デッキデータの整合性のみ
 pnpm typecheck
 pnpm demo:reading              # LLM なしでリーディングを1件生成して表示
 pnpm demo:reading -- <seed>    # 同じ seed で再現
+pnpm fetch:images              # カード画像を Wikimedia Commons から取得（通常は不要）
 
 cp apps/web/.env.example apps/web/.env.local   # 初回のみ
 pnpm emulators                 # Auth / Firestore / Functions（JDK が要る）
@@ -157,6 +158,17 @@ ANTHROPIC_API_KEY=sk-ant-... pnpm emulators
 `vitest.workspace.ts` の3か所の別名で行っていて、書き忘れるとビルドが落ちる。
 CI が `npm install --omit=dev` を毎回踏んでいる。
 
+## カードの絵
+
+1909年初版（ウェイト＝スミス版）のパブリックドメイン図版を、Wikimedia Commons の
+スキャンから使わせてもらっている。**根拠と取得手順は [`docs/CARD_IMAGES.md`](./docs/CARD_IMAGES.md)。**
+
+画像は `apps/web/public/cards/*.webp` にリポジトリごと入れてある。ビルド時に取りにいく
+形にすると、Wikimedia が落ちている日にビルドが落ちる。
+
+**絵が無くても読める。** 読み込みに失敗したら文字だけの盤面に戻るだけで、読み物は
+最後まで完成する。カード名・位置名は辞書が持っていて、絵はそこに何も足していない。
+
 ## 設計上の判断メモ
 
 - **`axes` に「良い/悪い」軸を作らない。** `friction` は「抵抗の大きさ」であって不幸ではない。
@@ -200,6 +212,9 @@ CI が `npm install --omit=dev` を毎回踏んでいる。
 - **本文は出す前に決める。** 整形を待つあいだ盤面は出すが本文は伏せ、時間切れなら
   テンプレートで確定して、あとから届いた答えは捨てる。読んでいる最中に文章が
   入れ替わるのは、読む側からすれば故障に見える。
+- **絵はこちらの解釈を足さない。** カードの絵を出すのは、構図・視線・色・繰り返される
+  小道具といった、こちらが言葉にしていない情報から利用者が自分で読み取れるようにするため。
+  絵に説明を添えない。逆位置は絵ごと180°回す（文字は回さない — 読めなくなる）。
 - **LLM 整形の既定はオフ。** 1回ごとにお金がかかり、無いほうが速く、無くても
   読み物は完成する。既定を無料の経路にしておけば、その経路が毎日使われ続ける。
   「オフで全機能が動く」は節約機能である以上に回帰テストの入口。
@@ -213,6 +228,6 @@ LLM なしで読み物が完成することが壊れていないかを、テス�
 
 ## 現状
 
-Phase 1–9 完了 + Issue #14（266 tests + エミュレータ 37 tests / typecheck clean）。
+Phase 1–9 完了 + Issue #14/#21/#34/#36（268 tests + エミュレータ 37 tests / typecheck clean）。
 本番への Cloud Function デプロイはまだ（Blaze プランと API キーが要る）。
 残作業は GitHub Issue に起票済み。実装計画は `~/.claude/plans/project-overview-md-ai-llm-tarot-mirror-tidy-parnas.md`。

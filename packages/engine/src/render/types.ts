@@ -1,4 +1,4 @@
-import type { Locale, PositionId } from "@tarot-mirror/content";
+import type { CardId, Locale, PositionId } from "@tarot-mirror/content";
 
 import type { PositionGroup, ReadingJSON } from "../types.js";
 
@@ -7,6 +7,11 @@ export type RenderMode = "template" | "llm";
 
 export interface RenderedPosition {
   readonly positionId: PositionId;
+  /**
+   * どのカードか。表示名ではなく ID なのは、画面が絵を引くのに要るのが
+   * 名前ではなく同一性だから。名前は訳せるが、絵のファイル名は訳せない。
+   */
+  readonly cardId: CardId;
   readonly positionLabel: string;
   /**
    * The slot named for the board, where a group heading already carries the

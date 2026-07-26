@@ -459,3 +459,21 @@
 .setting-note {
   max-width: var(--measure-reading);
 }
+
+/* 出典表記。読み方の設定の下に、一段引いた声で置く。 */
+.credits {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.credits-heading {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-label-small);
+  letter-spacing: var(--tracking-label);
+  font-weight: 400;
+  color: var(--color-text-quiet);
+}
