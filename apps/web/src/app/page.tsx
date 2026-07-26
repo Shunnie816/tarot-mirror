@@ -1,5 +1,7 @@
 import { DEFAULT_LOCALE, getResolver } from "@tarot-mirror/content";
 
+import Link from "next/link";
+
 import { AccountNotice } from "@/components/account-notice";
 import { QuestionForm } from "@/components/question-form";
 import { readQuestion, type RawParams } from "@/lib/flow";
@@ -29,6 +31,13 @@ export default async function Page({
           locale={DEFAULT_LOCALE}
           {...(question !== undefined ? { initialQuestion: question } : {})}
         />
+
+        {/* 引くことより前に出さない。ふりかえりは、引いたあとの行き先。 */}
+        <p className="screen-note">
+          <Link href="/history" className="quiet-link">
+            {resolver.ui("ui.historyLink")}
+          </Link>
+        </p>
 
         <AccountNotice locale={DEFAULT_LOCALE} />
       </main>

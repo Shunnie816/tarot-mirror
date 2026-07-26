@@ -5,6 +5,10 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
+  limit as limitTo,
+  orderBy,
+  query,
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
@@ -76,6 +80,29 @@ export function toStoredReading(
         ? (createdAt.toDate() as Date)
         : null,
   };
+}
+
+/**
+ * 何件まで遡るか。
+ *
+ * ページ送りを作らないのは、履歴を「積み上がっていくもの」として見せたくないため。
+ * 数を競う画面にすると、引くこと自体が目的になる。
+ */
+export const HISTORY_LIMIT = 50;
+
+/** 新しい順。読めなかったものは黙って落とす（1件の破損で画面ごと失わない）。 */
+export async function listReadings(
+  db: Firestore,
+  uid: string,
+  count: number = HISTORY_LIMIT,
+): Promise<readonly StoredReading[]> {
+  const snapshot = await getDocs(
+    query(readingsRef(db, uid), orderBy("createdAt", "desc"), limitTo(count)),
+  );
+
+  return snapshot.docs
+    .map((entry) => toStoredReading(entry.id, entry.data()))
+    .filter((entry): entry is StoredReading => entry !== null);
 }
 
 export async function getReading(
