@@ -5,6 +5,7 @@ import {
   SANCTIONED_HEDGES,
   type CopyResolver,
   type Locale,
+  type ToneViolation,
 } from "@tarot-mirror/content";
 
 import { getSpread } from "../spreads.js";
@@ -224,5 +225,31 @@ export function buildFormatPrompt(
   return {
     system: buildSystemPrompt(locale),
     user: buildUserPrompt(reading, locale),
+  };
+}
+
+/**
+ * The same request again, saying what was wrong with the last answer.
+ *
+ * A bare retry re-rolls the dice; naming the wording that failed asks for a
+ * correction. It costs one extra input block and it is the difference between
+ * a retry that usually works and one that usually does not.
+ */
+export function buildRetryPrompt(
+  prompt: FormatPrompt,
+  violations: readonly ToneViolation[],
+  locale: Locale = DEFAULT_LOCALE,
+): FormatPrompt {
+  const resolver = getResolver(locale);
+  const notes = violations.map((v) => `「${v.match}」 — ${v.reason}`);
+
+  return {
+    system: prompt.system,
+    user: [
+      prompt.user,
+      "",
+      resolver.prompt("prompt.retry"),
+      bulleted(notes),
+    ].join("\n"),
   };
 }

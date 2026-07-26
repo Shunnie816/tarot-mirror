@@ -61,6 +61,23 @@ function isBlank(text: string): boolean {
 }
 
 /**
+ * Scan every sentence an answer contributes.
+ *
+ * The renderer checks tone while merging, but the caller that *fetched* the
+ * answer needs the same verdict before it decides whether to spend a retry.
+ * Both read this, so the bar cannot differ between the two.
+ */
+export function findOutputViolations(
+  output: LlmFormatOutput,
+): readonly ToneViolation[] {
+  return [
+    output.synthesis,
+    output.closingQuestion,
+    ...output.positions.map((position) => position.text),
+  ].flatMap(findToneViolations);
+}
+
+/**
  * Fold the model's prose into the template's scaffolding.
  *
  * The structural fields — spread label, position labels, card names,

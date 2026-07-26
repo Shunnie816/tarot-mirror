@@ -13,5 +13,11 @@ service cloud.firestore {
     match /users/{uid}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
+
+    // llmUsage/{uid} — LLM 整形の1日あたりの回数。
+    //
+    // ここに規則を書かないのが意図。既定が拒否なので、Admin SDK を持つ
+    // Cloud Function だけが触れる。/users の下に置くと本人が自分の回数を
+    // 0 に戻せてしまい、上限が飾りになる。守る相手がいる唯一のデータ。
   }
 }
