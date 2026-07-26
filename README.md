@@ -28,7 +28,7 @@ Spread   ─┤
      ReadingJSON        ★ 全て純関数・全てID・コスト0
           ▼
   ┌───────┴────────┐
-[L4a] Template    [L4b] LLM（未実装）
+[L4a] Template    [L4b] LLM
   辞書のみ・0円      Cloud Function → Claude
   常に動く           構造化JSON・検証・失敗時は L4a へ
 ```
@@ -44,7 +44,7 @@ Spread   ─┤
 | `packages/decks` | カードデータ（静的JSON）と zod スキーマ。クライアントバンドルに載るため zod は実行時に走らせず、検証はテストで行う |
 | `packages/engine` | Rule Engine 本体。DOM 非依存・外部依存なしの純TS |
 | `apps/web` | Next.js (App Router)。デザインシステムと画面。Firebase に触れるのはセッションと保存だけ |
-| `functions` | Cloud Functions v2、LLM 整形のみ（未着手 / Phase 9） |
+| `functions` | Cloud Functions v2、LLM 整形のみ。API キーを置ける唯一の場所 |
 
 ## コマンド
 
@@ -57,9 +57,10 @@ pnpm demo:reading              # LLM なしでリーディングを1件生成し
 pnpm demo:reading -- <seed>    # 同じ seed で再現
 
 cp apps/web/.env.example apps/web/.env.local   # 初回のみ
-pnpm emulators                 # Auth / Firestore エミュレータ（JDK が要る）
+pnpm emulators                 # Auth / Firestore / Functions（JDK が要る）
 pnpm dev
 pnpm test:firestore            # セキュリティルールと保存（エミュレータを自前で起動する）
+pnpm build:functions           # Cloud Function を束ねる（デプロイ前に走る）
 ```
 
 `pnpm test` はエミュレータも Java も要らない。実際に動かさないと確かめられないもの
@@ -96,7 +97,37 @@ users/{uid}/journal/{autoId}             読みに紐づかない記入
 `drawn[]` や `deckIds` を別立てで持たない。どちらも `positions` と `meta` から導ける。
 テンプレートの本文も保存しない。readingJson と辞書があれば必ず同じ文章が再生成できる
 （0円・オフライン可）ので、保存する価値があるのは再生成できないもの、つまり
-Phase 9 の LLM 出力だけになる。カードデータを Firestore に置かないのと同じ判断。
+LLM の出力だけになる。カードデータを Firestore に置かないのと同じ判断。
+
+```
+llmUsage/{uid}                           1日あたりの整形回数（サーバー専用）
+```
+
+`llmUsage` だけは `users/` の外にある。ルールを書いていないので Admin SDK
+以外は読み書きできない。本人の下に置くと自分で回数を 0 に戻せてしまい、
+上限が飾りになる。**このアプリで「守る相手がいる」唯一のデータ。**
+
+### LLM 整形（L4b）
+
+`formatReading` は ReadingJSON を受け取り、構造化 JSON で本文を返す。
+API キーはブラウザに置けないので、このプロジェクトでサーバーが要るのはここだけ。
+
+プロンプトは**サーバー側で組み立てる**。素材を受け取って書くだけの関数にすると、
+匿名でサインインできる誰もが有料モデルを汎用の文章生成器として使えてしまう。
+ID をすべて辞書で引き直し、位置がスプレッドと一致することを確かめているので、
+呼び出し側にできるのは「タロットの読み物を作らせること」だけになる。
+
+モデルが書くのは本文だけで、カード名・位置名・スプレッド名は辞書のものを使う。
+**モデルがカードを取り違えても、間違ったカード名は画面に出ない。**
+
+```bash
+# 秘密鍵はコンソールか CLI から。リポジトリには入らない。
+firebase functions:secrets:set ANTHROPIC_API_KEY
+firebase deploy --only functions        # Blaze プランが要る
+
+# エミュレータで動かすときは環境変数で渡す
+ANTHROPIC_API_KEY=sk-ant-... pnpm emulators
+```
 
 ## 設計上の判断メモ
 
@@ -126,6 +157,18 @@ Phase 9 の LLM 出力だけになる。カードデータを Firestore に置�
 - **Firebase SDK を初期バンドルに載せない。** 動的 import 越しにのみ読み込む。
   静的に import すると `/` の First Load JS が 139kB → 292kB になり、
   保存を使わない人にも読み込みの重さだけを負わせることになる。
+- **LLM に完成した文章を渡さない。** 渡すのは読み筋とキーワードまで。
+  テンプレートの本文を渡すと LLM は言い換え装置になり、一貫性もコスト削減も失われる。
+  `prompt.test.ts` がこの線を毎回踏んでいる。
+- **プロンプトの文言も `packages/content` にしか置かない。** ただし辞書本体とは
+  別の入口（`@tarot-mirror/content/prompt`）にしてある。モデルへの指示は
+  サーバーしか読まないので、辞書に混ぜると全読者のバンドルに載る。
+- **答えを一部だけ採用しない。** 位置がひとつ欠けても、トーンをひとつ外しても、
+  丸ごとテンプレートに戻す。文体の違う本文が同じ画面に並ぶ読み物は、
+  書き手が二人いるように読める。
+- **本文は出す前に決める。** 整形を待つあいだ盤面は出すが本文は伏せ、時間切れなら
+  テンプレートで確定して、あとから届いた答えは捨てる。読んでいる最中に文章が
+  入れ替わるのは、読む側からすれば故障に見える。
 
 ## 開発の進め方
 

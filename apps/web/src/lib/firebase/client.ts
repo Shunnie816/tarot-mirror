@@ -5,6 +5,11 @@ import {
   connectFirestoreEmulator,
   getFirestore,
 } from "firebase/firestore";
+import {
+  type Functions,
+  connectFunctionsEmulator,
+  getFunctions,
+} from "firebase/functions";
 
 import { readFirebaseOptions, useEmulators } from "./config";
 
@@ -20,11 +25,16 @@ import { readFirebaseOptions, useEmulators } from "./config";
  */
 
 const EMULATOR_AUTH_URL = "http://127.0.0.1:9099";
-const EMULATOR_FIRESTORE_HOST = "127.0.0.1";
+const EMULATOR_HOST = "127.0.0.1";
 const EMULATOR_FIRESTORE_PORT = 8080;
+const EMULATOR_FUNCTIONS_PORT = 5001;
+
+/** Firestore のロケーションは変更できないので、Function もここに固定。 */
+const FUNCTIONS_REGION = "asia-northeast1";
 
 let auth: Auth | undefined;
 let db: Firestore | undefined;
+let functions: Functions | undefined;
 
 function app(): FirebaseApp {
   if (getApps().length > 0) return getApp();
@@ -49,12 +59,18 @@ export function getFirebaseDb(): Firestore {
   if (db === undefined) {
     db = getFirestore(app());
     if (useEmulators) {
-      connectFirestoreEmulator(
-        db,
-        EMULATOR_FIRESTORE_HOST,
-        EMULATOR_FIRESTORE_PORT,
-      );
+      connectFirestoreEmulator(db, EMULATOR_HOST, EMULATOR_FIRESTORE_PORT);
     }
   }
   return db;
+}
+
+export function getFirebaseFunctions(): Functions {
+  if (functions === undefined) {
+    functions = getFunctions(app(), FUNCTIONS_REGION);
+    if (useEmulators) {
+      connectFunctionsEmulator(functions, EMULATOR_HOST, EMULATOR_FUNCTIONS_PORT);
+    }
+  }
+  return functions;
 }

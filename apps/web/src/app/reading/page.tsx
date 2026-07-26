@@ -8,7 +8,7 @@ import {
 } from "@tarot-mirror/engine";
 
 import { JournalEditor } from "@/components/journal-editor";
-import { ReadingView } from "@/components/reading-view";
+import { ReadingSurface } from "@/components/reading-surface";
 import { SaveReading } from "@/components/save-reading";
 import {
   readQuestion,
@@ -42,11 +42,17 @@ export default async function Page({
   // ReadingJSON をそのままクライアントへ渡す。seed から引き直すこともできるが、
   // それにはエンジンとデッキをクライアントバンドルに載せることになり、
   // 「読むだけの人に重さを負わせない」方針と衝突する。
+  //
+  // 辞書だけで組んだ読み物はサーバーで作り、そのまま渡す。整形が要らない
+  // 設定でも、届かなくても、これがそのまま画面に出る。LLM は上乗せであって、
+  // 読めるかどうかを左右しない。
+  //
   // 書く場所は段階開示の外に出す。締めのブロックの中に入れると、最後まで
   // 開いた人しか書けなくなり、履歴から戻って書き直すこともできなくなる。
   return (
-    <ReadingView
-      reading={renderTemplate(reading)}
+    <ReadingSurface
+      source={reading}
+      template={renderTemplate(reading)}
       footer={
         <>
           <JournalEditor

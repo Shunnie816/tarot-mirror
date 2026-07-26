@@ -30,6 +30,12 @@ jobs:
       - name: Test
         run: pnpm test
 
+      # Function だけは束ねてからデプロイされる。ワークスペースのパッケージは
+      # ビルド無しの TypeScript なので、束ね方が壊れても test も typecheck も
+      # 気づかない。気づくのがデプロイの瞬間になるくらいなら、毎回束ねておく。
+      - name: The function must still bundle
+        run: pnpm build:functions
+
       # セキュリティルールは実際に動かさないと確かめられない。
       # 「他人の uid では読めない」が壊れていないことを毎回踏む。
       # Firestore エミュレータは JDK を要求する。ランナー既定の Java に

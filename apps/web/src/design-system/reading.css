@@ -259,6 +259,20 @@
   text-wrap: pretty;
 }
 
+/* 誰が言葉を整えたか。読み物の一部ではないので、締めの文よりさらに引く。 */
+.closing-provenance {
+  font-size: var(--text-label);
+  line-height: 1.8;
+}
+
+/* 本文を待っているあいだ。盤面はすでに出ているので、ここは埋め草を置かない。
+   進捗の点滅も割合も出さない。待っていることを、待っている声で言う。 */
+.reading-settling {
+  max-width: var(--measure-reading);
+  margin: 0 auto;
+  padding-block: var(--space-lg);
+}
+
 /* 残したことの控えめな報告。読み物ではなく画面の状態なので、
    本文の幅に揃えたうえで、いちばん下に一段下がった声で置く。 */
 .reading-kept {
