@@ -3,6 +3,7 @@ import { riderWaite } from "@tarot-mirror/decks";
 import { createReading, getSpread, renderTemplate } from "@tarot-mirror/engine";
 
 import { DrawView } from "@/components/draw-view";
+import { PrefetchReading } from "@/components/prefetch-reading";
 import { groupPositions } from "@/lib/groups";
 import {
   readQuestion,
@@ -33,17 +34,16 @@ export default async function Page({
 
   // 盤面と読み物は同じ引きでなければならない。設定を片方だけが見ていると、
   // ここに逆位置のカードが並んだあと、本文がすべて正位置になる。
-  const { allowReversals } = await readReadingPrefs();
+  const { allowReversals, llmEnabled } = await readReadingPrefs();
 
-  const reading = renderTemplate(
-    createReading({
-      spread: getSpread(spreadId),
-      deck: riderWaite,
-      seed,
-      allowReversals,
-      ...(question !== undefined ? { question } : {}),
-    }),
-  );
+  const source = createReading({
+    spread: getSpread(spreadId),
+    deck: riderWaite,
+    seed,
+    allowReversals,
+    ...(question !== undefined ? { question } : {}),
+  });
+  const reading = renderTemplate(source);
 
   return (
     <div className="screen">
@@ -61,6 +61,10 @@ export default async function Page({
           seed={seed}
           {...(question !== undefined ? { question } : {})}
         />
+
+        {/* 置いているあいだに整形を頼んでおく。読み物の手前で待たせないため。
+            何も描かないし、失敗しても読み物には何も起きない。 */}
+        <PrefetchReading reading={source} enabled={llmEnabled} />
       </main>
     </div>
   );
