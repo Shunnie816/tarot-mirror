@@ -106,4 +106,28 @@ describe("firestore rules", () => {
 
     await assertFails(getDoc(doc(db, "decks/rider-waite")));
   });
+
+  /**
+   * LLM 整形の回数だけは、本人からも守る必要がある。
+   *
+   * 上限は請求額の歯止めなので、数えられている当人が 0 に戻せてはいけない。
+   * `/users/{uid}` の下に置くと所有権ルールがそのまま通ってしまうため、
+   * ルールを書かない場所（Admin SDK だけが触れる場所）に置いてある。
+   * このアプリで「守る相手がいる」唯一のデータ。
+   */
+  describe("llmUsage", () => {
+    const path = `llmUsage/${OWNER}`;
+
+    it("should not let the person being counted read their own tally", async () => {
+      const db = testEnv.authenticatedContext(OWNER).firestore();
+
+      await assertFails(getDoc(doc(db, path)));
+    });
+
+    it("should not let the person being counted reset it", async () => {
+      const db = testEnv.authenticatedContext(OWNER).firestore();
+
+      await assertFails(setDoc(doc(db, path), { day: "2026-07-26", count: 0 }));
+    });
+  });
 });

@@ -37,6 +37,16 @@ export type GroupId = `group.${string}`;
 /** Chrome and connective copy used by renderers, e.g. `ui.upright`. */
 export type UiId = `ui.${string}`;
 
+/**
+ * A piece of the LLM system prompt, e.g. `prompt.lens.origin`.
+ *
+ * The prompt is copy, so it lives here rather than in the renderer. That keeps
+ * the rule "文言はすべて packages/content にしかない" true of the LLM path too,
+ * and it is what makes the promise in the README real: adding a locale means
+ * adding a dictionary, including the instructions the model is given.
+ */
+export type PromptId = `prompt.${string}`;
+
 /** A card, namespaced by deck, e.g. `rw.major.00`. */
 export type CardId = string;
 

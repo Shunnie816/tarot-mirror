@@ -18,9 +18,17 @@ import { anchorIdFor, countLabel, groupPositions } from "@/lib/groups";
  */
 export function ReadingView({
   reading,
+  settling = false,
   footer,
 }: {
   readonly reading: RenderedReading;
+  /**
+   * 本文がまだ確定していない。盤面と問いは出したまま、読み物だけを伏せる。
+   *
+   * 読み始めたあとに文章が入れ替わるのは、読む側からすれば故障に見える。
+   * 出してから直すくらいなら、出す前に少し待つ。
+   */
+  readonly settling?: boolean;
   /**
    * 画面のいちばん下に置かれるもの。読み物の一部ではないので段階開示の外に出す。
    * ここに入れたものは、どこまで開いたかに関係なく最初から載っている。
@@ -95,7 +103,16 @@ export function ReadingView({
           />
         </section>
 
-        <div className="screen-reading-block reading-body">
+        {settling && (
+          <p className="screen-reading-block screen-note reading-settling">
+            {resolver.ui("ui.readingSettling")}
+          </p>
+        )}
+
+        <div
+          className="screen-reading-block reading-body"
+          hidden={settling}
+        >
           {groups.map((group, index) => (
             <div key={group.key} className="reading-group">
               {index < openCount && (
@@ -208,6 +225,13 @@ export function ReadingView({
                   .map((sentence) => (
                     <p key={sentence}>{sentence}。</p>
                   ))}
+                {/* 誰が書いたのかを黙っておかない。整えたのは言葉だけで、
+                    意味を決めたのは引いた時点だ、というのは伝えておきたい。 */}
+                {reading.mode === "llm" && (
+                  <p className="closing-provenance">
+                    {resolver.ui("ui.readingAssisted")}
+                  </p>
+                )}
               </footer>
             </section>
           )}

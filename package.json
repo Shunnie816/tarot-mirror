@@ -14,7 +14,8 @@
     "validate:decks": "vitest run --project decks",
     "dev": "pnpm --filter @tarot-mirror/web dev",
     "build": "pnpm --filter @tarot-mirror/web build",
-    "emulators": "firebase emulators:start",
+    "emulators": "pnpm --filter @tarot-mirror/functions build && firebase emulators:start",
+    "build:functions": "pnpm --filter @tarot-mirror/functions build",
     "demo:reading": "tsx scripts/demo-reading.ts"
   },
   "devDependencies": {

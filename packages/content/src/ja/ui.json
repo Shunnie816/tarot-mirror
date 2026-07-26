@@ -44,6 +44,8 @@
   "ui.drawStatusDone": "すべて置きました。裏返しはありません。ここから読みはじめられます。",
   "ui.drawStart": "読みはじめる",
   "ui.readingKept": "この読みは残してあります。",
+  "ui.readingSettling": "いま、言葉を整えています。少しだけお待ちください。",
+  "ui.readingAssisted": "この読み物は、引いたカードの意味をもとに AI が言葉を整えたものです。意味そのものは、引いた時点で決まっています。",
 
   "ui.journalEyebrow": "書きとめる",
   "ui.journalHeading": "読んでみて、思ったこと",

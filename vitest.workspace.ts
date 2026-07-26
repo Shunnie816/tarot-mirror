@@ -30,6 +30,16 @@ export default defineWorkspace([
     },
   },
   {
+    // Cloud Function の判断（断る・上限・引き直す・諦める）はここで踏む。
+    // Anthropic も Firestore も注入なので、鍵もネットワークも要らない。
+    test: {
+      name: "functions",
+      root: "./functions",
+      environment: "node",
+      include: ["src/**/*.test.ts"],
+    },
+  },
+  {
     // 画面まわりで検証するのは、hooks に切り出したロジックだけ。
     // カードの見た目や DOM の構造はテストしない。
     test: {

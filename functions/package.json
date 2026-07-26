@@ -1,0 +1,29 @@
+{
+  "name": "@tarot-mirror/functions",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "_engines": "firebase-tools はランタイムの版をここから読む。範囲指定（>=22）は受け付けない。",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "firebase-admin": "^14.2.0",
+    "firebase-functions": "^7.3.0"
+  },
+  "devDependencies": {
+    "@tarot-mirror/content": "workspace:*",
+    "@tarot-mirror/decks": "workspace:*",
+    "@tarot-mirror/engine": "workspace:*",
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.2",
+    "zod": "^3.24.1"
+  }
+}
