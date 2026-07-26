@@ -36,13 +36,14 @@ jobs:
       - name: The function must still bundle
         run: pnpm build:functions
 
-      # App Hosting は毎回この本番ビルドを走らせる。dev サーバーでは通るのに
-      # `next build` では落ちるもの（プリレンダリング時の実行、型より緩い import、
-      # ワークスペースのトランスパイル漏れ）は、ここが無いとロールアウトの
-      # 瞬間まで誰も知らない。.env は置かない — Firebase の設定値が無い状態でも
-      # ビルドが通ることを、ついでに毎回踏んでおく。
-      - name: The web app must still build for production
-        run: pnpm build
+      # App Hosting が実際に打つコマンドをそのまま踏む。dev サーバーでは通るのに
+      # `next build` では落ちるもの（プリレンダリング時の実行、ワークスペースの
+      # トランスパイル漏れ）に加えて、turbo.json 側の壊れも同時に拾える。
+      # `pnpm build` にすると turbo を通らないので、その半分を見逃す（Issue #45）。
+      # .env は置かない — Firebase の設定値が無い状態でもビルドが通ることを
+      # ついでに毎回踏んでおく。
+      - name: The web app must still build the way App Hosting builds it
+        run: pnpm build:apphosting
 
       # デプロイ先は npm で入れる。ワークスペースの記法（workspace:*）が
       # functions/package.json に紛れ込むと、npm がマニフェストを読んだ時点で
