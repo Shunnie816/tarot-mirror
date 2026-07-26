@@ -45,6 +45,13 @@ jobs:
       - name: The web app must still build the way App Hosting builds it
         run: pnpm build:apphosting
 
+      # turbo.json は2つの実装に読まれる。turbo(Rust) は JSONC を受け付けるが、
+      # App Hosting のビルドパック(Go) は encoding/json で読むのでコメントを
+      # 受け付けない。上の build だけでは turbo 側しか踏めず、コメントを
+      # 書き足した瞬間からロールアウトだけが落ちる（Issue #47）。
+      - name: turbo.json must parse as strict JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('turbo.json','utf8'))"
+
       # デプロイ先は npm で入れる。ワークスペースの記法（workspace:*）が
       # functions/package.json に紛れ込むと、npm がマニフェストを読んだ時点で
       # 落ちる。pnpm で開発しているとローカルでは一度も踏まないので、

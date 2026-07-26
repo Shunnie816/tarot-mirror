@@ -1,20 +1,7 @@
 {
-  // このファイルは Turborepo のためだけに在るのではない。
-  //
-  // App Hosting のビルドパックは rootDir（apps/web）から上へ辿って
-  // nx.json か turbo.json を探し、**見つかったときだけ**そこをビルドの起点にする。
-  // 無いと apps/web 自体がアプリのルートになり、リポジトリのルートにある
-  // pnpm-lock.yaml が一度も見られないまま "Missing Lock File" で落ちる。
-  // pnpm workspace は、それだけではモノレポとして認識されない（Issue #45）。
-  //
-  // ローカルの開発は今までどおり pnpm --filter で回してよく、
-  // turbo を通るのは App Hosting のビルドだけ。
   "$schema": "https://turborepo.dev/schema.json",
   "tasks": {
     "build": {
-      // ワークスペースのパッケージは素の TypeScript を公開していて build を持たない。
-      // turbo は task を持たないパッケージを黙って飛ばすので、これは
-      // 「将来 build を持ったら先に走らせる」という宣言になる。
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     }
