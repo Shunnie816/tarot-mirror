@@ -323,6 +323,36 @@
   gap: var(--space-sm) var(--space-lg);
 }
 
+/* ---------- 画面から出る道 ---------- */
+
+/* 末尾に置く出口。細い線で本文と切るだけで、囲わないし色も付けない。
+   常設のヘッダーにしないのは、読んでいる最中に「次」を目に入れないため。 */
+.screen-exit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: var(--control-border-width) solid var(--color-border-subtle);
+}
+
+/* 文字を小さくするのはリンクだけ。`.screen-exit` 自体に font-size を書くと、
+   `--measure-reading` の em がその小さい文字で解けてしまい、区切り線が
+   読み物より一回り狭くなる。 */
+.screen-exit .quiet-link {
+  font-size: var(--text-label-small);
+  letter-spacing: var(--tracking-label);
+}
+
+/* 読み物の下に置くときは、本文と同じ幅に揃える。
+   `reading-layout` は align-items: center の flex なので、width を書かないと
+   区切り線がリンクの幅まで縮む。 */
+.screen-exit--reading {
+  width: 100%;
+  max-width: var(--measure-reading);
+  margin-inline: auto;
+}
+
 /* ---------- 書きとめる ---------- */
 
 /* 読み物と地続きにする。囲って「フォーム」にすると、書くことが手続きになる。 */

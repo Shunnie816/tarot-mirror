@@ -1,6 +1,7 @@
 import { DEFAULT_LOCALE, getResolver } from "@tarot-mirror/content";
 
 import { JournalList } from "@/components/journal-list";
+import { ScreenExit } from "@/components/screen-exit";
 
 /**
  * 書きとめたもの。
@@ -23,6 +24,8 @@ export default function Page() {
         </header>
 
         <JournalList locale={DEFAULT_LOCALE} />
+
+        <ScreenExit locale={DEFAULT_LOCALE} />
       </main>
     </div>
   );

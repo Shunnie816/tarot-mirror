@@ -3,6 +3,7 @@ import { riderWaite } from "@tarot-mirror/decks";
 import { ALL_SPREADS, createReading, renderTemplate } from "@tarot-mirror/engine";
 
 import { Board } from "@/components/board";
+import { ScreenExit } from "@/components/screen-exit";
 import { SpreadPicker } from "@/components/spread-picker";
 import { groupPositions } from "@/lib/groups";
 import { readQuestion, type RawParams } from "@/lib/flow";
@@ -67,6 +68,8 @@ export default async function Page({
             </section>
           ))}
         </div>
+
+        <ScreenExit locale={DEFAULT_LOCALE} reading />
       </main>
     </div>
   );

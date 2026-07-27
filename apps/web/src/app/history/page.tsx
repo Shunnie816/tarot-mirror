@@ -1,6 +1,7 @@
 import { DEFAULT_LOCALE, getResolver } from "@tarot-mirror/content";
 
 import { HistoryList } from "@/components/history-list";
+import { ScreenExit } from "@/components/screen-exit";
 
 /**
  * これまでの読み。
@@ -23,6 +24,8 @@ export default function Page() {
         </header>
 
         <HistoryList locale={DEFAULT_LOCALE} />
+
+        <ScreenExit locale={DEFAULT_LOCALE} />
       </main>
     </div>
   );

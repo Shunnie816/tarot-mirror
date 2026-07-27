@@ -1,6 +1,7 @@
 import { DEFAULT_LOCALE, getResolver } from "@tarot-mirror/content";
 import { cookies } from "next/headers";
 
+import { ScreenExit } from "@/components/screen-exit";
 import { SettingToggle } from "@/components/setting-toggle";
 import { LLM_COOKIE, parseLlmPref } from "@/lib/prefs/llm";
 import { REVERSALS_COOKIE, parseReversalsPref } from "@/lib/prefs/reversals";
@@ -53,6 +54,8 @@ export default async function Page() {
           </h2>
           <p className="screen-note">{resolver.ui("ui.creditsCards")}</p>
         </section>
+
+        <ScreenExit locale={DEFAULT_LOCALE} />
       </main>
     </div>
   );

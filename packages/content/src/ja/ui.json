@@ -104,6 +104,10 @@
   "ui.accountUnavailable": "いまは保存されない状態で動いています。読むことは、そのまま続けられます。",
   "ui.accountRetry": "もう一度つなぐ",
 
+  "ui.exitLabel": "この画面から移動する",
+  "ui.exitHome": "はじめに戻る",
+  "ui.exitDrawAgain": "もう一度引く",
+
   "ui.keywordSeparator": "、",
   "ui.noInsights": "今回は、カードどうしの目立った重なりは見当たりませんでした。一枚ずつの意味に、ゆっくり目を通してみてください。",
   "ui.closingNote": "ここに書かれていることは、決まった答えではありません。いまのあなたが受け取れるものだけ、持ち帰ってみてください。"

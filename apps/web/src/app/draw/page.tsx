@@ -4,6 +4,7 @@ import { createReading, getSpread, renderTemplate } from "@tarot-mirror/engine";
 
 import { DrawView } from "@/components/draw-view";
 import { PrefetchReading } from "@/components/prefetch-reading";
+import { ScreenExit } from "@/components/screen-exit";
 import { groupPositions } from "@/lib/groups";
 import {
   readQuestion,
@@ -65,6 +66,8 @@ export default async function Page({
         {/* 置いているあいだに整形を頼んでおく。読み物の手前で待たせないため。
             何も描かないし、失敗しても読み物には何も起きない。 */}
         <PrefetchReading reading={source} enabled={llmEnabled} />
+
+        <ScreenExit locale={DEFAULT_LOCALE} reading />
       </main>
     </div>
   );
