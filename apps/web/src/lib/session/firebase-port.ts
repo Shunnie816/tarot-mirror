@@ -4,12 +4,14 @@ import {
   linkWithPopup,
   onIdTokenChanged,
   signInAnonymously,
+  signInWithPopup,
+  signOut,
   type User,
 } from "firebase/auth";
 
 import { getFirebaseAuth } from "@/lib/firebase/client";
 
-import type { AuthPort, LinkResult, SessionUser } from "./types";
+import type { AuthPort, LinkResult, SessionUser, SignInResult } from "./types";
 
 /**
  * `AuthPort` の Firebase 実装。
@@ -76,6 +78,36 @@ export function createFirebaseAuthPort(): AuthPort {
           if (ALREADY_IN_USE_CODES.has(error.code)) return "alreadyInUse";
         }
         return "failed";
+      }
+    },
+
+    /**
+     * すでにある Google アカウントを開く。`linkWithPopup` と違って、いまの
+     * uid には何も起きない。匿名のまま呼ぶと、その匿名アカウントに書いたものは
+     * 残ったまま辿れなくなるので、呼ぶ側がそれを伝えてから呼ぶ。
+     */
+    signInGoogle: async (): Promise<SignInResult> => {
+      try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+        return "signedIn";
+      } catch (error) {
+        if (error instanceof FirebaseError && CANCELLED_CODES.has(error.code)) {
+          return "cancelled";
+        }
+        return "failed";
+      }
+    },
+
+    /**
+     * 失敗しても投げない。サインアウトが例外で止まると、画面は繋がったまま
+     * なのに利用者は離れたつもりでいる、といういちばん困る食い違いが起きる。
+     * 実際に離れられたかどうかは、このあと購読が流す利用者で分かる。
+     */
+    signOut: async () => {
+      try {
+        await signOut(auth);
+      } catch {
+        // 次の購読通知が本当の状態を教えてくれる。
       }
     },
   };
