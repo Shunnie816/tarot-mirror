@@ -1,9 +1,9 @@
 import { DEFAULT_LOCALE, getResolver } from "@tarot-mirror/content";
 import { cookies } from "next/headers";
 
+import { AccountSection } from "@/components/account-section";
 import { ScreenExit } from "@/components/screen-exit";
 import { SettingToggle } from "@/components/setting-toggle";
-import { SignOutControl } from "@/components/sign-out-control";
 import { LLM_COOKIE, parseLlmPref } from "@/lib/prefs/llm";
 import { REVERSALS_COOKIE, parseReversalsPref } from "@/lib/prefs/reversals";
 
@@ -50,7 +50,7 @@ export default async function Page() {
 
         {/* 読み方の設定より下に置く。ここに来る用があるのは稀で、
             間違って押す機会を増やしたくない。 */}
-        <SignOutControl locale={DEFAULT_LOCALE} />
+        <AccountSection locale={DEFAULT_LOCALE} />
 
         {/* 表示義務は無いが、描いた人の名前は出す。根拠は docs/CARD_IMAGES.md。 */}
         <section className="credits">
