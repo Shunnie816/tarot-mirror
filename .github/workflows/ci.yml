@@ -84,7 +84,7 @@ jobs:
       # 「他人の uid では読めない」が壊れていないことを毎回踏む。
       # Firestore エミュレータは JDK を要求する。ランナー既定の Java に
       # 依存すると、その入れ替えで静かに壊れるので版を固定する。
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
