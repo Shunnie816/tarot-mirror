@@ -1,0 +1,67 @@
+version: 2
+
+# 更新に気づく手立てが「たまに pnpm outdated を打つ」しか無かった。打つ機会は
+# 構造的に無いので、実際には誰も打たない。#52 と同じ形（手順書は打ち忘れを
+# 防がない）なので、向こうから来るようにする。
+#
+# セキュリティ更新はこの設定と別に、リポジトリの設定で常時動いている。
+# ここで決めているのは「脆弱性が無くても定期的に上げるか」のほう。
+
+updates:
+  # pnpm ワークスペース。ルートの pnpm-lock.yaml から apps/* packages/*
+  # functions まで一緒に見てくれるので、ここ1つでよい。
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Tokyo
+
+    # 開いたまま溜めない。読み切れない数の PR は、無いのと同じ。
+    open-pull-requests-limit: 5
+
+    labels:
+      - dependencies
+      - area:infra
+
+    commit-message:
+      prefix: chore
+      include: scope
+
+    # patch と minor はまとめて1本にする。1つずつ来ても、確かめることは
+    # 同じ（テストと typecheck と build が通るか）なので、分けても手間が
+    # 増えるだけ。
+    #
+    # メジャーはここに入れない。グループに入れないものは既定で1つずつ別の
+    # PR になる。上げ方も戻し方も違うので、束ねると「どれで落ちたか」が
+    # 分からなくなる。#66 の「一括で上げない」はそういう意味。
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+    ignore:
+      # TypeScript 7 は 5 からの連続した更新ではなく、コンパイラのネイティブ
+      # 移植。判断がつくまで毎週 PR が来て毎週閉じる状態になるので止める。
+      # 判断は #79 で、ついたらこの3行を消す。
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
+  # ワークフローが使っているアクション。ここが古びても CI は緑のままなので、
+  # 見に行かないかぎり気づけない。npm 側より放置されやすい。
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Tokyo
+
+    labels:
+      - dependencies
+      - area:infra
+
+    commit-message:
+      prefix: ci
