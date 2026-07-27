@@ -21,7 +21,7 @@
     "@types/node": "^22.10.2",
     "esbuild": "^0.28.1",
     "typescript": "^5.7.2",
-    "zod": "^3.24.1"
+    "zod": "^4.4.3"
   },
   "_dependencies": "ワークスペースのパッケージはここに書かない。npm が workspace:* を解釈できず、Cloud Functions のビルド（npm install）がマニフェストを読んだ時点で落ちる。esbuild が束ねてしまうので、書く必要もない。解決は build.mjs / tsconfig.json / vitest.workspace.ts の3か所の別名で行う。"
 }

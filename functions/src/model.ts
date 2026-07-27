@@ -5,7 +5,7 @@ import {
   type FormatPrompt,
   type LlmFormatOutput,
 } from "@tarot-mirror/engine";
-import { z } from "zod";
+import * as z from "zod";
 
 /**
  * The one place that talks to Anthropic.

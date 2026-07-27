@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 /**
  * Deck data validation.
@@ -57,7 +57,7 @@ export const CardSchema = z
       for (const field of ["suit", "rank", "court"] as const) {
         if (card[field] !== undefined) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             path: [field],
             message: `major arcana must not define "${field}"`,
           });
@@ -68,7 +68,7 @@ export const CardSchema = z
 
     if (card.suit === undefined) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         path: ["suit"],
         message: "minor arcana must define a suit",
       });
@@ -77,7 +77,7 @@ export const CardSchema = z
     const hasCourt = card.court !== undefined;
     if (hasRank === hasCourt) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         path: ["rank"],
         message: "minor arcana must define exactly one of rank or court",
       });
@@ -106,7 +106,7 @@ export const DeckSchema = z
     for (const [index, card] of deck.cards.entries()) {
       if (seen.has(card.id)) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           path: ["cards", index, "id"],
           message: `duplicate card id "${card.id}"`,
         });
@@ -115,7 +115,7 @@ export const DeckSchema = z
 
       if (!card.id.startsWith(`${deck.id}.`)) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           path: ["cards", index, "id"],
           message: `card id must be namespaced with deck id "${deck.id}"`,
         });
