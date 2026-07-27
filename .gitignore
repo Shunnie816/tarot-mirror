@@ -33,3 +33,7 @@ Thumbs.db
 
 # test output
 coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
