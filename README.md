@@ -139,16 +139,23 @@ gcloud iam service-accounts create github-deployer \
   --project=$PROJECT --display-name="GitHub Actions deployer"
 SA=github-deployer@$PROJECT.iam.gserviceaccount.com
 
-# 2. 権限。ルールと Function を出すのに要るぶんだけ
+# 2. Firebase 本体の権限は既製ロールを使わない（理由は下）。1つだけ切り出す
+gcloud iam roles create githubDeployerFirebaseConfig --project=$PROJECT \
+  --title="GitHub deployer: Firebase project config" \
+  --permissions=firebase.projects.get --stage=GA
+
+# 3. 権限。ルールと Function を出すのに要るぶんだけ
 for ROLE in roles/firebaserules.admin roles/datastore.indexAdmin \
             roles/cloudfunctions.admin roles/artifactregistry.admin \
             roles/serviceusage.serviceUsageConsumer \
-            roles/iam.serviceAccountUser roles/run.admin; do
+            roles/iam.serviceAccountUser roles/run.admin \
+            roles/secretmanager.viewer \
+            projects/$PROJECT/roles/githubDeployerFirebaseConfig; do
   gcloud projects add-iam-policy-binding $PROJECT \
     --member="serviceAccount:$SA" --role="$ROLE" --condition=None
 done
 
-# 3. GitHub からの入口
+# 4. GitHub からの入口
 gcloud iam workload-identity-pools create github --project=$PROJECT --location=global
 gcloud iam workload-identity-pools providers create-oidc github \
   --project=$PROJECT --location=global --workload-identity-pool=github \
@@ -156,12 +163,12 @@ gcloud iam workload-identity-pools providers create-oidc github \
   --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository" \
   --attribute-condition="assertion.repository=='$REPO'"
 
-# 4. このリポジトリにだけ、そのサービスアカウントを使わせる
+# 5. このリポジトリにだけ、そのサービスアカウントを使わせる
 gcloud iam service-accounts add-iam-policy-binding $SA --project=$PROJECT \
   --role=roles/iam.workloadIdentityUser \
   --member="principalSet://iam.googleapis.com/projects/$NUMBER/locations/global/workloadIdentityPools/github/attribute.repository/$REPO"
 
-# 5. ワークフローに教える（秘密ではないので variable でよい）
+# 6. ワークフローに教える（秘密ではないので variable でよい）
 gh variable set GCP_WORKLOAD_IDENTITY_PROVIDER \
   --body "projects/$NUMBER/locations/global/workloadIdentityPools/github/providers/github"
 gh variable set GCP_DEPLOY_SERVICE_ACCOUNT --body "$SA"
@@ -187,6 +194,34 @@ Error: ... /collectionGroups/-/indexes had HTTP Error: 403, The caller does not 
 **ここで `--only firestore:rules` に逃げないこと。** 索引を出さない CI にすると、
 `firestore.indexes.json` に索引を足した日から、また「リポジトリには在るのに本番に
 無い」が始まる。#52 と同じ形なので、権限のほうを足す。
+
+**`roles/firebase.viewer` を使わないこと。** `firebase deploy --only functions` は
+最初に Firebase Management API の `adminSdkConfig` を叩く。ここで要るのは
+`firebase.projects.get` だけだが、それを含む既製ロールはどれも広い。
+
+```
+Error: Request to https://firebase.googleapis.com/v1beta1/projects/.../adminSdkConfig
+had HTTP Error: 403, The caller does not have permission
+```
+
+`roles/firebase.viewer` は 289 個の権限を持ち、その中に `datastore.entities.list`
+が入っている。付ければ**デプロイ用のサービスアカウントが全ユーザーの読みと
+ジャーナルを読める**ようになる。このアプリが預かっているのはそういう種類の
+文章なので、1権限だけのカスタムロールを作る（上の手順 2）。
+
+`resourcemanager.projects.get` は別途要らない。`cloudfunctions.admin` /
+`run.admin` / `artifactregistry.admin` がすでに持っている。
+
+**Secret には `roles/secretmanager.viewer` で足りる。** `defineSecret` を使う
+Function をデプロイすると、firebase-tools が秘密の存在と、実行用サービス
+アカウントへの `secretAccessor` 付与を確認する。読むのは**メタデータと IAM
+ポリシーだけ**で、値そのものではない。`secretmanager.admin` は
+`versions.access` を含む＝ CI が `ANTHROPIC_API_KEY` の中身を読めてしまうので
+使わない。
+
+実行用サービスアカウントを差し替えた日には、付与のやり直しに
+`setIamPolicy` が要るので、この設定では CI が 403 で止まる。止まるのは
+正しい壊れ方なので、そのときに手で付け直す。
 
 ### 保存されるもの
 
