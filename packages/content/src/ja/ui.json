@@ -22,10 +22,10 @@
 
   "ui.questionEyebrow": "はじめに",
   "ui.questionTitle": "いま、何について考えていますか",
-  "ui.questionLead": "ここに書いた言葉は、そのままのかたちで読みの画面に残ります。うまく書けなくてもかまいません。空欄のまま進んでも、読むものは変わりません。",
+  "ui.questionLead": "カードは答えを出しません。出てくるのは考えるための手がかりで、それをどう受け取るかは、あなたが決めます。",
   "ui.questionFieldLabel": "あなたの問い（任意）",
   "ui.questionPlaceholder": "たとえば、いま迷っていること。",
-  "ui.questionNote": "長くても短くてもかまいません。文字数は数えていません。",
+  "ui.questionNote": "書いた言葉は、そのままのかたちで読みの画面に残ります。長くても短くてもかまいません。空欄のまま進んでも、読むものは変わりません。",
   "ui.questionSubmit": "この問いで進む",
   "ui.questionSkip": "問いを書かずに進む",
 
