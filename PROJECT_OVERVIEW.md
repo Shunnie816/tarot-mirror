@@ -239,6 +239,14 @@ The reading should encourage:
 - emotional organization
 - decision support
 
+The premise has to reach the reader **before the first card**, not only after.
+
+MVP feedback (Issue #54) found that the app opens straight into "what are you
+thinking about", which reads exactly like a fortune-telling intake. It was
+possible to go all the way through still expecting to be told something, and
+then find the result underwhelming. Nothing was broken — the premise had just
+never been handed over. The question screen states it now.
+
 ---
 
 # Cost Strategy
