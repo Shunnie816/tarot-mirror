@@ -22,11 +22,23 @@ export interface SessionUser {
  */
 export type LinkResult = "linked" | "cancelled" | "alreadyInUse" | "failed";
 
+/**
+ * すでにあるアカウントを開く試みの結果。
+ *
+ * `LinkResult` と分けてあるのは、結果の意味が違うから。繋ぐのは「いま書いた
+ * ものを持っていく」操作で、開くのは「別のところへ移る」操作。`alreadyInUse`
+ * に相当するものが無いのも、開く側から見れば使われているのが正常だから。
+ */
+export type SignInResult = "signedIn" | "cancelled" | "failed";
+
 export interface AuthPort {
   /** 現在の利用者を通知する。購読開始時にも一度呼ばれる。戻り値は購読解除。 */
   subscribe(listener: (user: SessionUser | null) => void): () => void;
   signInAnonymously(): Promise<void>;
   linkGoogle(): Promise<LinkResult>;
+  /** すでにある Google アカウントを開く。いまの uid のものは引き継がれない。 */
+  signInGoogle(): Promise<SignInResult>;
+  signOut(): Promise<void>;
 }
 
 /**
@@ -49,6 +61,15 @@ export interface Session {
   readonly user: SessionUser | null;
   /** アカウントを繋ぐ。匿名のときに書いたものはそのまま引き継がれる。 */
   linkGoogle(): Promise<LinkResult>;
+  /** すでにあるアカウントを開く。繋ぐ先が埋まっていたときの行き先。 */
+  signInGoogle(): Promise<SignInResult>;
+  /**
+   * いまのアカウントから離れる。離れたあとは、また名前のない状態で始まる。
+   *
+   * 匿名のまま離れると、その uid は二度と取り直せない。書いたものは消えないが、
+   * 開く手立てが無くなる。呼ぶ側は、そのことを先に伝えてから呼ぶこと。
+   */
+  signOut(): Promise<void>;
   /** `unavailable` からやり直す。 */
   retry(): void;
 }

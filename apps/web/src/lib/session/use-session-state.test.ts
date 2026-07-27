@@ -1,7 +1,13 @@
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { AuthPort, CreateAuthPort, LinkResult, SessionUser } from "./types";
+import type {
+  AuthPort,
+  CreateAuthPort,
+  LinkResult,
+  SessionUser,
+  SignInResult,
+} from "./types";
 import { useSessionState } from "./use-session-state";
 
 /**
@@ -17,6 +23,10 @@ import { useSessionState } from "./use-session-state";
  *  8. 認証そのものの読み込みに失敗しても同じところへ落ちること
  *  9. アンマウントで購読をやめること
  * 10. アカウント接続の結果が呼び出し側に伝わること
+ * 11. サインアウトが認証に伝わること
+ * 12. サインアウトのあと、また名前のない状態で始め直せること
+ * 13. すでにあるアカウントを開いた結果が呼び出し側に伝わること
+ * 14. 認証が用意できていないときに、サインアウトで壊れないこと
  *
  * 認証はフェイクを注入して検証する。ここで検証したいのは Firebase の挙動ではなく
  * 「利用者がいなければ黙って始め、駄目なら読むことだけは続けられる」という仕様。
@@ -37,16 +47,20 @@ interface FakeAuth {
   completeSignIn(user: SessionUser): void;
   failSignIn(): void;
   signInCalls(): number;
+  signOutCalls(): number;
   isListening(): boolean;
   setLinkResult(result: LinkResult): void;
+  setSignInResult(result: SignInResult): void;
 }
 
 function createFakeAuth(initial: SessionUser | null = null): FakeAuth {
   let listener: ((user: SessionUser | null) => void) | null = null;
   let current = initial;
   let signInCalls = 0;
+  let signOutCalls = 0;
   let pending: { resolve: () => void; reject: (reason: Error) => void } | null = null;
   let linkResult: LinkResult = "linked";
+  let signInResult: SignInResult = "signedIn";
 
   const emit = (user: SessionUser | null): void => {
     current = user;
@@ -69,6 +83,13 @@ function createFakeAuth(initial: SessionUser | null = null): FakeAuth {
       });
     },
     linkGoogle: () => Promise.resolve(linkResult),
+    signInGoogle: () => Promise.resolve(signInResult),
+    // 本物のサインアウトも、済んだあとに購読へ null を流す。
+    signOut() {
+      signOutCalls += 1;
+      emit(null);
+      return Promise.resolve();
+    },
   };
 
   return {
@@ -82,9 +103,13 @@ function createFakeAuth(initial: SessionUser | null = null): FakeAuth {
       pending?.reject(new Error("sign-in unavailable"));
     },
     signInCalls: () => signInCalls,
+    signOutCalls: () => signOutCalls,
     isListening: () => listener !== null,
     setLinkResult(result) {
       linkResult = result;
+    },
+    setSignInResult(result) {
+      signInResult = result;
     },
   };
 }
@@ -209,5 +234,51 @@ describe("useSessionState", () => {
     });
 
     expect(result.current.user?.isAnonymous).toBe(false);
+  });
+
+  it("should sign out when asked to", async () => {
+    const auth = createFakeAuth(LINKED);
+    const { result } = await mountSession(auth.createPort);
+
+    await act(async () => {
+      await result.current.signOut();
+    });
+
+    expect(auth.signOutCalls()).toBe(1);
+  });
+
+  it("should start over anonymously after signing out", async () => {
+    const auth = createFakeAuth(LINKED);
+    const { result } = await mountSession(auth.createPort);
+
+    await act(async () => {
+      await result.current.signOut();
+    });
+    act(() => {
+      auth.completeSignIn(ANONYMOUS);
+    });
+
+    expect(result.current.status).toBe("ready");
+    expect(result.current.user?.isAnonymous).toBe(true);
+  });
+
+  it("should report the outcome of opening an existing account", async () => {
+    const auth = createFakeAuth(ANONYMOUS);
+    auth.setSignInResult("cancelled");
+    const { result } = await mountSession(auth.createPort);
+
+    const outcome = await result.current.signInGoogle();
+
+    expect(outcome).toBe("cancelled");
+  });
+
+  it("should stay usable when signing out without a configured auth", async () => {
+    const { result } = await mountSession(noPort);
+
+    await act(async () => {
+      await result.current.signOut();
+    });
+
+    expect(result.current.status).toBe("unavailable");
   });
 });

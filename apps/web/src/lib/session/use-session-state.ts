@@ -9,6 +9,7 @@ import type {
   Session,
   SessionStatus,
   SessionUser,
+  SignInResult,
 } from "./types";
 
 /**
@@ -85,9 +86,27 @@ export function useSessionState(createPort: CreateAuthPort): Session {
     return port.linkGoogle();
   }, []);
 
+  const signInGoogle = useCallback(async (): Promise<SignInResult> => {
+    const port = portRef.current;
+    if (port === null) return "failed";
+    return port.signInGoogle();
+  }, []);
+
+  /**
+   * ここでは何も状態を書き換えない。サインアウトが済んだかどうかは購読が
+   * 教えてくれるし、そのとき利用者が null になれば、上の effect がいつもどおり
+   * 匿名で始め直す。つまり「離れたあとまた使える」は特別扱いではなく、
+   * 初めて来た人と同じ道を通ることで満たされる。
+   */
+  const signOut = useCallback(async (): Promise<void> => {
+    const port = portRef.current;
+    if (port === null) return;
+    await port.signOut();
+  }, []);
+
   const retry = useCallback(() => {
     setAttempt((count) => count + 1);
   }, []);
 
-  return { status, user, linkGoogle, retry };
+  return { status, user, linkGoogle, signInGoogle, signOut, retry };
 }
