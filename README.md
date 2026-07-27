@@ -133,8 +133,9 @@ gcloud iam service-accounts create github-deployer \
 SA=github-deployer@$PROJECT.iam.gserviceaccount.com
 
 # 2. 権限。ルールと Function を出すのに要るぶんだけ
-for ROLE in roles/firebaserules.admin roles/cloudfunctions.admin \
-            roles/artifactregistry.admin roles/serviceusage.serviceUsageConsumer \
+for ROLE in roles/firebaserules.admin roles/datastore.indexAdmin \
+            roles/cloudfunctions.admin roles/artifactregistry.admin \
+            roles/serviceusage.serviceUsageConsumer \
             roles/iam.serviceAccountUser roles/run.admin; do
   gcloud projects add-iam-policy-binding $PROJECT \
     --member="serviceAccount:$SA" --role="$ROLE" --condition=None
@@ -163,6 +164,22 @@ gh variable set GCP_DEPLOY_SERVICE_ACCOUNT --body "$SA"
 実行用サービスアカウントを `actAs` する。これが無いと、npm でもビルドでもなく
 `iam.serviceaccounts.actAs denied` で止まる（初回デプロイで踏んでいる）。
 API を有効にした直後は IAM の反映が追いつかず、少し置いて再実行すると通る。
+
+**`roles/firebaserules.admin` は索引をカバーしない。** ルールと索引は別の API で、
+`firebase deploy --only firestore` は両方を出す。索引側は Firestore の API を
+直接叩くので `roles/datastore.indexAdmin` が要る。これが無いと、ルールの
+アップロードまで進んだあとに索引だけが 403 で落ちる。
+
+```
+✔  cloud.firestore: rules file firestore.rules compiled successfully
+i  firestore: latest version of firestore.rules already up to date, skipping upload...
+i  firestore: deploying indexes...
+Error: ... /collectionGroups/-/indexes had HTTP Error: 403, The caller does not have permission
+```
+
+**ここで `--only firestore:rules` に逃げないこと。** 索引を出さない CI にすると、
+`firestore.indexes.json` に索引を足した日から、また「リポジトリには在るのに本番に
+無い」が始まる。#52 と同じ形なので、権限のほうを足す。
 
 ### 保存されるもの
 
