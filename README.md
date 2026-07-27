@@ -61,11 +61,18 @@ cp apps/web/.env.example apps/web/.env.local   # 初回のみ
 pnpm emulators                 # Auth / Firestore / Functions（JDK が要る）
 pnpm dev
 pnpm test:firestore            # セキュリティルールと保存（エミュレータを自前で起動する）
+pnpm test:e2e                  # 引いて読んで残るまでを通しで（初回のみ playwright install chromium）
 pnpm build:functions           # Cloud Function を束ねる（deploy 時にも自動で走る）
 ```
 
 `pnpm test` はエミュレータも Java も要らない。実際に動かさないと確かめられないもの
 （ルール・undefined の拒否・サーバー時刻）だけを `test:firestore` に分けてある。
+
+`pnpm test:e2e` はエミュレータと dev サーバーを自分で起動する（Java が要る）。
+見るのは通しで繋がっていることだけで、ロジックは単体テストの担当。単体もルール
+テストも緑のまま本番の保存が死んでいたこと（#52）があるので、**画面から保存までを
+一度も通っていない状態を作らない**ための1本。エミュレータは `firestore.rules` を
+読むので、これは実際のセキュリティルール越しに走っている。
 
 ## Firebase
 
