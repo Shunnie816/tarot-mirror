@@ -91,6 +91,22 @@ Firestore のロケーションは後から変更できないので、Cloud Func
 **設定値が無くてもアプリは動く。** カードを引いて読むところまでは Firebase に
 一切触れないため、その場合は保存だけが利用できない状態になる。
 
+#### `functions` の `engines.node` は「22」で正しい
+
+`pnpm install` のたびにこの警告が出る。
+
+```
+functions | WARN Unsupported engine: wanted: {"node":"22"} (current: {"node":"v24.12.0"})
+```
+
+**揃えて消さないこと。** `functions/package.json` の `engines.node` は開発環境の
+要求ではなく、**Cloud Functions のランタイムを選ぶ宣言**。ここに書いた値がその
+まま本番の実行環境になる。Cloud Functions が受け付けるのは Node.js 22 / 20 /
+18（非推奨）で、**24 は無い**。上げるとデプロイが落ちる。
+
+手元の Node が新しいことと、本番で動く Node は別のもの。警告は食い違いを
+正しく報告している。
+
 ### デプロイ
 
 **main に入ったものは CI が本番へ出す**（`.github/workflows/ci.yml` の `deploy`）。
