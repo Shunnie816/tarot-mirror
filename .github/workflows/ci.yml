@@ -7,7 +7,9 @@ on:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # main では途中で止めない。deploy が道連れになると、本番だけが
+  # 古いまま取り残されて、次の push まで誰も気づけない。
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   verify:
@@ -95,3 +97,94 @@ jobs:
       # ここが落ちたらコスト戦略が壊れているので、テストとは別に可視化しておく。
       - name: A reading must complete without an LLM
         run: pnpm demo:reading ci-smoke
+
+  # 画面は App Hosting が GitHub 連携で勝手に出すが、ルールと Function は
+  # 誰かが手で `firebase deploy` を打つまで本番に載らない。打つ機会が構造的に
+  # 無いので、v0.1 では firestore.rules が一度も上がらないまま公開され、
+  # 保存・履歴・ジャーナルが丸ごと死んでいた（Issue #52）。README に手順は
+  # 書いたが、手順書は打ち忘れを防がない。ここで打つ。
+  deploy:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      # Workload Identity Federation で GCP に入るために要る。
+      # 鍵ファイルを GitHub に置かずに済むのはこれのおかげ。
+      id-token: write
+
+    # 本番へ同時に2つ流さない。cancel-in-progress は付けない
+    # （途中で切られたデプロイは、中途半端に適用されうる）。
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 変わったものだけ Function を上げ直すために、1つ前の main が要る。
+          fetch-depth: 2
+
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: tarot-mirror-a74b6
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+
+      # ルールは毎回上げる。速いし、同じ内容なら何度出しても同じ結果になる。
+      # 「変わったときだけ」にすると、変えていないのに本番だけ違う状態
+      # （まさに #52）から自力で戻れなくなる。
+      #
+      # `--only firestore` は索引も見る。firestore.indexes.json は空なので、
+      # コンソールで手作りした索引があると削除を尋ねられ、--non-interactive が
+      # エラーで止まる。黙って消されるより、止まって気づけるほうがいい。
+      - name: Deploy Firestore rules and indexes
+        run: npx --yes firebase-tools@15 deploy --only firestore --non-interactive
+
+      # Function は中身が変わったときだけ。毎回上げるとコンテナが積み上がる。
+      # packages/* も見るのは、engine と content と decks を束ねて出しているから。
+      - name: Did anything the function is made of change?
+        id: changed
+        run: |
+          before='${{ github.event.before }}'
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] \
+             || ! git cat-file -e "$before^{commit}" 2>/dev/null; then
+            # 比較相手が無い（初回 push など）。分からないときは上げる側に倒す。
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git diff --name-only "$before" '${{ github.sha }}' \
+             | grep -qE '^(functions/|packages/|firebase\.json$|pnpm-lock\.yaml$)'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: pnpm/action-setup@v4
+        if: steps.changed.outputs.changed == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.changed.outputs.changed == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+        if: steps.changed.outputs.changed == 'true'
+
+      # 古い関数イメージの掃除方針を先に決めておく。決まっていないと deploy が
+      # 対話プロンプトを出し、--non-interactive がそれをエラーにする。
+      # 「関数のデプロイ自体は成功しているのに終了コード 1」という、いちばん
+      # 紛らわしい失敗の正体がこれ。冪等なので毎回打ってよい。
+      - name: The image cleanup policy must already be decided
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          npx --yes firebase-tools@15 functions:artifacts:setpolicy \
+            --location asia-northeast1 --days 1 --force --non-interactive
+
+      # --force は付けない。付けると「コードから消えた関数」を確認なしに
+      # 本番から消す。取り違えたときに戻せない側の操作なので、手で打つ。
+      - name: Deploy Cloud Functions
+        if: steps.changed.outputs.changed == 'true'
+        run: npx --yes firebase-tools@15 deploy --only functions --non-interactive
