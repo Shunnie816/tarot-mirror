@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { reportStoreFailure } from "@/lib/store/report";
+
 /**
  * 書きかけを持つ。
  *
@@ -16,7 +18,12 @@ export interface JournalStore {
   save(uid: string, body: string): Promise<void>;
 }
 
-export type DraftStatus = "loading" | "ready" | "unavailable";
+/**
+ * `unavailable` は「保存できない場所にいる」、`failed` は「読みにいって失敗した」。
+ * 前者では入力欄を出さないのが正しいが、後者で畳んでしまうと、一時的に読めなかった
+ * だけの人に「ここには書けません」と言うことになる（Issue #52）。
+ */
+export type DraftStatus = "loading" | "ready" | "unavailable" | "failed";
 
 export interface JournalDraft {
   readonly status: DraftStatus;
@@ -61,9 +68,10 @@ export function useJournalDraft(
         setKept(loaded);
         setStatus("ready");
       })
-      .catch(() => {
-        // 書いたものを保存できない場所で入力欄を出すのは罠なので、畳む。
-        if (active) setStatus("unavailable");
+      .catch((error: unknown) => {
+        // 読めなかっただけなので、書けないと言い切らない。
+        reportStoreFailure("書きとめたものを読み込めなかった", error);
+        if (active) setStatus("failed");
       });
 
     return () => {

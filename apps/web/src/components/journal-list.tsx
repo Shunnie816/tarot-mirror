@@ -13,6 +13,7 @@ import { buildHref, isSpreadId } from "@/lib/flow";
 import { useSession } from "@/lib/session/provider";
 import type { JournalEntry } from "@/lib/store/journal";
 import { parseReadingDocId } from "@/lib/store/reading-doc";
+import { reportStoreFailure } from "@/lib/store/report";
 
 /**
  * 書きとめたものを並べる。
@@ -21,7 +22,7 @@ import { parseReadingDocId } from "@/lib/store/reading-doc";
  * 書くことは習慣の達成になり、書きたくない日に書かないことが失敗になる。
  */
 
-type Status = "loading" | "ready" | "unavailable";
+type Status = "loading" | "ready" | "unavailable" | "failed";
 
 async function store() {
   const [{ getFirebaseDb }, journal] = await Promise.all([
@@ -163,8 +164,9 @@ export function JournalList({ locale }: { readonly locale: Locale }) {
 
     let active = true;
     setStatus("loading");
-    void reload(uid).catch(() => {
-      if (active) setStatus("unavailable");
+    void reload(uid).catch((error: unknown) => {
+      reportStoreFailure("書きとめたものを読み込めなかった", error);
+      if (active) setStatus("failed");
     });
 
     return () => {
@@ -203,6 +205,10 @@ export function JournalList({ locale }: { readonly locale: Locale }) {
 
   if (status === "unavailable") {
     return <p className="screen-note">{resolver.ui("ui.journalUnavailable")}</p>;
+  }
+
+  if (status === "failed") {
+    return <p className="screen-note">{resolver.ui("ui.journalLoadFailed")}</p>;
   }
 
   return (

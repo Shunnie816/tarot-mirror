@@ -84,6 +84,29 @@ Firestore のロケーションは後から変更できないので、Cloud Func
 **設定値が無くてもアプリは動く。** カードを引いて読むところまでは Firebase に
 一切触れないため、その場合は保存だけが利用できない状態になる。
 
+### ルールのデプロイ
+
+```bash
+firebase deploy --only firestore        # ルールとインデックス
+```
+
+**`firestore.rules` を書き換えたら、これを打つまで本番には何も反映されない。**
+リポジトリに置いてあることと、本番に載っていることは別。
+
+忘れやすい構造になっているので注意する。App Hosting は **main への push で
+勝手にロールアウトする**ため、画面を出すために `firebase deploy` を打つ機会が
+そもそも無い。Function は `firebase deploy --only functions` を打つので気づくが、
+ルールだけは誰も打たないまま残る。
+
+v0.1 はこれで落ちた。ルールが一度も上がっておらず、本番はプロジェクト作成時の
+ロックモード（既定拒否）のままだった。匿名サインインは成功するのに、自分の
+`users/{uid}/readings` を読むたびに `PERMISSION_DENIED` が返り、**保存・履歴・
+ジャーナルが丸ごと動いていなかった**（Issue #52）。
+
+エミュレータのルールテスト（`pnpm test:firestore`）は `firestore.rules` を直接
+読むので、**この抜けは原理的に踏めない**。CI が緑でも本番が拒否していることは
+ありうる。リリース前に本番で1回引いて、履歴に並ぶことを目で見る。
+
 ### 保存されるもの
 
 ```
@@ -178,6 +201,11 @@ Auth / Firestore / Functions と同じプロジェクトに同居する。
 ```bash
 firebase deploy --only apphosting        # ルールも Function も一緒なら firebase deploy
 ```
+
+ただし通常このコマンドは打たない。バックエンドが GitHub と繋がっていて、
+**main への push でロールアウトが走る**。裏を返すと `firebase deploy` を
+打つ機会が無いということで、[ルールのデプロイ](#ルールのデプロイ)を
+忘れる原因はここにある。
 
 | 項目 | 値 |
 |---|---|

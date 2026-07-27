@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+import { reportStoreFailure } from "@/lib/store/report";
 import type { StoredReading } from "@/lib/store/readings";
 
 export type LoadReadings = (uid: string) => Promise<readonly StoredReading[]>;
 
-export type HistoryStatus = "loading" | "ready" | "unavailable";
+export type HistoryStatus = "loading" | "ready" | "unavailable" | "failed";
 
 /**
  * 履歴の読み込み。
@@ -18,6 +19,11 @@ export type HistoryStatus = "loading" | "ready" | "unavailable";
  *
  * 「まだ分からない」と「無い」を同じ扱いにすると、開いた瞬間に一瞬だけ
  * 「何も残っていません」と出てから消える。事実としても体験としても正しくない。
+ *
+ * 読みにいって失敗した場合は4つ目の `failed` になる。`unavailable` と混ぜない。
+ * 前者は「もう一度ひらけば読めるかもしれない」、後者は「原理的に並ぶものが無い」で、
+ * 利用者が次にできることが違う。混ぜていたせいで、本番のルール未反映
+ * （Issue #52）が「保存は未実装」に見えていた。
  */
 export function useHistory(
   uid: string | null | undefined,
@@ -45,9 +51,10 @@ export function useHistory(
         setReadings(list);
         setStatus("ready");
       })
-      .catch(() => {
+      .catch((error: unknown) => {
         // 読めなかったことを画面に出しはするが、エラーにはしない。
-        if (active) setStatus("unavailable");
+        reportStoreFailure("これまでの読みを読み込めなかった", error);
+        if (active) setStatus("failed");
       });
 
     return () => {

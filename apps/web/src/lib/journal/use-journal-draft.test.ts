@@ -1,5 +1,5 @@
 import { act, cleanup, renderHook } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { JournalStore } from "./use-journal-draft";
 import { useJournalDraft } from "./use-journal-draft";
@@ -14,6 +14,7 @@ import { useJournalDraft } from "./use-journal-draft";
  *  5. 保存できない状態では入力欄を出さないこと（書かせておいて失う形にしない）
  *  6. 認証の返事待ちと「保存できない」を取り違えないこと
  *  7. 書きとめたあとに書き足せば、また「書きかけ」になること
+ *  8. 読み込みに失敗したとき、「保存できない状態」と区別されること
  *
  * 4 がこのファイルの主題。ここは利用者が自分の言葉で書く場所で、通信の都合で
  * 消えてよいものは1文字も無い。
@@ -68,7 +69,10 @@ async function mountDraft(journal: FakeJournal, body = "") {
 }
 
 describe("useJournalDraft", () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
 
   it("should show what was already written", async () => {
     const journal = createFakeJournal();
@@ -161,7 +165,8 @@ describe("useJournalDraft", () => {
     expect(result.current.status).toBe("loading");
   });
 
-  it("should fold away when what was written cannot be read", async () => {
+  it("should say it could not read, not that nothing can be kept", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
     const journal = createFakeJournal();
     const { result } = renderHook(() => useJournalDraft("uid-1", journal.store));
 
@@ -169,6 +174,6 @@ describe("useJournalDraft", () => {
       journal.failLoad();
     });
 
-    expect(result.current.status).toBe("unavailable");
+    expect(result.current.status).toBe("failed");
   });
 });

@@ -55,6 +55,10 @@ export function HistoryList({ locale }: { readonly locale: Locale }) {
     );
   }
 
+  if (status === "failed") {
+    return <p className="screen-note">{resolver.ui("ui.historyFailed")}</p>;
+  }
+
   if (entries.length === 0) {
     return <p className="screen-lead">{resolver.ui("ui.historyEmpty")}</p>;
   }

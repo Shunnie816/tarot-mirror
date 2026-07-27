@@ -64,6 +64,14 @@ export function JournalEditor({
     );
   }
 
+  if (draft.status === "failed") {
+    return (
+      <p className="screen-note journal-block">
+        {resolver.ui("ui.journalLoadFailed")}
+      </p>
+    );
+  }
+
   return (
     <section className="journal-block">
       <div className="journal-head">

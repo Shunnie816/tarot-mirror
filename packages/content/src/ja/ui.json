@@ -70,6 +70,7 @@
   "ui.journalKept": "書きとめました。",
   "ui.journalFailed": "いまは書きとめられませんでした。書いたものはこのまま残っているので、あとでもう一度試せます。",
   "ui.journalUnavailable": "いまは書いたものを残せない状態です。",
+  "ui.journalLoadFailed": "いま読み込めませんでした。書いたものが消えたわけではありません。少し時間をおいて、もう一度ひらいてみてください。",
   "ui.journalClear": "空のまま書きとめると、この記入は消えます。",
 
   "ui.journalTitle": "書きとめたもの",
@@ -92,6 +93,7 @@
   "ui.historyLoading": "読み込んでいます。",
   "ui.historyEmpty": "まだ何も残っていません。一枚引くと、ここに並びます。",
   "ui.historyUnavailable": "いまは保存されない状態なので、ここには何も並びません。",
+  "ui.historyFailed": "いま読み込めませんでした。残したものが消えたわけではありません。少し時間をおいて、もう一度ひらいてみてください。",
   "ui.cardSeparator": "、",
 
   "ui.accountAnonymous": "いまは名前のない状態で使っています。書いたものは、この端末から開けます。",
