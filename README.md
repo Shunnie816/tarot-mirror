@@ -139,12 +139,15 @@ gcloud iam service-accounts create github-deployer \
   --project=$PROJECT --display-name="GitHub Actions deployer"
 SA=github-deployer@$PROJECT.iam.gserviceaccount.com
 
-# 2. Firebase 本体の権限は既製ロールを使わない（理由は下）。1つだけ切り出す
+# 2. CI は API を有効化できない（理由は下）。要るものは先に有効にしておく
+gcloud services enable cloudbilling.googleapis.com --project=$PROJECT
+
+# 3. Firebase 本体の権限は既製ロールを使わない（理由は下）。1つだけ切り出す
 gcloud iam roles create githubDeployerFirebaseConfig --project=$PROJECT \
   --title="GitHub deployer: Firebase project config" \
   --permissions=firebase.projects.get --stage=GA
 
-# 3. 権限。ルールと Function を出すのに要るぶんだけ
+# 4. 権限。ルールと Function を出すのに要るぶんだけ
 for ROLE in roles/firebaserules.admin roles/datastore.indexAdmin \
             roles/cloudfunctions.admin roles/artifactregistry.admin \
             roles/serviceusage.serviceUsageConsumer \
@@ -155,7 +158,7 @@ for ROLE in roles/firebaserules.admin roles/datastore.indexAdmin \
     --member="serviceAccount:$SA" --role="$ROLE" --condition=None
 done
 
-# 4. GitHub からの入口
+# 5. GitHub からの入口
 gcloud iam workload-identity-pools create github --project=$PROJECT --location=global
 gcloud iam workload-identity-pools providers create-oidc github \
   --project=$PROJECT --location=global --workload-identity-pool=github \
@@ -163,12 +166,12 @@ gcloud iam workload-identity-pools providers create-oidc github \
   --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository" \
   --attribute-condition="assertion.repository=='$REPO'"
 
-# 5. このリポジトリにだけ、そのサービスアカウントを使わせる
+# 6. このリポジトリにだけ、そのサービスアカウントを使わせる
 gcloud iam service-accounts add-iam-policy-binding $SA --project=$PROJECT \
   --role=roles/iam.workloadIdentityUser \
   --member="principalSet://iam.googleapis.com/projects/$NUMBER/locations/global/workloadIdentityPools/github/attribute.repository/$REPO"
 
-# 6. ワークフローに教える（秘密ではないので variable でよい）
+# 7. ワークフローに教える（秘密ではないので variable でよい）
 gh variable set GCP_WORKLOAD_IDENTITY_PROVIDER \
   --body "projects/$NUMBER/locations/global/workloadIdentityPools/github/providers/github"
 gh variable set GCP_DEPLOY_SERVICE_ACCOUNT --body "$SA"
@@ -207,7 +210,7 @@ had HTTP Error: 403, The caller does not have permission
 `roles/firebase.viewer` は 289 個の権限を持ち、その中に `datastore.entities.list`
 が入っている。付ければ**デプロイ用のサービスアカウントが全ユーザーの読みと
 ジャーナルを読める**ようになる。このアプリが預かっているのはそういう種類の
-文章なので、1権限だけのカスタムロールを作る（上の手順 2）。
+文章なので、1権限だけのカスタムロールを作る（上の手順 3）。
 
 `resourcemanager.projects.get` は別途要らない。`cloudfunctions.admin` /
 `run.admin` / `artifactregistry.admin` がすでに持っている。
@@ -222,6 +225,24 @@ Function をデプロイすると、firebase-tools が秘密の存在と、実�
 実行用サービスアカウントを差し替えた日には、付与のやり直しに
 `setIamPolicy` が要るので、この設定では CI が 403 で止まる。止まるのは
 正しい壊れ方なので、そのときに手で付け直す。
+
+**CI に API を有効化させない。** firebase-tools は Function を出す前に、
+必要な API が有効かどうかを確かめ、無ければ**自分で有効にしようとする**。
+`roles/serviceusage.serviceUsageConsumer` は `services.get` / `list` / `use` は
+持つが `enable` は持たないので、そこで止まる。
+
+```
+Error: Permissions denied enabling cloudbilling.googleapis.com.
+```
+
+ここで `roles/serviceusage.serviceUsageAdmin` を足すと直るが、それは
+**CI にどの API でも有効化できる権限を渡す**ということで、課金の入り口を
+含む。要るのは1つだけなので、API のほうを先に有効にする（上の手順 2）。
+有効になっていれば firebase-tools は `services.get` で確かめて素通りする。
+
+`cloudbilling` を見に行くのは、Cloud Functions v2 が Blaze プランを要求する
+から。呼ぶのは `getBillingInfo` の読み取りだけで、課金を変更する権限は
+渡していない。
 
 ### 保存されるもの
 
