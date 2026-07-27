@@ -10,6 +10,7 @@ import {
 import { JournalEditor } from "@/components/journal-editor";
 import { ReadingSurface } from "@/components/reading-surface";
 import { SaveReading } from "@/components/save-reading";
+import { ScreenExit } from "@/components/screen-exit";
 import {
   readQuestion,
   readSeed,
@@ -68,6 +69,14 @@ export default async function Page({
             locale={DEFAULT_LOCALE}
           />
           <SaveReading reading={reading} locale={DEFAULT_LOCALE} />
+
+          {/* 「もう一度引く」は問いの画面ではなく並べ方へ返す。同じ問いのまま
+              引き直したい場面のほうが多く、はじめに戻ると問いから書き直しになる。 */}
+          <ScreenExit
+            locale={DEFAULT_LOCALE}
+            reading
+            also={{ href: "/spread", labelId: "ui.exitDrawAgain" }}
+          />
         </>
       }
     />
