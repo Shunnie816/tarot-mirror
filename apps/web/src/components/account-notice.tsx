@@ -1,10 +1,11 @@
 "use client";
 
-import { getResolver, type Locale, type UiId } from "@tarot-mirror/content";
-import { useState } from "react";
+import { getResolver, type Locale } from "@tarot-mirror/content";
 
 import { useSession } from "@/lib/session/provider";
-import type { LinkResult, SignInResult } from "@/lib/session/types";
+import { useAccountLink } from "@/lib/session/use-account-link";
+
+import { accountOutcomeCopy } from "./account-copy";
 
 /**
  * アカウントの状態を、必要なときだけ静かに置く。
@@ -12,36 +13,14 @@ import type { LinkResult, SignInResult } from "@/lib/session/types";
  * サインアップは求めない。匿名のまま最後まで使えるのが前提で、ここは
  * 「別の端末からも開きたくなったとき」の出口でしかない。だから画面の主役に
  * しないし、繋いでいないことを問題として書かない。
+ *
+ * 全体像（いまの状態・どこに残るか・離れる）は設定のアカウント欄にある。
+ * ここはトップに置くものなので、引く前の画面を重くしない一行に留める。
  */
-
-const OUTCOME_COPY: Readonly<Record<LinkResult, UiId>> = {
-  linked: "ui.accountLinked",
-  cancelled: "ui.accountLinkCancelled",
-  alreadyInUse: "ui.accountLinkInUse",
-  failed: "ui.accountLinkFailed",
-};
-
-const SIGN_IN_COPY: Readonly<Record<SignInResult, UiId>> = {
-  signedIn: "ui.accountSignedIn",
-  cancelled: "ui.accountSignInCancelled",
-  failed: "ui.accountSignInFailed",
-};
-
-type Outcome =
-  | { readonly kind: "link"; readonly result: LinkResult }
-  | { readonly kind: "signIn"; readonly result: SignInResult };
-
-function outcomeCopy(outcome: Outcome): UiId {
-  return outcome.kind === "link"
-    ? OUTCOME_COPY[outcome.result]
-    : SIGN_IN_COPY[outcome.result];
-}
-
 export function AccountNotice({ locale }: { readonly locale: Locale }) {
   const resolver = getResolver(locale);
   const session = useSession();
-  const [outcome, setOutcome] = useState<Outcome | null>(null);
-  const [working, setWorking] = useState(false);
+  const account = useAccountLink(session.linkGoogle, session.signInGoogle);
 
   // 応答を待っているあいだは何も出さない。一瞬だけ「保存されません」と
   // 出てから消えるのは、事実としても体験としても正しくない。
@@ -76,52 +55,34 @@ export function AccountNotice({ locale }: { readonly locale: Locale }) {
     );
   }
 
-  const link = async () => {
-    setWorking(true);
-    setOutcome({ kind: "link", result: await session.linkGoogle() });
-    setWorking(false);
-  };
-
-  const open = async () => {
-    setWorking(true);
-    setOutcome({ kind: "signIn", result: await session.signInGoogle() });
-    setWorking(false);
-  };
-
-  /**
-   * 繋ぐ先がすでに埋まっていたときだけ、そのアカウントを開く道を出す。
-   *
-   * これが無いと、一度サインアウトした人が自分の記録に戻れない。繋ぎ直そうと
-   * しても、その Google はもう向こうのアカウントのものなので `alreadyInUse` で
-   * 弾かれ、そこが行き止まりになる。常に出さないのは、開くと**いまの匿名側に
-   * 書いたものが辿れなくなる**から。行き止まりのときだけ出す。
-   */
-  const stuck = outcome?.kind === "link" && outcome.result === "alreadyInUse";
-
   return (
     <div className="account-notice">
       <p className="screen-note account-notice-text">
-        {outcome === null
+        {account.outcome === null
           ? resolver.ui("ui.accountAnonymous")
-          : resolver.ui(outcomeCopy(outcome))}
+          : resolver.ui(accountOutcomeCopy(account.outcome))}
       </p>
-      {stuck ? (
+      {account.stuck ? (
         <button
           type="button"
           className="button button--outline button--inline"
-          onClick={() => void open()}
-          disabled={working}
+          onClick={account.open}
+          disabled={account.working}
         >
-          {resolver.ui(working ? "ui.accountOpening" : "ui.accountOpenExisting")}
+          {resolver.ui(
+            account.working ? "ui.accountOpening" : "ui.accountOpenExisting",
+          )}
         </button>
       ) : (
         <button
           type="button"
           className="button button--outline button--inline"
-          onClick={() => void link()}
-          disabled={working}
+          onClick={account.link}
+          disabled={account.working}
         >
-          {resolver.ui(working ? "ui.accountLinking" : "ui.accountLink")}
+          {resolver.ui(
+            account.working ? "ui.accountLinking" : "ui.accountLink",
+          )}
         </button>
       )}
     </div>

@@ -525,15 +525,27 @@
   color: var(--color-text-quiet);
 }
 
-/* ---------- サインアウト ---------- */
+/* ---------- アカウント ---------- */
 
-.sign-out {
+.account-section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-sm);
   padding-top: var(--space-lg);
   border-top: 1px solid var(--color-border-subtle);
+}
+
+/* 離れる操作は、状態や接続と地続きにしない。同じ欄の中で一段引いた場所に置く。 */
+.account-leave {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  width: 100%;
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px dashed var(--color-border-subtle);
 }
 
 .sign-out-confirm {
