@@ -84,19 +84,29 @@ Firestore のロケーションは後から変更できないので、Cloud Func
 **設定値が無くてもアプリは動く。** カードを引いて読むところまでは Firebase に
 一切触れないため、その場合は保存だけが利用できない状態になる。
 
-### ルールのデプロイ
+### デプロイ
+
+**main に入ったものは CI が本番へ出す**（`.github/workflows/ci.yml` の `deploy`）。
+`verify` が通ってからでないと走らない。
+
+| 対象 | 誰が出すか | いつ |
+|---|---|---|
+| 画面（App Hosting） | GitHub 連携 | main への push |
+| Firestore ルールと索引 | CI | main への push（毎回） |
+| Cloud Functions | CI | `functions/` `packages/` `firebase.json` `pnpm-lock.yaml` が変わったとき |
+
+手で出すこともできる。
 
 ```bash
 firebase deploy --only firestore        # ルールとインデックス
+firebase deploy --only functions
 ```
 
-**`firestore.rules` を書き換えたら、これを打つまで本番には何も反映されない。**
-リポジトリに置いてあることと、本番に載っていることは別。
+#### なぜ自動化したか
 
-忘れやすい構造になっているので注意する。App Hosting は **main への push で
-勝手にロールアウトする**ため、画面を出すために `firebase deploy` を打つ機会が
-そもそも無い。Function は `firebase deploy --only functions` を打つので気づくが、
-ルールだけは誰も打たないまま残る。
+**`firestore.rules` はリポジトリに置いてあることと、本番に載っていることが別。**
+そして打つ機会が構造的に無い。App Hosting は main への push で勝手にロールアウト
+するので、画面を出すために `firebase deploy` を打つ場面がそもそも存在しない。
 
 v0.1 はこれで落ちた。ルールが一度も上がっておらず、本番はプロジェクト作成時の
 ロックモード（既定拒否）のままだった。匿名サインインは成功するのに、自分の
@@ -105,7 +115,54 @@ v0.1 はこれで落ちた。ルールが一度も上がっておらず、本番
 
 エミュレータのルールテスト（`pnpm test:firestore`）は `firestore.rules` を直接
 読むので、**この抜けは原理的に踏めない**。CI が緑でも本番が拒否していることは
-ありうる。リリース前に本番で1回引いて、履歴に並ぶことを目で見る。
+ありうる。だから手順書ではなく CI に持たせた（Issue #64）。
+
+#### CI の認証（初回だけ必要な設定）
+
+鍵ファイルは置かない。Workload Identity Federation で、このリポジトリの
+ワークフローだけが本番に触れるようにする。
+
+```bash
+PROJECT=tarot-mirror-a74b6
+NUMBER=$(gcloud projects describe $PROJECT --format='value(projectNumber)')
+REPO=Shunnie816/tarot-mirror
+
+# 1. デプロイ専用のサービスアカウント
+gcloud iam service-accounts create github-deployer \
+  --project=$PROJECT --display-name="GitHub Actions deployer"
+SA=github-deployer@$PROJECT.iam.gserviceaccount.com
+
+# 2. 権限。ルールと Function を出すのに要るぶんだけ
+for ROLE in roles/firebaserules.admin roles/cloudfunctions.admin \
+            roles/artifactregistry.admin roles/serviceusage.serviceUsageConsumer \
+            roles/iam.serviceAccountUser roles/run.admin; do
+  gcloud projects add-iam-policy-binding $PROJECT \
+    --member="serviceAccount:$SA" --role="$ROLE" --condition=None
+done
+
+# 3. GitHub からの入口
+gcloud iam workload-identity-pools create github --project=$PROJECT --location=global
+gcloud iam workload-identity-pools providers create-oidc github \
+  --project=$PROJECT --location=global --workload-identity-pool=github \
+  --issuer-uri="https://token.actions.githubusercontent.com" \
+  --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository" \
+  --attribute-condition="assertion.repository=='$REPO'"
+
+# 4. このリポジトリにだけ、そのサービスアカウントを使わせる
+gcloud iam service-accounts add-iam-policy-binding $SA --project=$PROJECT \
+  --role=roles/iam.workloadIdentityUser \
+  --member="principalSet://iam.googleapis.com/projects/$NUMBER/locations/global/workloadIdentityPools/github/attribute.repository/$REPO"
+
+# 5. ワークフローに教える（秘密ではないので variable でよい）
+gh variable set GCP_WORKLOAD_IDENTITY_PROVIDER \
+  --body "projects/$NUMBER/locations/global/workloadIdentityPools/github/providers/github"
+gh variable set GCP_DEPLOY_SERVICE_ACCOUNT --body "$SA"
+```
+
+**`roles/iam.serviceAccountUser` を落とさないこと。** Function のデプロイは
+実行用サービスアカウントを `actAs` する。これが無いと、npm でもビルドでもなく
+`iam.serviceaccounts.actAs denied` で止まる（初回デプロイで踏んでいる）。
+API を有効にした直後は IAM の反映が追いつかず、少し置いて再実行すると通る。
 
 ### 保存されるもの
 
@@ -204,8 +261,9 @@ firebase deploy --only apphosting        # ルールも Function も一緒なら
 
 ただし通常このコマンドは打たない。バックエンドが GitHub と繋がっていて、
 **main への push でロールアウトが走る**。裏を返すと `firebase deploy` を
-打つ機会が無いということで、[ルールのデプロイ](#ルールのデプロイ)を
-忘れる原因はここにある。
+打つ機会が無いということで、v0.1 でルールが本番に載っていなかった原因は
+ここにあった。いまはルールと Function を CI が出すので、
+手で打つ場面は基本的に無い（[デプロイ](#デプロイ)を参照）。
 
 | 項目 | 値 |
 |---|---|
