@@ -165,6 +165,23 @@
   background: var(--color-surface-raised);
 }
 
+/* 取り返しのつかない側に使う。枠も塗りも与えない。押せることは読み取れるが、
+   目には飛び込んでこない。並べたときに手が伸びるのは「やめておく」のほうで
+   あってほしい。押させたくないものを目立たせないのは、押させたいものを
+   目立たせないのと同じ理由（.button--solid のコメント参照）。 */
+.button--quiet {
+  background: transparent;
+  color: var(--color-text-quiet);
+  border: var(--control-border-width) solid transparent;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  transition: color var(--motion-duration-ui) var(--motion-ease-out);
+}
+
+.button--quiet:hover {
+  color: var(--color-text-secondary);
+}
+
 .button:focus-visible {
   outline: 2px solid var(--color-accent-depth);
   outline-offset: 3px;
@@ -506,4 +523,29 @@
   letter-spacing: var(--tracking-label);
   font-weight: 400;
   color: var(--color-text-quiet);
+}
+
+/* ---------- サインアウト ---------- */
+
+.sign-out {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.sign-out-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* 「やめておく」を先に置く。取り返しのつくほうが手前に来る並びにする。 */
+.sign-out-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-md);
 }
