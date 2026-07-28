@@ -107,6 +107,10 @@
 .tile {
   flex: 1 1 0;
   min-width: 0;
+  /* 3枚並べたときの1枚より大きくしない。枚数で絵の大きさが変わると、
+     少ないほうが「豪華」に見える。スプレッドの違いは考える範囲の違いで
+     あって、格の違いではない。 */
+  max-width: var(--tile-max-width);
   display: flex;
   flex-direction: column;
   align-items: stretch;
