@@ -48,7 +48,16 @@ export default defineConfig({
   // CI での1回だけの再試行。ここで消える失敗は本物ではないことが多いが、
   // 2回以上入れると本物の不安定さが見えなくなる。
   retries: process.env.CI !== undefined ? 1 : 0,
-  reporter: process.env.CI !== undefined ? "github" : "list",
+
+  // CI では github レポーターに html を足す。github だけだと注釈しか出ず、
+  // playwright-report/ が作られない。落ちたときに持ち帰るものが何も無い状態に
+  // なるので（#72 で入れた upload-artifact は空を掴んでいた）、報告書のほうを
+  // 作らせる。html レポーターは trace や screenshot を playwright-report/ の
+  // 中に写すので、これ1つ持ち帰れば追える。
+  reporter:
+    process.env.CI !== undefined
+      ? [["github"], ["html", { open: "never" }]]
+      : "list",
 
   use: {
     baseURL: `http://127.0.0.1:${PORT}`,
