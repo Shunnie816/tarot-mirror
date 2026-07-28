@@ -107,6 +107,12 @@ functions | WARN Unsupported engine: wanted: {"node":"22"} (current: {"node":"v2
 手元の Node が新しいことと、本番で動く Node は別のもの。警告は食い違いを
 正しく報告している。
 
+同じ理由で **`@types/node` の major も上げない**。これは「実行環境の Node の
+版」であって、新しければいいものではない。CI もランタイムも 22 なので、22 に
+無い API を「ある」と型付けされると、型検査を通ったコードが本番で落ちる。
+しかもテストがその API を触らないかぎり CI は緑のまま。`.github/dependabot.yml`
+で major を止めてある。
+
 ### デプロイ
 
 **main に入ったものは CI が本番へ出す**（`.github/workflows/ci.yml` の `deploy`）。

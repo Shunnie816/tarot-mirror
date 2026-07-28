@@ -49,6 +49,14 @@ updates:
       - dependency-name: typescript
         update-types: ["version-update:semver-major"]
 
+      # @types/node の major は「実行環境の Node の版」であって、新しければ
+      # いいものではない。CI も Cloud Functions のランタイムも Node 22 で、
+      # 22 に無い API を「ある」と型付けされると、型検査を通ったコードが
+      # 本番で落ちる。しかもテストが新しい API を触らないかぎり CI は緑のまま。
+      # Cloud Functions が 24 を受け付けるようになったら、そのときに揃える。
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
   # ワークフローが使っているアクション。ここが古びても CI は緑のままなので、
   # 見に行かないかぎり気づけない。npm 側より放置されやすい。
   - package-ecosystem: github-actions
