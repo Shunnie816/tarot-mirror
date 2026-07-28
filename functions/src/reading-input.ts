@@ -1,6 +1,6 @@
 import { getResolver, type Locale } from "@tarot-mirror/content";
 import { getSpread, type ReadingJSON, type SpreadId } from "@tarot-mirror/engine";
-import { z } from "zod";
+import * as z from "zod";
 
 /**
  * The trust boundary.

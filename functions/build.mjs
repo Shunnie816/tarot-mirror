@@ -1,4 +1,4 @@
-import { rmSync } from "node:fs";
+import { rmSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -35,6 +35,23 @@ const src = (name, file = "index.ts") =>
   path.join(packages, name, "src", file);
 
 const outDir = path.join(here, "lib");
+const outFile = path.join(outDir, "index.js");
+
+/**
+ * バンドルの上限。
+ *
+ * `import { z } from "zod"` と書くと、名前空間オブジェクト全体が参照される
+ * ので esbuild は何も落とせず、zod だけで 525kb 入る。`import * as z from
+ * "zod"` に変えると 138kb になる（どちらも実測）。同じものを同じように
+ * 使っていて、違うのは1行の書き方だけ。
+ *
+ * これは型検査でもテストでも踏めない。太っても全部通るし、遅くなるのは
+ * cold start だけで、誰も見ていない。だからここで数える。
+ *
+ * 中身が増えて超えたら、上限のほうを上げてよい。ただし「何が増えたのか」を
+ * 確かめてから上げること。増えていいものと、書き方を間違えたものは違う。
+ */
+const MAX_BUNDLE_BYTES = 400 * 1024;
 
 // 先に消す。ビルドが走らなかったときに古い成果物が残っていると気づけないが、
 // 消してあれば firebase-tools が main を見つけられずその場で落ちる。
@@ -43,7 +60,7 @@ rmSync(outDir, { recursive: true, force: true });
 
 await build({
   entryPoints: [path.join(here, "src", "index.ts")],
-  outfile: path.join(outDir, "index.js"),
+  outfile: outFile,
   bundle: true,
   platform: "node",
   target: "node22",
@@ -59,3 +76,12 @@ await build({
   },
   logLevel: "info",
 });
+
+const bytes = statSync(outFile).size;
+if (bytes > MAX_BUNDLE_BYTES) {
+  const kb = (n) => `${(n / 1024).toFixed(1)}kb`;
+  throw new Error(
+    `bundle is ${kb(bytes)}, over the ${kb(MAX_BUNDLE_BYTES)} ceiling. ` +
+      `何が入ったのかを確かめてから上限を上げること（build.mjs の MAX_BUNDLE_BYTES）。`,
+  );
+}
