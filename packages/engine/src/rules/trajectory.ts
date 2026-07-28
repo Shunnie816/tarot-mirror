@@ -1,7 +1,7 @@
 import type { InsightId } from "@tarot-mirror/content";
 
-import type { Insight, PositionGroup, PositionReading } from "../types.js";
-import { AXES, clamp01, type Axis, type SpreadContext, type SpreadRule } from "./context.js";
+import type { Insight, PositionGroup, PositionReading } from "../types";
+import { AXES, clamp01, type Axis, type SpreadContext, type SpreadRule } from "./context";
 
 /**
  * Movement across time.

@@ -5,9 +5,9 @@ import {
   type ToneViolation,
 } from "@tarot-mirror/content";
 
-import type { ReadingJSON } from "../types.js";
-import { renderTemplate } from "./template.js";
-import type { ReadingRenderer, RenderedReading } from "./types.js";
+import type { ReadingJSON } from "../types";
+import { renderTemplate } from "./template";
+import type { ReadingRenderer, RenderedReading } from "./types";
 
 /**
  * L4b — the LLM renderer.

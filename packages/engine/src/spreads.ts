@@ -1,4 +1,4 @@
-import type { Spread, SpreadId } from "./types.js";
+import type { Spread, SpreadId } from "./types";
 
 /**
  * MVP spreads, per PROJECT_OVERVIEW.

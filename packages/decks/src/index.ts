@@ -1,8 +1,8 @@
 import riderWaiteJson from "./rider-waite/deck.json" with { type: "json" };
 
-import type { Card, Deck } from "./schema.js";
+import type { Card, Deck } from "./schema";
 
-export * from "./schema.js";
+export * from "./schema";
 
 /**
  * Deck data ships in the client bundle, so zod is deliberately NOT run at

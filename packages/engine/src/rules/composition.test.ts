@@ -1,8 +1,8 @@
 import { riderWaite } from "@tarot-mirror/decks";
 import { describe, expect, it } from "vitest";
 
-import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "../spreads.js";
-import { contextFor, testCard, testDeck } from "../testing.js";
+import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "../spreads";
+import { contextFor, testCard, testDeck } from "../testing";
 import {
   aceOrTen,
   courtPresence,
@@ -11,7 +11,7 @@ import {
   numericEcho,
   reversalRatioRule,
   suitDominance,
-} from "./composition.js";
+} from "./composition";
 
 /**
  * One rule, one test. Each rule states a claim about a spread; these tests are

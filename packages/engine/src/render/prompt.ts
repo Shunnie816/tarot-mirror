@@ -9,8 +9,8 @@ import {
 } from "@tarot-mirror/content";
 import { getPromptCopy } from "@tarot-mirror/content/prompt";
 
-import { getSpread } from "../spreads.js";
-import type { PositionReading, ReadingJSON } from "../types.js";
+import { getSpread } from "../spreads";
+import type { PositionReading, ReadingJSON } from "../types";
 
 /**
  * L4b — the instructions and the ingredients handed to the LLM.

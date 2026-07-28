@@ -8,7 +8,7 @@ import type {
   PositionReading,
   Spread,
   SpreadPosition,
-} from "./types.js";
+} from "./types";
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(max, Math.max(min, value));

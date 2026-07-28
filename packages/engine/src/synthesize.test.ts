@@ -2,16 +2,16 @@ import { getResolver } from "@tarot-mirror/content";
 import { riderWaite } from "@tarot-mirror/decks";
 import { describe, expect, it } from "vitest";
 
-import type { RankedInsight } from "./rules/index.js";
-import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "./spreads.js";
+import type { RankedInsight } from "./rules/index";
+import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "./spreads";
 import {
   createReading,
   MAX_INSIGHTS,
   MAX_REFLECTION_QUESTIONS,
   rankInsights,
   selectReflectionQuestions,
-} from "./synthesize.js";
-import { contextFor, testCard, testDeck } from "./testing.js";
+} from "./synthesize";
+import { contextFor, testCard, testDeck } from "./testing";
 
 const insight = (
   id: string,

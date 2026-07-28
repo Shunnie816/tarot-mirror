@@ -1,16 +1,16 @@
-import { COMPOSITION_RULES } from "./composition.js";
-import { appliesTo, type SpreadContext, type SpreadRule } from "./context.js";
-import { RELATIONSHIP_RULES } from "./relationship.js";
-import { TENSION_RULES } from "./tension.js";
-import { TRAJECTORY_RULES } from "./trajectory.js";
+import { COMPOSITION_RULES } from "./composition";
+import { appliesTo, type SpreadContext, type SpreadRule } from "./context";
+import { RELATIONSHIP_RULES } from "./relationship";
+import { TENSION_RULES } from "./tension";
+import { TRAJECTORY_RULES } from "./trajectory";
 
-import type { Insight, SpreadId } from "../types.js";
+import type { Insight, SpreadId } from "../types";
 
-export * from "./context.js";
-export * from "./composition.js";
-export * from "./relationship.js";
-export * from "./tension.js";
-export * from "./trajectory.js";
+export * from "./context";
+export * from "./composition";
+export * from "./relationship";
+export * from "./tension";
+export * from "./trajectory";
 
 export const ALL_RULES: readonly SpreadRule[] = [
   ...COMPOSITION_RULES,

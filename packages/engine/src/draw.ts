@@ -1,7 +1,7 @@
 import type { Deck } from "@tarot-mirror/decks";
 
-import { createRng, shuffle, type Rng } from "./random.js";
-import type { DrawnCard, Spread } from "./types.js";
+import { createRng, shuffle, type Rng } from "./random";
+import type { DrawnCard, Spread } from "./types";
 
 export interface DrawOptions {
   readonly spread: Spread;

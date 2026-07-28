@@ -5,9 +5,9 @@ import {
   type Locale,
 } from "@tarot-mirror/content";
 
-import { getSpread } from "../spreads.js";
-import type { PositionReading, ReadingJSON } from "../types.js";
-import type { RenderedPosition, RenderedReading } from "./types.js";
+import { getSpread } from "../spreads";
+import type { PositionReading, ReadingJSON } from "../types";
+import type { RenderedPosition, RenderedReading } from "./types";
 
 /**
  * L4a — turn a ReadingJSON into Japanese prose using only the dictionary.

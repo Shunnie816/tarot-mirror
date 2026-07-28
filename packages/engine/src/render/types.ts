@@ -1,6 +1,6 @@
 import type { CardId, Locale, PositionId } from "@tarot-mirror/content";
 
-import type { PositionGroup, ReadingJSON } from "../types.js";
+import type { PositionGroup, ReadingJSON } from "../types";
 
 /** How the prose was produced. Surfaced so the UI can label an LLM-assisted reading. */
 export type RenderMode = "template" | "llm";

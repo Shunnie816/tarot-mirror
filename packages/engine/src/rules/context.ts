@@ -7,7 +7,7 @@ import type {
   PositionReading,
   Spread,
   SpreadId,
-} from "../types.js";
+} from "../types";
 
 /** Everything an L2 rule is allowed to look at. */
 export interface SpreadContext {

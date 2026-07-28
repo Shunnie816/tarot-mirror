@@ -1,5 +1,5 @@
-import type { Insight } from "../types.js";
-import { clamp01, type SpreadRule } from "./context.js";
+import type { Insight } from "../types";
+import { clamp01, type SpreadRule } from "./context";
 
 /**
  * Contradictions sitting next to each other.

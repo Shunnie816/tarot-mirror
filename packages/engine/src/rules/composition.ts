@@ -1,6 +1,6 @@
 import type { Element, Suit } from "@tarot-mirror/decks";
 
-import type { Insight } from "../types.js";
+import type { Insight } from "../types";
 import {
   cardsOf,
   clamp01,
@@ -9,7 +9,7 @@ import {
   elementsPresent,
   reversalRatio,
   type SpreadRule,
-} from "./context.js";
+} from "./context";
 
 /**
  * Rules about what the spread is *made of* — suit, arcana, orientation,

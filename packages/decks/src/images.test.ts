@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { riderWaite } from "./index.js";
+import { riderWaite } from "./index";
 
 /**
  * カードデータと画像がずれていないことを確かめる。

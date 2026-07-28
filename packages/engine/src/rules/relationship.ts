@@ -1,11 +1,11 @@
-import type { Insight } from "../types.js";
+import type { Insight } from "../types";
 import {
   axisDistance,
   clamp01,
   meanAxes,
   readingsInGroup,
   type SpreadRule,
-} from "./context.js";
+} from "./context";
 
 /**
  * Rules that only make sense when a spread has two sides.

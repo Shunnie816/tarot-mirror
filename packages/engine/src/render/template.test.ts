@@ -2,9 +2,9 @@ import { findToneViolations, getResolver } from "@tarot-mirror/content";
 import { riderWaite } from "@tarot-mirror/decks";
 import { describe, expect, it } from "vitest";
 
-import { ALL_SPREADS, ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "../spreads.js";
-import { createReading } from "../synthesize.js";
-import { renderTemplate, toPlainText } from "./template.js";
+import { ALL_SPREADS, ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "../spreads";
+import { createReading } from "../synthesize";
+import { renderTemplate, toPlainText } from "./template";
 
 const reading = (seed: string, spread = THREE_CARDS, question?: string) =>
   createReading({

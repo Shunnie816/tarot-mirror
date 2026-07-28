@@ -6,10 +6,10 @@ import {
 import { riderWaite } from "@tarot-mirror/decks";
 import { describe, expect, it } from "vitest";
 
-import { RELATIONSHIP_8, THREE_CARDS } from "../spreads.js";
-import { createReading } from "../synthesize.js";
-import { buildSystemPrompt, buildUserPrompt } from "./prompt.js";
-import { renderTemplate } from "./template.js";
+import { RELATIONSHIP_8, THREE_CARDS } from "../spreads";
+import { createReading } from "../synthesize";
+import { buildSystemPrompt, buildUserPrompt } from "./prompt";
+import { renderTemplate } from "./template";
 
 /**
  * 観点

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { ONE_CARD, THREE_CARDS } from "../spreads.js";
-import { contextFor, testCard, testDeck } from "../testing.js";
-import { tensionPair } from "./tension.js";
+import { ONE_CARD, THREE_CARDS } from "../spreads";
+import { contextFor, testCard, testDeck } from "../testing";
+import { tensionPair } from "./tension";
 
 const DECK = testDeck([
   testCard({ id: "t.pushing", axes: { agency: 2, friction: 0 } }),

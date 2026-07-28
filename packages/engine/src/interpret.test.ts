@@ -7,9 +7,9 @@ import {
   interpretDraw,
   interpretPosition,
   selectKeywords,
-} from "./interpret.js";
-import { THREE_CARDS } from "./spreads.js";
-import type { SpreadPosition } from "./types.js";
+} from "./interpret";
+import { THREE_CARDS } from "./spreads";
+import type { SpreadPosition } from "./types";
 
 const fool = getCard("rw.major.00");
 const devil = getCard("rw.major.15");
