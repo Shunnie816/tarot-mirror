@@ -114,7 +114,7 @@ jobs:
       # 残らない**。実際 #72 では github レポーターしか動いておらず、
       # playwright-report/ がそもそも存在しなかった。空を掴んだことに気づける
       # のは、次に落ちた誰かがログを開いたときしかない。
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
