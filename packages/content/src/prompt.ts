@@ -1,7 +1,7 @@
 import ja from "./ja/prompt.json" with { type: "json" };
 
-import { MissingCopyError } from "./dictionary.js";
-import type { Locale, PromptId } from "./ids.js";
+import { MissingCopyError } from "./dictionary";
+import type { Locale, PromptId } from "./ids";
 
 /**
  * The LLM's instructions — copy that only a server ever reads.

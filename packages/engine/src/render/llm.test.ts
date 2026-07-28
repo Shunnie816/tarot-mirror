@@ -1,17 +1,17 @@
 import { riderWaite } from "@tarot-mirror/decks";
 import { describe, expect, it } from "vitest";
 
-import { THREE_CARDS } from "../spreads.js";
-import { createReading } from "../synthesize.js";
-import type { ReadingJSON } from "../types.js";
+import { THREE_CARDS } from "../spreads";
+import { createReading } from "../synthesize";
+import type { ReadingJSON } from "../types";
 import {
   createLlmRenderer,
   mergeLlmOutput,
   type FormatPort,
   type LlmFormatOutput,
   type Rejection,
-} from "./llm.js";
-import { renderTemplate } from "./template.js";
+} from "./llm";
+import { renderTemplate } from "./template";
 
 /**
  * 観点

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { RELATIONSHIP_8, THREE_CARDS } from "../spreads.js";
-import { contextFor, testCard, testDeck } from "../testing.js";
-import { bridge, mirroring } from "./relationship.js";
+import { RELATIONSHIP_8, THREE_CARDS } from "../spreads";
+import { contextFor, testCard, testDeck } from "../testing";
+import { bridge, mirroring } from "./relationship";
 
 const DECK = testDeck([
   testCard({ id: "t.neutral", axes: {} }),

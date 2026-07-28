@@ -1,8 +1,8 @@
 import type { AxisVector, Card, Deck } from "@tarot-mirror/decks";
 
-import { interpretDraw } from "./interpret.js";
-import { buildContext, type SpreadContext } from "./rules/context.js";
-import type { Orientation, Spread } from "./types.js";
+import { interpretDraw } from "./interpret";
+import { buildContext, type SpreadContext } from "./rules/context";
+import type { Orientation, Spread } from "./types";
 
 /**
  * Test-only builders.

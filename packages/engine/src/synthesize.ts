@@ -1,10 +1,10 @@
 import type { QuestionId } from "@tarot-mirror/content";
 import type { Card, Deck } from "@tarot-mirror/decks";
 
-import { drawCards, type DrawOptions } from "./draw.js";
-import { interpretDraw } from "./interpret.js";
-import { buildContext, evaluateRules, type RankedInsight } from "./rules/index.js";
-import type { Insight, PositionReading, ReadingJSON, Spread } from "./types.js";
+import { drawCards, type DrawOptions } from "./draw";
+import { interpretDraw } from "./interpret";
+import { buildContext, evaluateRules, type RankedInsight } from "./rules/index";
+import type { Insight, PositionReading, ReadingJSON, Spread } from "./types";
 
 /**
  * Cap on observations shown per reading.

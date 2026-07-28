@@ -1,8 +1,8 @@
 import { riderWaite } from "@tarot-mirror/decks";
 import { describe, expect, it } from "vitest";
 
-import { drawCards, NotEnoughCardsError } from "./draw.js";
-import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "./spreads.js";
+import { drawCards, NotEnoughCardsError } from "./draw";
+import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "./spreads";
 
 describe("drawCards", () => {
   const base = { spread: THREE_CARDS, deck: riderWaite } as const;

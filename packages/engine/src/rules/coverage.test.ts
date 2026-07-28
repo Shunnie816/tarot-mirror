@@ -1,12 +1,12 @@
 import { riderWaite } from "@tarot-mirror/decks";
 import { describe, expect, it } from "vitest";
 
-import { drawCards } from "../draw.js";
-import { interpretDraw } from "../interpret.js";
-import { ALL_SPREADS } from "../spreads.js";
-import type { SpreadId } from "../types.js";
-import { appliesTo, buildContext } from "./context.js";
-import { ALL_RULES } from "./index.js";
+import { drawCards } from "../draw";
+import { interpretDraw } from "../interpret";
+import { ALL_SPREADS } from "../spreads";
+import type { SpreadId } from "../types";
+import { appliesTo, buildContext } from "./context";
+import { ALL_RULES } from "./index";
 
 /**
  * Every rule must be reachable from the shipped deck.

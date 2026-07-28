@@ -11,13 +11,13 @@ import spreads from "./ja/spreads.json" with { type: "json" };
 import themes from "./ja/themes.json" with { type: "json" };
 import ui from "./ja/ui.json" with { type: "json" };
 
-import type { Dictionary } from "./dictionary.js";
-import { createResolver } from "./dictionary.js";
-import type { Locale } from "./ids.js";
+import type { Dictionary } from "./dictionary";
+import { createResolver } from "./dictionary";
+import type { Locale } from "./ids";
 
-export * from "./ids.js";
-export * from "./dictionary.js";
-export * from "./tone.js";
+export * from "./ids";
+export * from "./dictionary";
+export * from "./tone";
 
 export const ja: Dictionary = {
   locale: "ja",

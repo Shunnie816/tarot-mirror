@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { ja } from "./index.js";
-import { promptTables } from "./prompt.js";
-import { BANNED_PHRASES, findToneViolations } from "./tone.js";
+import { ja } from "./index";
+import { promptTables } from "./prompt";
+import { BANNED_PHRASES, findToneViolations } from "./tone";
 
 /**
  * Core Principle #1 — a reading is never a prediction.

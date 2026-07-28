@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { getResolver } from "@tarot-mirror/content";
 
-import { allCards, RAW_DECKS, riderWaite } from "./index.js";
-import { CardSchema, DeckSchema } from "./schema.js";
+import { allCards, RAW_DECKS, riderWaite } from "./index";
+import { CardSchema, DeckSchema } from "./schema";
 
 /**
  * Deck data integrity. Run in isolation via `pnpm validate:decks`.

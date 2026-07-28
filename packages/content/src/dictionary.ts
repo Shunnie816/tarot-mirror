@@ -10,7 +10,7 @@ import type {
   SpreadLabelId,
   ThemeId,
   UiId,
-} from "./ids.js";
+} from "./ids";
 
 /** Copy for a cross-card observation produced by an L2 rule. */
 export interface InsightCopy {

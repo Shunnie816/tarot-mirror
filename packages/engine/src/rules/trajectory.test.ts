@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "../spreads.js";
-import { contextFor, testCard, testDeck } from "../testing.js";
-import { temporalSequences, trajectory } from "./trajectory.js";
+import { ONE_CARD, RELATIONSHIP_8, THREE_CARDS } from "../spreads";
+import { contextFor, testCard, testDeck } from "../testing";
+import { temporalSequences, trajectory } from "./trajectory";
 
 /**
  * These are the tests that justify putting numeric axes on cards at all: a

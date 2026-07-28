@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createRng, generateSeed, shuffle } from "./random.js";
+import { createRng, generateSeed, shuffle } from "./random";
 
 describe("createRng", () => {
   it("should produce the same sequence for the same seed", () => {

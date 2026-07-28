@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { createResolver, interpolate, MissingCopyError } from "./dictionary.js";
-import { getResolver, ja } from "./index.js";
+import { createResolver, interpolate, MissingCopyError } from "./dictionary";
+import { getResolver, ja } from "./index";
 
 describe("interpolate", () => {
   it("should fill a named slot", () => {
