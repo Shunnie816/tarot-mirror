@@ -5,6 +5,13 @@ dist/
 out/
 *.tsbuildinfo
 
+# Next が毎回書き直す生成物。Turbopack にしてから中身が dev と build で振れる
+# ようになった（`next dev` は .next/dev/types/routes.d.ts を、`next build` は
+# .next/types/routes.d.ts を指す）ので、追跡していると dev を叩くたびに差分が出る。
+# 追跡から外しても CI は通る — typecheck はこのファイルが無くても成立する
+# （fresh clone と同じ、next-env.d.ts も .next も無い状態で確認済み）。
+next-env.d.ts
+
 # Firebase
 .firebase/
 .apphosting/
