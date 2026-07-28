@@ -7,8 +7,12 @@ on:
 
 concurrency:
   group: ci-${{ github.ref }}
-  # main では途中で止めない。deploy が道連れになると、本番だけが
+  # main では実行中のものを途中で止めない。deploy が道連れになると、本番だけが
   # 古いまま取り残されて、次の push まで誰も気づけない。
+  #
+  # ただしこれが守るのは**実行中**の run だけ。同じ group で順番待ちをしている
+  # run は、新しい run が来ると設定に関係なく取り消される（待てるのは1本だけ）。
+  # main に merge が続くと実際に起きる。取りこぼしへの備えは deploy 側にある。
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
@@ -134,6 +138,8 @@ jobs:
 
     permissions:
       contents: read
+      # 「最後にデプロイが通った commit」を知るために、自分の実行履歴を読む。
+      actions: read
       # Workload Identity Federation で GCP に入るために要る。
       # 鍵ファイルを GitHub に置かずに済むのはこれのおかげ。
       id-token: write
@@ -147,8 +153,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          # 変わったものだけ Function を上げ直すために、1つ前の main が要る。
-          fetch-depth: 2
+          # 変わったものだけ Function を上げ直すために、比較相手の commit が要る。
+          # 相手は「最後にデプロイが通った commit」で、それが何本前かは分からない
+          # （取り消された run のぶんだけ遠ざかる）ので、全部持ってくる。
+          fetch-depth: 0
 
       - uses: google-github-actions/auth@v3
         with:
@@ -166,19 +174,41 @@ jobs:
       - name: Deploy Firestore rules and indexes
         run: npx --yes firebase-tools@15 deploy --only firestore --non-interactive
 
+      # 比べる相手は「直前の push」ではなく「最後にデプロイが通った commit」。
+      #
+      # github.event.before を使っていると取りこぼす。main に merge が続くと、
+      # 順番待ちの run は新しい run に追い越されて取り消される。生き残った run
+      # から見た「直前の push」は取り消された run の commit なので、そこに
+      # 入っていた packages/ の変更は**二度と見えない**。本番の Function だけが
+      # 古いまま、CI は緑になる。#52 と同じ形。
+      #
+      # run 全体が success ということは deploy まで通ったということなので、
+      # その commit の中身は本番に載っている（載せる必要が無かった場合も、
+      # 中身が同じなので同じこと）。
+      - name: What is already deployed?
+        id: base
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha=$(gh run list --workflow ci.yml --branch main --event push \
+                  --status success --limit 1 --json headSha --jq '.[0].headSha' \
+                2>/dev/null || true)
+          echo "last successful deploy: ${sha:-(none)}"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
       # Function は中身が変わったときだけ。毎回上げるとコンテナが積み上がる。
       # packages/* も見るのは、engine と content と decks を束ねて出しているから。
       - name: Did anything the function is made of change?
         id: changed
         run: |
-          before='${{ github.event.before }}'
-          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] \
-             || ! git cat-file -e "$before^{commit}" 2>/dev/null; then
-            # 比較相手が無い（初回 push など）。分からないときは上げる側に倒す。
+          base='${{ steps.base.outputs.sha }}'
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            # 比較相手が無い（初回・履歴が届かない・API が答えない）。
+            # 分からないときは上げる側に倒す。
             echo "changed=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if git diff --name-only "$before" '${{ github.sha }}' \
+          if git diff --name-only "$base" '${{ github.sha }}' \
              | grep -qE '^(functions/|packages/|firebase\.json$|pnpm-lock\.yaml$)'; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
