@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Tarot Mirror">
+  <!--
+    タブに出る印。16px まで縮むので、形はカード1枚と中心の線だけにしてある。
+    絵柄を入れても潰れるし、この道具は「よく当たりそうな絵」を出したくない。
+
+    色は design-system のトークンと同じもの（--color-surface-base /
+    --color-accent-depth / --color-accent-warm）を hex で写した。favicon は
+    ブラウザ以外にも読まれるので oklch のままにしない。
+
+    中心の縦線がテラコッタなのは、画面の中で「振り返り」に使っている色だから。
+    カードは藍＝奥行き。鏡の軸がカードを二分している、というだけの形。
+  -->
+  <rect width="32" height="32" rx="6" fill="#f5f2ec" />
+  <rect
+    x="9.5"
+    y="5.5"
+    width="13"
+    height="21"
+    rx="2"
+    fill="none"
+    stroke="#334963"
+    stroke-width="2.5"
+  />
+  <line
+    x1="16"
+    y1="10"
+    x2="16"
+    y2="22"
+    stroke="#986750"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+</svg>
