@@ -13,15 +13,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.115.0",
-    "firebase-admin": "^14.2.0",
-    "firebase-functions": "^7.3.0"
+    "@anthropic-ai/sdk": "^0.132.1",
+    "firebase-admin": "^14.5.0",
+    "firebase-functions": "^7.4.0"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
-    "esbuild": "^0.28.1",
+    "@types/node": "^22.20.5",
+    "esbuild": "^0.28.2",
     "typescript": "^5.7.2",
-    "zod": "^4.4.3"
+    "zod": "^4.6.5"
   },
   "_dependencies": "ワークスペースのパッケージはここに書かない。npm が workspace:* を解釈できず、Cloud Functions のビルド（npm install）がマニフェストを読んだ時点で落ちる。esbuild が束ねてしまうので、書く必要もない。解決は build.mjs / tsconfig.json / vitest.workspace.ts の3か所の別名で行う。"
 }
